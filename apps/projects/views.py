@@ -110,7 +110,7 @@ def dashboard_detail(request, project_id):
 
 @login_required
 @require_http_methods(["GET", "POST"])
-def dashboard_edit(request, project_id):
+def dashboard_update(request, project_id):
     """
     프로젝트 대시보드 수정 (팀원만)
     
@@ -163,7 +163,7 @@ def dashboard_edit(request, project_id):
         "links_form": links_form,
     }
     
-    return render(request, "projects/dashboard_edit.html", context)
+    return render(request, "projects/dashboard_update.html", context)
 
 
 @login_required

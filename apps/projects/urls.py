@@ -7,7 +7,7 @@ urlpatterns = [
     # 프로젝트 대시보드 (현재 프로젝트)
     path("dashboard/", views.dashboard, name="dashboard"),  # dashboard.html
     path("dashboard/<int:project_id>/", views.dashboard_detail, name="dashboard_detail"),  # 대시보드 조회
-    path("dashboard/<int:project_id>/edit/", views.dashboard_edit, name="dashboard_edit"),  # 대시보드 수정
+    path("dashboard/<int:project_id>/edit/", views.dashboard_update, name="dashboard_edit"),  # 대시보드 수정
     
     # 지난 프로젝트
     path("", views.project_list, name="project_list"),  # project_list.html
