@@ -211,21 +211,33 @@ def project_detail(request, project_id):
 
 
 @login_required
+@require_http_methods(["GET"])
 def kitup_list(request):
-    """모든 KITUP 프로젝트 리스트"""
-    # TODO: 모든 프로젝트 리스트 로직 구현
-    context = {}
+    """모든 KITUP 프로젝트 리스트 (진행 중인 프로젝트)"""
+    # 활성화된 프로젝트만 조회 (상태: IN_PROGRESS 또는 MATCHED)
+    projects = Project.objects.filter(
+        status__in=[Project.Status.IN_PROGRESS, Project.Status.MATCHED]
+    ).select_related('team').order_by('-created_at')
+    
+    context = {
+        "projects": projects,
+    }
     return render(request, "projects/kitup_list.html", context)
 
 
 @login_required
+@require_http_methods(["GET"])
 def kitup_detail(request, project_id):
-    """모든 KITUP 프로젝트 상세"""
-    # TODO: 모든 프로젝트 상세 로직 구현
-    # project = get_object_or_404(Project, id=project_id)
-    context = {
-        "project_id": project_id,
-    }
+    """모든 KITUP 프로젝트 상세 (조회만)"""
+    project = get_object_or_404(Project, id=project_id)
+    
+    # 활성화된 프로젝트만 조회 가능
+    if project.status not in [Project.Status.IN_PROGRESS, Project.Status.MATCHED]:
+        messages.error(request, "조회할 수 없는 프로젝트입니다.")
+        return redirect("projects:kitup_list")
+    
+    context = _get_project_context(project, request.user)
+    
     return render(request, "projects/kitup_detail.html", context)
 
 
