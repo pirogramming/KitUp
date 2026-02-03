@@ -11,6 +11,64 @@ from apps.projects.services import TeamMatchingService
 from apps.teams.models import Team, TeamMember
 
 
+# ================================
+# Helper 함수
+# ================================
+
+def _get_project_context(project, user):
+    """
+    프로젝트 상세 정보 context 생성 (dashboard_detail, project_detail에서 공유)
+    """
+    team = project.team
+    members = team.members.filter(is_active=True).select_related("user", "role")
+    member_count_by_role = team.get_member_count_by_role()
+    
+    # 시즌 정보
+    season = None
+    active_season = Season.get_active_season()
+    if active_season:
+        if active_season.project_start <= project.created_at <= active_season.project_end:
+            season = active_season
+    
+    # 가이드 진척도 계산
+    guide_progress = None
+    if hasattr(project, 'current_stage') and project.current_stage:
+        try:
+            from apps.guides.models import GuideTask, GuideTaskProgress
+            
+            total_tasks = GuideTask.objects.filter(
+                card__stage=project.current_stage
+            ).count()
+            
+            completed_tasks = GuideTaskProgress.objects.filter(
+                task__card__stage=project.current_stage,
+                project=project,
+                user=user,
+                is_completed=True
+            ).count()
+            
+            progress_percent = int((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0)
+            
+            guide_progress = {
+                'stage': project.current_stage,
+                'total_tasks': total_tasks,
+                'completed_tasks': completed_tasks,
+                'progress_percent': progress_percent,
+            }
+        except:
+            # GuideTask 모델이 없거나 데이터가 없으면 None으로 처리
+            guide_progress = None
+    
+    return {
+        "project": project,
+        "team": team,
+        "members": members,
+        "member_count_by_role": member_count_by_role,
+        "season": season,
+        "guide_progress": guide_progress,
+    }
+
+
 @login_required
 def dashboard(request):
     """
@@ -37,14 +95,7 @@ def dashboard(request):
 @login_required
 @require_http_methods(["GET"])
 def dashboard_detail(request, project_id):
-    """
-    프로젝트 대시보드 조회 (읽기 전용)
-    
-    읽기 전용 정보:
-    - 진행기간 (starts_at, ends_at)
-    - 팀 정보 (team composition)
-    - 진척도 (guide_stage progress)
-    """
+    """프로젝트 대시보드 조회 (진행 중인 프로젝트)"""
     project = get_object_or_404(Project, id=project_id)
     
     # 팀원 확인
@@ -58,52 +109,8 @@ def dashboard_detail(request, project_id):
         messages.error(request, "팀원만 접근할 수 있습니다.")
         return redirect("projects:dashboard")
     
-    # 팀 정보
-    team = project.team
-    members = team.members.filter(is_active=True).select_related("user", "role")
-    member_count_by_role = team.get_member_count_by_role()
-    
-    # 시즌 정보
-    season = None
-    active_season = Season.get_active_season()
-    if active_season:
-        if active_season.project_start <= project.created_at <= active_season.project_end:
-            season = active_season
-    
-    # 가이드 진척도 계산
-    guide_progress = None
-    if project.current_stage:
-        from apps.guides.models import GuideTask, GuideTaskProgress
-        
-        total_tasks = GuideTask.objects.filter(
-            card__stage=project.current_stage
-        ).count()
-        
-        completed_tasks = GuideTaskProgress.objects.filter(
-            task__card__stage=project.current_stage,
-            project=project,
-            user=request.user,
-            is_completed=True
-        ).count()
-        
-        progress_percent = int((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0)
-        
-        guide_progress = {
-            'stage': project.current_stage,
-            'total_tasks': total_tasks,
-            'completed_tasks': completed_tasks,
-            'progress_percent': progress_percent,
-        }
-    
-    context = {
-        "project": project,
-        "team": team,
-        "members": members,
-        "member_count_by_role": member_count_by_role,
-        "season": season,
-        "guide_progress": guide_progress,
-        "is_team_member": is_team_member,
-    }
+    context = _get_project_context(project, request.user)
+    context["is_team_member"] = is_team_member
     
     return render(request, "projects/dashboard.html", context)
 
@@ -198,25 +205,7 @@ def project_detail(request, project_id):
         messages.error(request, "접근 권한이 없습니다.")
         return redirect("projects:project_list")
     
-    # 팀 정보
-    team = project.team
-    members = team.members.all().select_related("user", "role")
-    member_count_by_role = team.get_member_count_by_role()
-    
-    # 시즌 정보
-    season = None
-    active_season = Season.get_active_season()
-    if active_season:
-        if active_season.project_start <= project.created_at <= active_season.project_end:
-            season = active_season
-    
-    context = {
-        "project": project,
-        "team": team,
-        "members": members,
-        "member_count_by_role": member_count_by_role,
-        "season": season,
-    }
+    context = _get_project_context(project, request.user)
     
     return render(request, "projects/project_detail.html", context)
 
