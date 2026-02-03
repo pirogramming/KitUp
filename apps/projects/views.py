@@ -167,22 +167,57 @@ def dashboard_edit(request, project_id):
 
 
 @login_required
+@require_http_methods(["GET"])
 def project_list(request):
-    """지난 프로젝트 리스트"""
-    # TODO: 지난 프로젝트 리스트 로직 구현
-    # projects = request.user.created_teams.all()
-    context = {}
+    """과거 프로젝트 리스트 (완료된 프로젝트)"""
+    # 사용자가 속했던 모든 팀의 프로젝트
+    projects = Project.objects.filter(
+        team__members__user=request.user,
+        team__members__is_active=False  # 비활성 (완료된 팀)
+    ).distinct().select_related('team').order_by('-created_at')
+    
+    context = {
+        "projects": projects,
+    }
     return render(request, "projects/project_list.html", context)
 
 
 @login_required
+@require_http_methods(["GET"])
 def project_detail(request, project_id):
-    """지난 프로젝트 상세"""
-    # TODO: 지난 프로젝트 상세 로직 구현
-    # project = get_object_or_404(Project, id=project_id)
+    """과거 프로젝트 상세 (조회만)"""
+    project = get_object_or_404(Project, id=project_id)
+    
+    # 사용자가 해당 프로젝트에 속했었는지 확인
+    is_member = TeamMember.objects.filter(
+        team__project=project,
+        user=request.user
+    ).exists()
+    
+    if not is_member:
+        messages.error(request, "접근 권한이 없습니다.")
+        return redirect("projects:project_list")
+    
+    # 팀 정보
+    team = project.team
+    members = team.members.all().select_related("user", "role")
+    member_count_by_role = team.get_member_count_by_role()
+    
+    # 시즌 정보
+    season = None
+    active_season = Season.get_active_season()
+    if active_season:
+        if active_season.project_start <= project.created_at <= active_season.project_end:
+            season = active_season
+    
     context = {
-        "project_id": project_id,
+        "project": project,
+        "team": team,
+        "members": members,
+        "member_count_by_role": member_count_by_role,
+        "season": season,
     }
+    
     return render(request, "projects/project_detail.html", context)
 
 
