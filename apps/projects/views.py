@@ -13,9 +13,25 @@ from apps.teams.models import Team, TeamMember
 
 @login_required
 def dashboard(request):
-    """현재 프로젝트 대시보드"""
-    # TODO: 대시보드 로직 구현
-    return render(request, "projects/dashboard.html")
+    """
+    현재 프로젝트 대시보드 진입점
+    
+    - 사용자가 속한 현재 진행 중인 프로젝트가 있으면 해당 프로젝트 대시보드로 리다이렉트
+    - 없으면 "현재 진행중인 프로젝트가 없어요" 페이지 렌더링
+    """
+    
+    # 사용자의 현재 진행 중인 프로젝트 찾기
+    team_member = TeamMember.objects.filter(
+        user=request.user,
+        is_active=True
+    ).select_related('team__project').first()
+    
+    # 프로젝트 있으면 상세 페이지로 리다이렉트
+    if team_member and team_member.team.project:
+        return redirect('projects:dashboard_detail', project_id=team_member.team.project.id)
+    
+    # 프로젝트 없으면 "현재 진행중인 프로젝트가 없어요" 페이지 표시
+    return render(request, "projects/dashboard.html", {"has_project": False})
 
 
 @login_required
