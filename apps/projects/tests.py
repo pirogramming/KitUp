@@ -2,6 +2,7 @@
 팀 매칭 알고리즘 테스트
 """
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 from django.core.exceptions import ValidationError
@@ -152,3 +153,174 @@ class TeamMatchingServiceTest(TestCase):
         self.assertEqual(fe_count, 2)
         self.assertEqual(be_count, 2)
 
+
+class ProjectDashboardViewTest(TestCase):
+    """프로젝트 대시보드 뷰 테스트"""
+    
+    def setUp(self):
+        """테스트 데이터 준비"""
+        # 시즌 생성
+        self.season = Season.objects.create(
+            name="2026년 1월 시즌",
+            status=Season.Status.IN_PROJECT,
+            matching_start=timezone.now() - timedelta(days=10),
+            matching_end=timezone.now() - timedelta(days=5),
+            project_start=timezone.now() - timedelta(days=3),
+            project_end=timezone.now() + timedelta(days=30),
+            is_active=True,
+        )
+        
+        # 역할 생성
+        self.pm_role = Role.objects.create(code="PM", name="프로덕트 매니저")
+        self.fe_role = Role.objects.create(code="FE", name="프론트엔드")
+        self.be_role = Role.objects.create(code="BE", name="백엔드")
+        
+        # 사용자 생성 후 프로필 완성
+        self.pm_user = User.objects.create_user(
+            username="pm_user",
+            email="pm@test.com",
+            password="testpass123",
+        )
+        self.pm_user.nickname = "PM 유저"
+        self.pm_user.save()
+        
+        self.fe_user = User.objects.create_user(
+            username="fe_user",
+            email="fe@test.com",
+            password="testpass123",
+        )
+        self.fe_user.nickname = "FE 유저"
+        self.fe_user.save()
+        
+        # 프로젝트 생성
+        self.project = Project.objects.create(
+            title="테스트 프로젝트",
+            description="테스트 설명",
+            status=Project.Status.IN_PROGRESS,
+        )
+        
+        # 팀 생성
+        self.team = Team.objects.create(
+            project=self.project,
+            name="테스트 팀",
+        )
+        
+        # 팀 멤버 추가
+        self.pm_member = TeamMember.objects.create(
+            team=self.team,
+            user=self.pm_user,
+            role=self.pm_role,
+            is_active=True,
+        )
+        self.fe_member = TeamMember.objects.create(
+            team=self.team,
+            user=self.fe_user,
+            role=self.fe_role,
+            is_active=True,
+        )
+    
+    def test_dashboard_no_project(self):
+        """진행 중인 프로젝트 없을 때"""
+        user = User.objects.create_user(
+            username="no_project",
+            email="no@test.com",
+            password="testpass123",
+        )
+        user.nickname = "No Project User"
+        user.save()
+        
+        self.client.login(username="no_project", password="testpass123")
+        
+        response = self.client.get(reverse("projects:dashboard"))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context["has_project"])
+    
+    def test_dashboard_with_project(self):
+        """진행 중인 프로젝트 있을 때"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        response = self.client.get(reverse("projects:dashboard"))
+        # 프로젝트 있으면 redirect
+        self.assertEqual(response.status_code, 302)
+    
+    def test_dashboard_detail_access(self):
+        """대시보드 상세 조회"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        url = reverse("projects:dashboard_detail", kwargs={"project_id": self.project.id})
+        print(f"\n🔍 Testing URL: {url}")
+        print(f"   Project ID: {self.project.id}")
+        print(f"   User: pm_user")
+        print(f"   TeamMember exists: {TeamMember.objects.filter(user=self.pm_user, is_active=True).exists()}")
+        
+        response = self.client.get(url)
+        
+        print(f"   Response status: {response.status_code}")
+        if response.status_code == 302:
+            print(f"   Redirected to: {response.url}")
+        
+        self.assertEqual(response.status_code, 200)
+    
+    def test_dashboard_detail_not_member(self):
+        """대시보드 상세 - 팀원 아닐 때"""
+        user = User.objects.create_user(
+            username="non_member",
+            email="non@test.com",
+            password="testpass123",
+        )
+        self.client.login(username="non_member", password="testpass123")
+        
+        response = self.client.get(
+            reverse("projects:dashboard_detail", kwargs={"project_id": self.project.id})
+        )
+        self.assertEqual(response.status_code, 302)  # redirect
+    
+    def test_project_list_access(self):
+        """과거 프로젝트 리스트"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        response = self.client.get(reverse("projects:project_list"))
+        self.assertEqual(response.status_code, 200)
+    
+    def test_project_detail_access(self):
+        """과거 프로젝트 상세 조회"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        response = self.client.get(
+            reverse("projects:project_detail", kwargs={"project_id": self.project.id})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["project"], self.project)
+    
+    def test_dashboard_update_get(self):
+        """대시보드 수정 폼 조회"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        response = self.client.get(
+            reverse("projects:dashboard_edit", kwargs={"project_id": self.project.id})
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("form", response.context)
+        self.assertIn("links_form", response.context)
+    
+    def test_dashboard_update_post(self):
+        """대시보드 정보 수정"""
+        self.client.login(username="pm_user", password="testpass123")
+        
+        data = {
+            "title": "수정된 프로젝트명",
+            "description": "수정된 설명",
+            "is_favorite": True,
+        }
+        response = self.client.post(
+            reverse("projects:dashboard_edit", kwargs={"project_id": self.project.id}),
+            data,
+        )
+        
+        # 수정 후 redirect
+        self.assertEqual(response.status_code, 302)
+        
+        # 데이터 확인
+        self.project.refresh_from_db()
+        self.assertEqual(self.project.title, "수정된 프로젝트명")
+        self.assertTrue(self.project.is_favorite)
