@@ -3,10 +3,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_http_methods
 
-from apps.projects.models import Season
+from apps.projects.models import Season, Project
+from apps.projects.forms import ProjectDashboardEditForm, ProjectRelatedLinksForm
 from apps.projects.services import TeamMatchingService
+from apps.teams.models import Team, TeamMember
 
 
 @login_required
@@ -17,30 +19,135 @@ def dashboard(request):
 
 
 @login_required
+@require_http_methods(["GET"])
 def dashboard_detail(request, project_id):
-    """나의 현재 프로젝트 대시보드"""
-    # TODO: 단 하나뿐 나의 프로젝트 대시보드
-    # project = get_object_or_404(Project, id=project_id)
+    """
+    프로젝트 대시보드 조회 (읽기 전용)
+    
+    읽기 전용 정보:
+    - 진행기간 (starts_at, ends_at)
+    - 팀 정보 (team composition)
+    - 진척도 (guide_stage progress)
+    """
+    project = get_object_or_404(Project, id=project_id)
+    
+    # 팀원 확인
+    is_team_member = TeamMember.objects.filter(
+        team__project=project,
+        user=request.user,
+        is_active=True
+    ).exists()
+    
+    if not is_team_member:
+        messages.error(request, "팀원만 접근할 수 있습니다.")
+        return redirect("projects:dashboard")
+    
+    # 팀 정보
+    team = project.team
+    members = team.members.filter(is_active=True).select_related("user", "role")
+    member_count_by_role = team.get_member_count_by_role()
+    
+    # 시즌 정보
+    season = None
+    active_season = Season.get_active_season()
+    if active_season:
+        if active_season.project_start <= project.created_at <= active_season.project_end:
+            season = active_season
+    
+    # 가이드 진척도 계산
+    guide_progress = None
+    if project.current_stage:
+        from apps.guides.models import GuideTask, GuideTaskProgress
+        
+        total_tasks = GuideTask.objects.filter(
+            card__stage=project.current_stage
+        ).count()
+        
+        completed_tasks = GuideTaskProgress.objects.filter(
+            task__card__stage=project.current_stage,
+            project=project,
+            user=request.user,
+            is_completed=True
+        ).count()
+        
+        progress_percent = int((completed_tasks / total_tasks * 100) if total_tasks > 0 else 0)
+        
+        guide_progress = {
+            'stage': project.current_stage,
+            'total_tasks': total_tasks,
+            'completed_tasks': completed_tasks,
+            'progress_percent': progress_percent,
+        }
+    
     context = {
-        "project_id": project_id,
+        "project": project,
+        "team": team,
+        "members": members,
+        "member_count_by_role": member_count_by_role,
+        "season": season,
+        "guide_progress": guide_progress,
+        "is_team_member": is_team_member,
     }
+    
     return render(request, "projects/dashboard.html", context)
 
 
 @login_required
-def dashboard_update(request, project_id):
-    """나의 현재 프로젝트 대시보드 수정"""
-    # TODO: 프로젝트 정보 수정 로직
-    # project = get_object_or_404(Project, id=project_id, created_by=request.user)
+@require_http_methods(["GET", "POST"])
+def dashboard_edit(request, project_id):
+    """
+    프로젝트 대시보드 수정 (팀원만)
+    
+    수정 가능 필드:
+    - 서비스명 (title)
+    - 서비스 소개 (description)
+    - 프로필 사진 (project_image)
+    - 팀 규칙 (team_rules)
+    - 관련 링크 (related_links)
+    - 즐겨찾기 (is_favorite)
+    """
+    project = get_object_or_404(Project, id=project_id)
+    
+    # 팀원 권한 확인
+    is_team_member = TeamMember.objects.filter(
+        team__project=project,
+        user=request.user,
+        is_active=True
+    ).exists()
+    
+    if not is_team_member:
+        messages.error(request, "팀원만 수정할 수 있습니다.")
+        return redirect("projects:dashboard_detail", project_id=project_id)
+    
     if request.method == "POST":
-        # 정보 업데이트
-        messages.success(request, "프로젝트가 업데이트되었습니다.")
-        return render(request, "projects/dashboard.html")
+        form = ProjectDashboardEditForm(request.POST, request.FILES, instance=project)
+        links_form = ProjectRelatedLinksForm(request.POST)
+        
+        if form.is_valid() and links_form.is_valid():
+            project = form.save(commit=False)
+            project.related_links = links_form.to_dict()
+            project.save()
+            
+            messages.success(request, "✅ 프로젝트 정보가 수정되었습니다.")
+            return redirect("projects:dashboard_detail", project_id=project_id)
+        else:
+            messages.error(request, "❌ 입력 오류가 있습니다. 다시 확인해주세요.")
+    else:
+        form = ProjectDashboardEditForm(instance=project)
+        related_links = project.related_links or {}
+        links_form = ProjectRelatedLinksForm(initial={
+            "notion_url": related_links.get("notion"),
+            "figma_url": related_links.get("figma"),
+            "github_url": related_links.get("github"),
+        })
     
     context = {
-        "project_id": project_id,
+        "project": project,
+        "form": form,
+        "links_form": links_form,
     }
-    return render(request, "projects/dashboard_update.html", context)
+    
+    return render(request, "projects/dashboard_edit.html", context)
 
 
 @login_required
