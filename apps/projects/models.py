@@ -143,6 +143,31 @@ class Project(models.Model):
         help_text="활동 지역 (오프라인 시)",
     )
 
+    # 대시보드에서 팀원이 수정 가능한 필드
+    project_image = models.ImageField(
+        upload_to="projects/",
+        null=True,
+        blank=True,
+        help_text="프로젝트 프로필 사진",
+    )
+
+    team_rules = models.TextField(
+        null=True,
+        blank=True,
+        help_text="팀 규칙 (마크다운)",
+    )
+
+    related_links = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="관련 링크 (Notion, Figma, GitHub 등)",
+    )
+
+    is_favorite = models.BooleanField(
+        default=False,
+        help_text="즐겨찾기 여부",
+    )
+
     current_stage = models.ForeignKey(
         "guides.GuideStage",
         on_delete=models.SET_NULL,
