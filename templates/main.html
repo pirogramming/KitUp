@@ -1,14 +1,105 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/main.css' %}" />
+{% endblock %} {% block content %}
+<div class="main-container">
+	<img src="{% static 'images/header_img.png' %}" alt="메인이미지" />
+</div>
+<div class="main-note">
+	<div class="main-note-title">
+		<img src="{% static 'images/note_img.png' %}" alt="회고이미지" />
+		<h3>오늘의 작업을 기록해보세요.</h3>
+	</div>
+	<div class="main-note-content">
+		{% if user.is_authenticated %}
+		<div class="login_content">
+			<p class="m_title">서비스명</p>
+			<p class="m_content">[1일차] 초기 세팅</p>
+			<p class="m_date">2026.02.02</p>
+		</div>
+		{% else %}
+		<p class="unlogin_content">로그인 후 이용해보세요.</p>
+		{% endif %}
+	</div>
+	{% if user.is_authenticated %}
+	<button class="m_note_btn" onclick="location.href = '/reflections/'">
+		기록하러 가기
+	</button>
+	{% else %} {% endif %}
+</div>
+<div class="main-team">
+	<!-- 기간별 분기 -->
+	<!-- 매칭기간 O -->
 
+	<!-- 팀 매칭 기간X (다음 팀 매칭 날짜 확정 안 되었을 때) -->
+	<!-- <h3>팀 매칭 모집 기간이 아니예요</h3> -->
+	<!-- 팀 매칭 기간X (다음 팀 매칭 날짜 확정 되었을 때) -->
+	<!-- <h3>팀 매칭 모집 D-N</h3> -->
+	<!-- 팀 매칭 기간O -->
 
-{% block header %}
-
+	<!-- 팀 매칭 발표 -->
+	<div>
+		<h3>팀 매칭 결과가 발표됐어요.</h3>
+		<p>
+			6주의 기간동안 비슷한 실력과 열정을 가진 팀원들과 멋진 서비스를
+			완성해보아요.
+		</p>
+		<a href="{% url 'teams:team_status' %}" class="m_team_result"
+			><p>결과 보러가기</p></a
+		>
+	</div>
+</div>
+<div class="main-project">
+	<div class="m_project_title">
+		<img src="{% static 'images/project_img.png' %}" alt="project_img" />
+		<h3>KITUP 프로젝트</h3>
+	</div>
+	<div class="m_project_content">
+		<!-- 프로젝트 없는 경우 -->
+		<h3 class="m_noproject">진행된 KITUP 프로젝트가 없습니다.</h3>
+		<!-- 프로젝트 있는 경우 -->
+		<!-- 반복문으로 지금까지 있었던 프로젝트 등록 -->
+		<!-- <div class="m_project">
+			<div>
+				<img
+					src="{% static 'images/example_img.png' %}"
+					alt="예시이미지"
+				/>
+				<h3>서비스명</h3>
+				<p>서비스명은 이러이러한 기능을 하는 플랫폼이다</p>
+			</div>
+			<div>
+				<img
+					src="{% static 'images/example_img.png' %}"
+					alt="예시이미지"
+				/>
+				<h3>서비스명</h3>
+				<p>서비스명은 이러이러한 기능을 하는 플랫폼이다</p>
+			</div>
+			<div>
+				<img
+					src="{% static 'images/example_img.png' %}"
+					alt="예시이미지"
+				/>
+				<h3>서비스명</h3>
+				<p>서비스명은 이러이러한 기능을 하는 플랫폼이다</p>
+			</div>
+			<div>
+				<img
+					src="{% static 'images/example_img.png' %}"
+					alt="예시이미지"
+				/>
+				<h3>서비스명</h3>
+				<p>서비스명은 이러이러한 기능을 하는 플랫폼이다</p>
+			</div>
+			<div>
+				<img
+					src="{% static 'images/example_img.png' %}"
+					alt="예시이미지"
+				/>
+				<h3>서비스명</h3>
+				<p>서비스명은 이러이러한 기능을 하는 플랫폼이다</p>
+			</div>
+		</div> -->
+	</div>
+</div>
 {% endblock %}
-
-{% block content %}
-    <div class="initial-container">
-       메인화면
-    </div>
-{% endblock %}
-

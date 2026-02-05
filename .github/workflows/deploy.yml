@@ -1,0 +1,54 @@
+name: Deploy to EC2 with GHCR
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/pirogramming/startlinedev/web:latest
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}      
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}     
+          script: |
+            cd /home/ubuntu/kitup
+            # 서버에서도 GHCR 이미지를 받을 수 있게 로그인
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            # 최신 이미지 가져오고 컨테이너 재실행
+            docker-compose pull web
+            docker-compose up -d --build web
+            
+            # 후처리 작업 (DB 동기화 및 정적파일 수집)
+            docker-compose exec -T web python manage.py migrate
+            docker-compose exec -T web python manage.py collectstatic --noinput

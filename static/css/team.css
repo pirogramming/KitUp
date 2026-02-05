@@ -1,0 +1,104 @@
+body {
+    background: #f6f8ff;
+}
+
+/* 매칭 성공 */
+.team_success {
+    margin-top: 50px;
+    text-align: center;
+    align-items: center;
+}
+
+.team_success h3 {
+    font-size: 25px; font-weight: 550;
+}
+
+.team_member {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center; gap: 20px;
+}
+
+.t_member {
+    position: relative;
+    width: 17%;
+    height: 250px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 2px 2px 0 #999;
+}
+
+.t_member .profile_img {
+    width: 120px; height: 120px;
+}
+
+.t_member .level_img {
+    width: 40px; height: 40px;
+    position: absolute;
+    top: 100px; right: 30px;
+}
+
+.t_member .u_name {
+    margin-top: 20px;
+    font-size: 18px; font-weight: 500;
+}
+
+.t_member .u_stack {
+    margin: 10px auto 0;
+    width: 80%;
+    padding: 5px 10px;
+    color: #FFCE53;
+    border-radius: 20px;
+    box-shadow: 1px 2px 2px 1px #FFCE53;
+    font-size: 16px;
+}
+
+.go_project {
+    display: block;
+    width: 20%; height: 40px;
+    margin: 50px auto 0;
+    padding: 10px 10px;
+    background: #1F4CC0;
+    text-decoration: none; color: #fff;
+    border-radius: 20px;
+}
+
+.go_project p {
+    font-size: 15px; font-weight: 500;
+}
+
+.go_project:hover {
+    background: #4272EF;
+    transition: 0.3s ease;
+}
+
+/* 매칭 실패 */
+.team_fail {
+    margin-top: 15%;
+    text-align: center;
+    align-items: center;
+}
+
+.team_fail h3 {
+    font-size: 30px; font-weight: 550;
+}
+
+.team_fail a {
+    display: block;
+    width: 20%; height: 40px;
+    margin: 50px auto 0;
+    padding: 10px 10px;
+    background: #1F4CC0;
+    text-decoration: none; color: #fff;
+    border-radius: 20px;
+}
+
+.team_fail a p {
+    font-size: 18px; font-weight: 500;
+}
+
+.team_fail a:hover {
+    background: #4272EF;
+    transition: 0.3s ease;
+}

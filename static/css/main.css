@@ -100,7 +100,7 @@ body {
 .main-team {
 	margin-top: 90px;
 	width: 100%;
-	height: 500px;
+	min-height: 300px;
 	padding: 90px 0;
 	background: #f6f8ff;
 	text-align: center;
@@ -236,6 +236,28 @@ body {
 	border-radius: 30px;
 	font-size: 18px;
 	font-weight: 550;
+}
+
+/* 팀 매칭 결과 */
+.m_team_result {
+	display: block;
+	width: 18%; height: 40px;
+	margin: 30px auto 0;
+	padding: 5px 10px;
+	text-decoration: none;
+	background: #1F4CC0;
+	color: #fff;
+	border-radius: 20px;
+}
+
+.m_team_result:hover {
+	background: #4272EF;
+	transition: 0.3s ease-in-out;
+}
+
+.m_team_result p {
+	font-weight: 550; font-size: 18px;
+	line-height: 30px;
 }
 
 /* KITUP 프로젝트 */

@@ -1,9 +1,11 @@
 version: "3.8"
 
 services:
-  db:  # services보다 두 칸 들여쓰기
+  db:
     image: postgres:15-alpine
     container_name: kitup_db
+    env_file:
+      - .env
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -13,14 +15,17 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kitup"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  web:  # services보다 두 칸 들여쓰기
-    image: bimvocado/kitup-web:latest
+  web:
+    image: ghcr.io/pirogramming/startlinedev/web:latest 
+    build: . 
     container_name: kitup_web
+    env_file:
+      - .env
     command: >
       sh -c "
       python manage.py migrate &&
@@ -28,17 +33,16 @@ services:
       python manage.py runserver 0.0.0.0:8000
       "
     volumes:
-      - .:/app
+      - .:/app 
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
       - "8000:8000"
     environment:
-      DEBUG: "True"
       DB_ENGINE: django.db.backends.postgresql
-      DB_NAME: kitup
-      DB_USER: kitup
-      DB_PASSWORD: kitup123
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: db
       DB_PORT: 5432
       REDIS_HOST: redis
@@ -49,7 +53,7 @@ services:
       redis:
         condition: service_started
 
-  redis:  # services보다 두 칸 들여쓰기
+  redis:
     image: redis:7-alpine
     container_name: kitup_redis
     ports:

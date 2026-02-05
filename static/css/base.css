@@ -37,7 +37,7 @@ header .header_menu {
     display: flex;
 }
 
-header .header_menu a {
+header .header_menu > a {
     display: block;
     color: #4272EF;
     width: 110px; height: 40px;
@@ -45,13 +45,13 @@ header .header_menu a {
     border-radius: 20px;
 }
 
-header .header_menu a:hover {
+header .header_menu > a:hover {
     background: #4272EF;
     color: #fff;
     transition: 0.3s ease;
 }
 
-header .header_menu a p {
+header .header_menu > a p {
     padding: 13px auto;
     font-size: 14px; font-weight: bold;
     line-height: 40px;
@@ -60,4 +60,74 @@ header .header_menu a p {
 main {
     padding-top: 60px;
     min-height: calc(100vh - 60px);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.dropdown > a {
+    display: block;
+    color: #4272EF;
+    width: 110px; height: 40px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.dropdown > a:hover {
+    background: #4272EF;
+    color: #fff;
+    transition: 0.5s ease;
+}
+
+.dropdown > a p {
+    padding: 13px auto;
+    font-size: 14px; font-weight: bold;
+    line-height: 40px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 42px;
+    left: -10px;
+    background: #fff;
+    min-width: 130px;
+    overflow: hidden;
+    z-index: 1001;
+    padding-top: 3px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+}
+
+.dropdown-content a {
+    display: block;
+    color: #4272EF;
+    padding: 12px 0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.dropdown-content a:hover {
+    background: #4272EF;
+    color: #fff;
+    transition: 0.5s ease;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }

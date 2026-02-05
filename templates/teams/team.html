@@ -1,0 +1,66 @@
+{% extends 'base.html' %} {% load static %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/team.css' %}" />
+{% endblock %} {% block content %}
+<!-- 매칭 성공 -->
+<div class="team_success">
+	<h3>
+		팀 매칭이 완료 되었어요. <br />
+		내 프로젝트에서 업데이트 된 팀 정보를 확인해보세요.
+	</h3>
+	<div class="team_member">
+		<div class="t_member">
+			<img
+				src="{% static 'images/default_img.png' %}"
+				alt="프로필사진"
+				class="profile_img"
+			/>
+			<img
+				src="{% static 'images/level3.png' %}"
+				alt="level"
+				class="level_img"
+			/>
+			<p class="u_name">user1 (Lv3)</p>
+			<p class="u_stack">프론트엔드</p>
+		</div>
+		<div class="t_member">
+			<img
+				src="{% static 'images/default_img.png' %}"
+				alt="프로필사진"
+				class="profile_img"
+			/>
+			<img
+				src="{% static 'images/level3.png' %}"
+				alt="level"
+				class="level_img"
+			/>
+			<p class="u_name">user1 (Lv3)</p>
+			<p class="u_stack">프론트엔드</p>
+		</div>
+        <div class="t_member">
+            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
+            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
+            <p class="u_name">user1 (Lv3)</p>
+            <p class="u_stack">프론트엔드</p>
+        </div>
+        <div class="t_member">
+            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
+            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
+            <p class="u_name">user1 (Lv3)</p>
+            <p class="u_stack">프론트엔드</p>
+        </div>
+        <div class="t_member">
+            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
+            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
+            <p class="u_name">user1 (Lv3)</p>
+            <p class="u_stack">프론트엔드</p>
+        </div>
+	</div>
+    <a href="{% url 'projects:dashboard' %}" class="go_project"><p>내 프로젝트로 이동</p></a>
+</div>
+<!-- 매칭 실패 -->
+<!-- <div class="team_fail">
+    <h3>팀 매칭에 실패했어요. <br>
+    다음 팀 매칭을 기다려주세요.</h3>
+    <a href="{% url 'main' %}"><p>메인화면으로 이동</p></a>
+</div> -->
+{% endblock %}
