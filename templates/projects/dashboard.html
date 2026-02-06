@@ -4,5 +4,143 @@
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
 {% endblock %} 
 {% block content %}
-프로젝트 
+<section class="p_header">
+    <a href="{% url 'projects:dashboard' %}" class="p_dashboard"><p>DASHBOARD</p></a>
+    <a href="{% url 'guides:mission' %}" class="p_mission"><p>MISSION</p></a>
+</section>
+<div class="dashboard">
+<!-- 메모장에 있는 것 복붙하기 -->
+    <div class="d_service">
+        <img src="{% static 'images/service_default.png' %}" alt="서비스이미지">
+        <h3>{서비스명}</h3>
+        <p>{서비스는 어떤 문제를 해결하기 위한 어떤 서비스입니다.}</p>
+    </div>
+    <div class="d_period">
+        <img src="{% static 'images/calender.png' %}" alt="달력이미지">
+        <p><span class="period_title">진행기간 </span>2026/01/25 ~ 2026/02/19</p>
+    </div>
+    <div class="d_bookmark">
+        <div class="b_title">
+            <img src="{% static 'images/bookmark.png' %}" alt="북마크이미지">
+            <p>즐겨찾기</p>
+        </div>
+        <div class="b_content">
+            <p>즐겨찾기 컨텐츠 1</p>
+            <p>즐겨찾기 컨텐츠 2</p>
+            <p>즐겨찾기 컨텐츠 3</p>
+        </div>
+    </div>
+    <hr>
+    <div class="d_team">
+        <div class="t_title">
+            <img src="{% static 'images/team_flag.png' %}" alt="팀 아이콘">
+            <h3>Team</h3>
+            <div class="t_report">
+                <img src="{% static 'images/report.png' %}" alt="신고하기">
+                <a href=""><p>버스 탑승자 신고하기</p></a>
+            </div>
+        </div>
+        <div class="t_content">
+            <p><span class="t_role">PM</span>
+                   {% for member in members %}
+                    {% if member.role.name == "기획자" %}
+                    {{ member.user.username }}
+                    {% endif %}
+                    {% endfor %}user1</p>
+            <p><span class="t_role">FE</span> 
+                   {% for member in members %}
+                    {% if member.role.name == "프론트엔드" %}
+                    {{ member.user.username }}
+                    {% endif %}
+                    {% endfor %}                
+                user2 user3</p>
+            <p><span class="t_role">BE</span> 
+                   {% for member in members %}
+                    {% if member.role.name == "백엔드" %}
+                    {{ member.user.username }}
+                    {% endif %}
+                    {% endfor %}                  
+                user4, user4</p>
+            <div class="t_member">
+                <!-- 멤버 정보 반복문 써야 함 -->
+                <div class="member">
+                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
+                    <h3>user1</h3>
+                    <p class="info">✉️ user1@naver.com</p>
+                    <p class="info">🖥️ @user</p>
+                    <p class="role_design">기획자</p>
+                </div>
+                <div class="member">
+                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
+                    <h3>user1</h3>
+                    <p class="info">✉️ user1@naver.com</p>
+                    <p class="info">🖥️ @user</p>
+                    <p class="role_frontend">프론트엔드</p>
+                </div>
+                <div class="member">
+                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
+                    <h3>user1</h3>
+                    <p class="info">✉️ user1@naver.com</p>
+                    <p class="info">🖥️ @user</p>
+                    <p class="role_backend">백엔드</p>
+                </div>
+                <div class="member">
+                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
+                    <h3>user1</h3>
+                    <p class="info">✉️ user1@naver.com</p>
+                    <p class="info">🖥️ @user</p>
+                    <p class="role_design">기획자</p>
+                </div>
+                <div class="member">
+                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
+                    <h3>user1</h3>
+                    <p class="info">✉️ user1@naver.com</p>
+                    <p class="info">🖥️ @user</p>
+                    <p class="role_design">기획자</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d_rule">
+        <div class="r_title">
+            <img src="{% static 'images/rule.png' %}" alt="rule">
+            <h3>팀 규칙</h3>
+        </div>
+        <div class="r_content">
+            <p>1. 규칙 1번입니다.</p>
+            <p>2. 규칙 2번입니다.</p>
+            <p>3. 규칙 3번입니다.</p>
+            <p>4. 규칙 4번입니다.</p>
+            <p>5. 규칙 5번입니다.</p>
+        </div>
+    </div>
+    <div class="d_link">
+        <div class="l_title">
+            <img src="{% static 'images/link.png' %}" alt="link">
+            <h3>관련 링크</h3>
+        </div>
+        <div class="l_content">
+            <p>Notion : </p>
+            <p>Figma : </p>
+            <p>Github : </p>
+        </div>
+    </div>
+    <div class="d_progress">
+        <div class="p_title">
+            <img src="{% static 'images/progress.png' %}" alt="progress">
+            <h3>진척도</h3>
+        </div>
+        <div class="p_content">
+            <div class="p_bar"></div>
+            <div class="p_real"></div>
+        </div>
+    </div>
+    <button type="button">수정하기</button>
+    <!-- 이하동문 --> 
+</div>
 {% endblock %}

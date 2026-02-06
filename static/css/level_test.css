@@ -1,0 +1,263 @@
+/* level_test.css */
+
+.level-test-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 문항 화면 */
+.questions-screen {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 4px;
+    margin-bottom: 40px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5b73e8, #7c8fe8);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.question-header {
+    margin-bottom: 32px;
+}
+
+.question-number {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #5b73e8;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+}
+
+.question-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.4;
+}
+
+.options-container {
+    margin-bottom: 40px;
+}
+
+.option-item {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.option-item:hover {
+    background: #f3f4f6;
+    border-color: #5b73e8;
+}
+
+.option-item input[type="radio"] {
+    display: none;
+}
+
+.option-item input[type="radio"]:checked + label {
+    color: #5b73e8;
+    font-weight: 600;
+}
+
+.option-item:has(input[type="radio"]:checked) {
+    background: #eef2ff;
+    border-color: #5b73e8;
+}
+
+.option-item label {
+    display: block;
+    width: 100%;
+    font-size: 16px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-prev,
+.btn-next,
+.btn-submit {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-prev {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.btn-prev:hover {
+    background: #e5e7eb;
+}
+
+.btn-next,
+.btn-submit {
+    background: #5b73e8;
+    color: #fff;
+}
+
+.btn-next:hover,
+.btn-submit:hover {
+    background: #4a5fc8;
+}
+
+/* 결과 화면 */
+.result-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 500px;
+}
+
+.result-content {
+    text-align: center;
+    max-width: 500px;
+}
+
+.result-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+}
+
+.result-content h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 16px;
+}
+
+.result-content > p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+.result-content > p span {
+    color: #5b73e8;
+    font-weight: 600;
+}
+
+.result-level-badge {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    background: linear-gradient(135deg, #5b73e8, #7c8fe8);
+    color: #fff;
+    padding: 24px 48px;
+    border-radius: 16px;
+    margin: 24px 0;
+    box-shadow: 0 8px 24px rgba(91, 115, 232, 0.3);
+}
+
+.level-text {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.level-number {
+    font-size: 48px;
+    font-weight: 700;
+}
+
+.result-score {
+    font-size: 18px;
+    color: #374151;
+    font-weight: 600;
+    margin: 16px 0 24px 0;
+}
+
+.result-score span {
+    color: #5b73e8;
+    font-size: 20px;
+}
+
+.result-description {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+.btn-home {
+    background: #5b73e8;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-home:hover {
+    background: #4a5fc8;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .level-test-container {
+        padding: 20px 16px;
+    }
+
+    .questions-screen {
+        padding: 24px 20px;
+    }
+
+    .question-title {
+        font-size: 20px;
+    }
+
+    .button-container {
+        flex-direction: column;
+    }
+
+    .btn-prev,
+    .btn-next,
+    .btn-submit {
+        width: 100%;
+    }
+
+    .result-level-badge {
+        padding: 20px 40px;
+    }
+
+    .level-text {
+        font-size: 20px;
+    }
+
+    .level-number {
+        font-size: 40px;
+    }
+}

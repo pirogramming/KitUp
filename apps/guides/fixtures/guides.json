@@ -1,0 +1,1458 @@
+[
+  {
+    "model": "guides.GuideCard",
+    "pk": 1,
+    "fields": {
+      "role": 1,
+      "title": "1. 팀 커뮤니케이션 채널 개설",
+      "content_md": "디스코드/슬랙 등 팀플용 채널 생성",
+      "order_no": 1,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 1,
+    "fields": {
+      "card": 1,
+      "title": "디스코드/슬랙 등 팀플용 채널 생성",
+      "description": "검색 키워드: 디스코드 서버 만들기 / 슬랙 워크스페이스 만들기",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 2,
+    "fields": {
+      "card": 1,
+      "title": "팀원 이메일로 초대 링크 공유",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 2,
+    "fields": {
+      "role": 1,
+      "title": "2. 문서 협업 툴 준비",
+      "content_md": "노션/구글독스 계정 생성",
+      "order_no": 2,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 3,
+    "fields": {
+      "card": 2,
+      "title": "노션/구글독스 계정 생성",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 4,
+    "fields": {
+      "card": 2,
+      "title": "팀 회의록 페이지 생성 및 공유",
+      "description": "검색 키워드: 노션 회의록 템플릿",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 3,
+    "fields": {
+      "role": 1,
+      "title": "3. 첫 팀 미팅 진행",
+      "content_md": "",
+      "order_no": 3,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 5,
+    "fields": {
+      "card": 3,
+      "title": "자기소개",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 6,
+    "fields": {
+      "card": 3,
+      "title": "프로젝트 참여 목적 공유",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 7,
+    "fields": {
+      "card": 3,
+      "title": "팀 규칙 간단히 정하기",
+      "description": "",
+      "order_no": 3,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 4,
+    "fields": {
+      "role": 1,
+      "title": "4. 기본 운영 규칙 합의",
+      "content_md": "",
+      "order_no": 4,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 8,
+    "fields": {
+      "card": 4,
+      "title": "정기 회의 주기",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 9,
+    "fields": {
+      "card": 4,
+      "title": "스크럼(데일리/주간) 여부",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 10,
+    "fields": {
+      "card": 4,
+      "title": "응답 시간 기준",
+      "description": "",
+      "order_no": 3,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 11,
+    "fields": {
+      "card": 4,
+      "title": "연락 불가 일정 미리 공유",
+      "description": "",
+      "order_no": 4,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 5,
+    "fields": {
+      "role": 1,
+      "title": "5. 아이디어 공유 미팅 진행",
+      "content_md": "",
+      "order_no": 5,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 12,
+    "fields": {
+      "card": 5,
+      "title": "각자 생각한 서비스/프로젝트 아이디어 공유",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 13,
+    "fields": {
+      "card": 5,
+      "title": "현실성/기간 고려해 후보 압축",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 6,
+    "fields": {
+      "role": 1,
+      "title": "6. 프로젝트 방향 결정",
+      "content_md": "",
+      "order_no": 6,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 14,
+    "fields": {
+      "card": 6,
+      "title": "서비스 목표 (학습용 / 포폴 / 출시)",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 15,
+    "fields": {
+      "card": 6,
+      "title": "MVP 범위 합의",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 7,
+    "fields": {
+      "role": 1,
+      "title": "7. 기획 문서 작성",
+      "content_md": "",
+      "order_no": 7,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 16,
+    "fields": {
+      "card": 7,
+      "title": "서비스 개요",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 17,
+    "fields": {
+      "card": 7,
+      "title": "주요 기능",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 18,
+    "fields": {
+      "card": 7,
+      "title": "사용자 흐름 정리",
+      "description": "검색 키워드: 서비스 기획서 작성 양식",
+      "order_no": 3,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 8,
+    "fields": {
+      "role": 1,
+      "title": "8. 팀원 피드백 반영",
+      "content_md": "",
+      "order_no": 8,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 19,
+    "fields": {
+      "card": 8,
+      "title": "프론트/백 의견 수렴",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 20,
+    "fields": {
+      "card": 8,
+      "title": "기술적으로 어려운 부분 조정",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 9,
+    "fields": {
+      "role": 1,
+      "title": "9. 역할별 업무 범위 정리",
+      "content_md": "",
+      "order_no": 9,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 21,
+    "fields": {
+      "card": 9,
+      "title": "프론트 / 백 / 기타 역할 명확화",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 22,
+    "fields": {
+      "card": 9,
+      "title": "누가 무엇을 언제까지 할지 정리",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 10,
+    "fields": {
+      "role": 1,
+      "title": "10. 진행 상황 주기적 체크",
+      "content_md": "",
+      "order_no": 10,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 23,
+    "fields": {
+      "card": 10,
+      "title": "일정 밀리는 부분 확인",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 24,
+    "fields": {
+      "card": 10,
+      "title": "병목 발생 시 우선순위 재조정",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 11,
+    "fields": {
+      "role": 1,
+      "title": "11. 팀 분위기 관리",
+      "content_md": "",
+      "order_no": 11,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 25,
+    "fields": {
+      "card": 11,
+      "title": "진행 중 어려움 공유",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 26,
+    "fields": {
+      "card": 11,
+      "title": "중간 목표 달성 시 간단한 피드백",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 12,
+    "fields": {
+      "role": 1,
+      "title": "12. 결과물 활용 방향 논의",
+      "content_md": "",
+      "order_no": 12,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 27,
+    "fields": {
+      "card": 12,
+      "title": "배포 여부",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 28,
+    "fields": {
+      "card": 12,
+      "title": "포트폴리오 정리",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 29,
+    "fields": {
+      "card": 12,
+      "title": "홍보 방식 논의",
+      "description": "오픈채팅 / SNS / 커뮤니티 등",
+      "order_no": 3,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 13,
+    "fields": {
+      "role": 2,
+      "title": "1. 팀 커뮤니케이션 채널 참여",
+      "content_md": "",
+      "order_no": 1,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 30,
+    "fields": {
+      "card": 13,
+      "title": "PM이 공유한 팀플 채널 입장",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 14,
+    "fields": {
+      "role": 2,
+      "title": "2. 기획 내용 숙지",
+      "content_md": "",
+      "order_no": 2,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 31,
+    "fields": {
+      "card": 14,
+      "title": "기획 문서 읽고 전체 흐름 파악",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 32,
+    "fields": {
+      "card": 14,
+      "title": "핵심 사용자 화면 정리",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 15,
+    "fields": {
+      "role": 2,
+      "title": "3. 디자인 컨셉 리서치",
+      "content_md": "",
+      "order_no": 3,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 33,
+    "fields": {
+      "card": 15,
+      "title": "유사 서비스/디자인 레퍼런스 조사",
+      "description": "검색 키워드: Pinterest UI reference",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 16,
+    "fields": {
+      "role": 2,
+      "title": "4. 레퍼런스 공유 및 합의",
+      "content_md": "",
+      "order_no": 4,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 34,
+    "fields": {
+      "card": 16,
+      "title": "팀원들에게 디자인 방향 공유",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 35,
+    "fields": {
+      "card": 16,
+      "title": "피드백 반영해 방향 확정",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 17,
+    "fields": {
+      "role": 2,
+      "title": "5. 디자인 도구 선택",
+      "content_md": "",
+      "order_no": 5,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 36,
+    "fields": {
+      "card": 17,
+      "title": "Figma / Adobe XD / 기타 도구 선택",
+      "description": "검색 키워드: Figma 사용법",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 18,
+    "fields": {
+      "role": 2,
+      "title": "6. 컬러·폰트 가이드 정리",
+      "content_md": "",
+      "order_no": 6,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 37,
+    "fields": {
+      "card": 18,
+      "title": "컬러칩",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 38,
+    "fields": {
+      "card": 18,
+      "title": "기본 폰트",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 39,
+    "fields": {
+      "card": 18,
+      "title": "버튼/텍스트 스타일",
+      "description": "",
+      "order_no": 3,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 19,
+    "fields": {
+      "role": 2,
+      "title": "7. 와이어프레임 제작",
+      "content_md": "",
+      "order_no": 7,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 40,
+    "fields": {
+      "card": 19,
+      "title": "주요 화면 구조 설계",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 41,
+    "fields": {
+      "card": 19,
+      "title": "사용자 흐름 중심으로 구성",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 20,
+    "fields": {
+      "role": 2,
+      "title": "8. 와이어프레임 리뷰",
+      "content_md": "",
+      "order_no": 8,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 42,
+    "fields": {
+      "card": 20,
+      "title": "팀원 피드백 반영",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 43,
+    "fields": {
+      "card": 20,
+      "title": "수정사항 반영",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 21,
+    "fields": {
+      "role": 2,
+      "title": "9. 최종 UI 디자인 완성",
+      "content_md": "",
+      "order_no": 9,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 44,
+    "fields": {
+      "card": 21,
+      "title": "색상/아이콘/여백 적용",
+      "description": "검색 키워드: 사용자 편의성 UI 디자인",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 22,
+    "fields": {
+      "role": 2,
+      "title": "10. 퍼블리싱 또는 프론트 구현",
+      "content_md": "",
+      "order_no": 10,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 45,
+    "fields": {
+      "card": 22,
+      "title": "HTML/CSS 또는 React/Vue 등 선택",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 46,
+    "fields": {
+      "card": 22,
+      "title": "컴포넌트 단위로 구현",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 23,
+    "fields": {
+      "role": 2,
+      "title": "11. 백엔드 연동 고려",
+      "content_md": "",
+      "order_no": 11,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 47,
+    "fields": {
+      "card": 23,
+      "title": "데이터 위치/형식 파악",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 48,
+    "fields": {
+      "card": 23,
+      "title": "API 연동 포인트 확인",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 24,
+    "fields": {
+      "role": 2,
+      "title": "12. 반응형/기본 UX 점검",
+      "content_md": "",
+      "order_no": 12,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 49,
+    "fields": {
+      "card": 24,
+      "title": "모바일/데스크톱 기본 대응",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 50,
+    "fields": {
+      "card": 24,
+      "title": "버튼/폼 동작 확인",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 25,
+    "fields": {
+      "role": 2,
+      "title": "13. UI 수정 및 정리",
+      "content_md": "",
+      "order_no": 13,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 51,
+    "fields": {
+      "card": 25,
+      "title": "실제 사용 시 불편한 부분 개선",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 26,
+    "fields": {
+      "role": 3,
+      "title": "1. 기획 및 기능 범위 파악",
+      "content_md": "",
+      "order_no": 1,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 52,
+    "fields": {
+      "card": 26,
+      "title": "어떤 기능을 서버에서 담당하는지 확인",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 27,
+    "fields": {
+      "role": 3,
+      "title": "2. 기술 스택 결정",
+      "content_md": "",
+      "order_no": 2,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 53,
+    "fields": {
+      "card": 27,
+      "title": "Django / Spring / Node 등 선택",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 54,
+    "fields": {
+      "card": 27,
+      "title": "DB 종류 선택",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 28,
+    "fields": {
+      "role": 3,
+      "title": "3. 프로젝트 초기 세팅",
+      "content_md": "",
+      "order_no": 3,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 55,
+    "fields": {
+      "card": 28,
+      "title": "서버 프로젝트 생성",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 56,
+    "fields": {
+      "card": 28,
+      "title": "기본 폴더 구조 정리",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 29,
+    "fields": {
+      "role": 3,
+      "title": "4. DB 모델 설계",
+      "content_md": "",
+      "order_no": 4,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 57,
+    "fields": {
+      "card": 29,
+      "title": "핵심 엔티티 정의",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 58,
+    "fields": {
+      "card": 29,
+      "title": "관계 설정",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 30,
+    "fields": {
+      "role": 3,
+      "title": "5. 기본 CRUD 설계",
+      "content_md": "",
+      "order_no": 5,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 59,
+    "fields": {
+      "card": 30,
+      "title": "생성 / 조회 / 수정 / 삭제 흐름 정리",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 31,
+    "fields": {
+      "role": 3,
+      "title": "6. API 구조 설계",
+      "content_md": "",
+      "order_no": 6,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 60,
+    "fields": {
+      "card": 31,
+      "title": "엔드포인트 네이밍",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 61,
+    "fields": {
+      "card": 31,
+      "title": "요청/응답 형식 정의",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 32,
+    "fields": {
+      "role": 3,
+      "title": "7. 인증/권한 고려",
+      "content_md": "",
+      "order_no": 7,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 62,
+    "fields": {
+      "card": 32,
+      "title": "로그인 여부",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 63,
+    "fields": {
+      "card": 32,
+      "title": "사용자별 접근 제한",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 33,
+    "fields": {
+      "role": 3,
+      "title": "8. API 구현",
+      "content_md": "",
+      "order_no": 8,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 64,
+    "fields": {
+      "card": 33,
+      "title": "기능 단위로 구현",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 65,
+    "fields": {
+      "card": 33,
+      "title": "예외 상황 처리",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 34,
+    "fields": {
+      "role": 3,
+      "title": "9. API 테스트",
+      "content_md": "",
+      "order_no": 9,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 66,
+    "fields": {
+      "card": 34,
+      "title": "Postman / curl / 테스트 코드로 요청 확인",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 67,
+    "fields": {
+      "card": 34,
+      "title": "정상/에러 케이스 점검",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 35,
+    "fields": {
+      "role": 3,
+      "title": "10. 프론트 연동 지원",
+      "content_md": "",
+      "order_no": 10,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 68,
+    "fields": {
+      "card": 35,
+      "title": "프론트 요청 사항 반영",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 69,
+    "fields": {
+      "card": 35,
+      "title": "데이터 형식 조정",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 36,
+    "fields": {
+      "role": 3,
+      "title": "11. 환경 설정 분리",
+      "content_md": "",
+      "order_no": 11,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 70,
+    "fields": {
+      "card": 36,
+      "title": "로컬 / 배포 환경 구분",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 37,
+    "fields": {
+      "role": 3,
+      "title": "12. 배포 준비",
+      "content_md": "",
+      "order_no": 12,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 71,
+    "fields": {
+      "card": 37,
+      "title": "서버 실행 방식 정리",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 72,
+    "fields": {
+      "card": 37,
+      "title": "도메인/HTTPS 고려",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideCard",
+    "pk": 38,
+    "fields": {
+      "role": 3,
+      "title": "13. 기능 안정화",
+      "content_md": "",
+      "order_no": 13,
+      "is_active": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 73,
+    "fields": {
+      "card": 38,
+      "title": "에러 로그 확인",
+      "description": "",
+      "order_no": 1,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "guides.GuideTask",
+    "pk": 74,
+    "fields": {
+      "card": 38,
+      "title": "성능/보안 기본 점검",
+      "description": "",
+      "order_no": 2,
+      "is_required": true,
+      "created_at": "2026-02-06T00:00:00Z",
+      "updated_at": "2026-02-06T00:00:00Z"
+    }
+  }
+]

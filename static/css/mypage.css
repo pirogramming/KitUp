@@ -1,0 +1,325 @@
+/* mypage.css */
+
+.mypage-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #fff;
+}
+
+.profile-card {
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    overflow: visible;
+    position: relative;
+}
+
+/* 상단 배너 영역 */
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 160px;
+    background-color: #EAF0FF;
+    border-radius: 20px 20px 0 0;
+    z-index: 0;
+}
+
+/* 카드 내부 컨테이너 */
+.profile-card {
+    display: flex;
+    padding-top: 160px;
+    position: relative;
+}
+
+/* 왼쪽 프로필 영역 - 50% */
+.user-info-side {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 50px 50px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 프로필 이미지 - 배너와 카드 사이에 걸침 */
+.avatar-container {
+    position: absolute;
+    top: -100px;
+    width: 180px;
+    height: 180px;
+    margin-bottom: 20px;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #d1d5db;
+    border: 6px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 42px;
+    height: 42px;
+    background-color: #6b7280;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 3px solid #fff;
+    transition: background-color 0.2s;
+}
+
+.edit-badge:hover {
+    background-color: #4b5563;
+}
+
+.edit-badge img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}
+
+/* 레벨 태그 */
+.level-tag {
+    background-color: #6B8AFF;
+    color: white;
+    padding: 10px 35px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 100px;
+    margin-bottom: 30px;
+}
+
+/* 정보 테이블 */
+.info-table {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+}
+
+.info-row .label {
+    font-weight: 700;
+    font-size: 18px;
+    color: #000;
+    min-width: 90px;
+}
+
+.info-row .value {
+    font-size: 17px;
+    color: #4b5563;
+    margin-left: 40px;
+}
+
+/* 프로필 수정 버튼 */
+.edit-button {
+    margin-top: 175px;
+    width: 100%;
+    max-width: 240px;
+    padding: 14px 0;
+    background-color: #4F75FF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+    background-color: #3d5dd1;
+}
+
+/* 오른쪽 콘텐츠 영역 - 50% */
+.content-side {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 40px 50px 50px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 기술 스택 박스 */
+.tech-stack-box {
+    background-color: white;
+    border: 2px solid #A4BDFD;
+    border-radius: 20px;
+    padding: 35px;
+}
+
+.side-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 24px 0;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.tag-item {
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 17px;
+    font-weight: 600;
+    border: 2px solid;
+}
+
+/* 기술 스택별 색상 */
+.tag-javascript {
+    color: #06D6A0;
+    border-color: #06D6A0;
+    background-color: transparent;
+}
+
+.tag-react-native,
+.tag-react,
+.tag-reactnative {
+    color: #FFC107;
+    border-color: #FFC107;
+    background-color: transparent;
+}
+
+.tag-html {
+    color: #00B4D8;
+    border-color: #00B4D8;
+    background-color: transparent;
+}
+
+/* 프로젝트 그리드 */
+.project-list-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.project-item-card {
+    background-color: #fff;
+    border: 2px solid #A4BDFD;
+    border-radius: 20px;
+    padding: 35px;
+    min-height: 160px;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-item-card.empty {
+    opacity: 0.7;
+}
+
+.item-label {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 15px 0;
+}
+
+.item-project-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 auto 0;
+}
+
+.item-role-tag {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 8px 18px;
+    background-color: #6B8AFF;
+    color: white;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 18px;
+}
+
+.empty-msg {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+/* 반응형 */
+@media (max-width: 1024px) {
+    .user-info-side,
+    .content-side {
+        flex: 0 0 50%;
+        padding: 40px 30px;
+    }
+    
+    .info-table {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-card {
+        flex-direction: column;
+        padding-top: 140px;
+    }
+    
+    .profile-card::before {
+        height: 140px;
+    }
+
+    .user-info-side {
+        flex: none;
+        width: 100%;
+        padding: 80px 30px 40px;
+    }
+    
+    .avatar-container {
+        top: -80px;
+        width: 140px;
+        height: 140px;
+    }
+    
+    .level-tag {
+        margin-top: 80px;
+    }
+
+    .content-side {
+        flex: none;
+        width: 100%;
+        padding: 20px 30px 40px;
+    }
+
+    .project-list-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-row .label {
+        font-size: 16px;
+    }
+    
+    .info-row .value {
+        font-size: 15px;
+    }
+}

@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}KITUP - 레벨테스트{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/level_test.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="level-test-container">
+    <!-- 숨겨진 트랙 체크 필드 -->
+    <input type="hidden" id="selected-track" name="selected_track" value="{{ role}}">
+    <input type="hidden" id="track-completed" name="track_completed" value="false">
+
+    <!-- 문항 화면 -->
+    <div id="questions-screen" class="questions-screen">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <div class="question-header">
+            <span class="question-number" id="question-number">1/10</span>
+            <h2 class="question-title" id="question-title"></h2>
+        </div>
+
+        <form id="level-test-form">
+            <div class="options-container" id="options-container">
+                <!-- 동적으로 생성될 옵션들 -->
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="btn-prev" id="btn-prev" style="display: none;">이전</button>
+                <button type="button" class="btn-next" id="btn-next">다음</button>
+                <button type="submit" class="btn-submit" id="btn-submit" style="display: none;">제출하기</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 결과 화면 -->
+    <div id="result-screen" class="result-screen" style="display: none;">
+        <div class="result-content">
+            <div class="result-icon">🎉</div>
+            <h2>진단이 완료되었습니다!</h2>
+            <p>당신의 <span id="result-track"></span> 레벨은</p>
+            <div class="result-level-badge">
+                <span class="level-text">Level</span>
+                <span class="level-number" id="result-level"></span>
+            </div>
+        
+            <p class="result-description" id="result-description"></p>
+            <button class="btn-home" onclick="location.href='/'">홈으로 돌아가기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 문항 데이터
+const questions = {
+  FRONTEND: [
+    {
+      question: "1. Figma를 얼마나 활용할 수 있나요?",
+      options: [
+        "써본 적 없다",
+        "회원가입 후 몇 가지 기능만 눌러봤다",
+        "검색하며 간단한 화면은 만들 수 있다",
+        "하나 이상의 디자인 시안을 만들어본 경험이 있다",
+        "컴포넌트·오토레이아웃을 활용해 능숙하게 다룬다"
+      ]
+    },
+    {
+      question: "2. HTML로 페이지 구조를 직접 잡아본 적이 있나요?",
+      options: [
+        "HTML을 직접 작성해본 적이 없다",
+        "튜토리얼을 따라 작성해본 적이 있다",
+        "간단한 페이지 구조를 직접 작성할 수 있다",
+        "의미 있는 태그 구조를 고려해 작성해본 경험이 있다",
+        "접근성과 유지보수를 고려한 구조를 설계할 수 있다"
+      ]
+    },
+    {
+      question: "3. CSS로 레이아웃을 구성해본 적이 있나요?",
+      options: [
+        "CSS를 거의 사용해본 적이 없다",
+        "기본 스타일만 수정해봤다",
+        "Flex 또는 Grid를 사용해 레이아웃을 구성할 수 있다",
+        "복잡한 레이아웃을 혼자서 구성해본 경험이 있다",
+        "다양한 해상도를 고려한 레이아웃 설계가 가능하다"
+      ]
+    },
+    {
+      question: "4. 반응형 웹을 구현해본 경험이 있나요?",
+      options: [
+        "반응형 개념을 잘 모른다",
+        "미디어쿼리를 들어본 적은 있다",
+        "간단한 반응형 레이아웃을 구현해봤다",
+        "여러 해상도를 고려해 반응형 페이지를 만들어봤다",
+        "모바일 퍼스트 관점에서 반응형 설계가 가능하다"
+      ]
+    },
+    {
+      question: "5. JavaScript로 반응형 UI를 만들어본 적이 있나요?",
+      options: [
+        "JavaScript를 거의 사용해본 적이 없다",
+        "간단한 이벤트 처리만 해봤다",
+        "폼 처리나 UI 변경을 구현해봤다",
+        "상태에 따라 화면이 바뀌는 로직을 구현해봤다",
+        "복잡한 사용자 흐름을 JS로 관리해본 경험이 있다"
+      ]
+    },
+    {
+      question: "6. API에서 받은 JSON 데이터를 화면에 보여준 적이 있나요?",
+      options: [
+        "API를 사용해본 적이 없다",
+        "예제를 따라 API 호출을 해본 적이 있다",
+        "API 응답을 받아 화면에 출력해봤다",
+        "여러 API를 조합해 화면을 구성해봤다",
+        "에러 처리까지 고려해 API 연동을 구현해봤다"
+      ]
+    },
+    {
+      question: "7. 컴포넌트 단위로 UI를 나누어 만들어본 적이 있나요?",
+      options: [
+        "컴포넌트 개념이 익숙하지 않다",
+        "튜토리얼에서 컴포넌트를 사용해봤다",
+        "재사용 가능한 컴포넌트를 만들어봤다",
+        "프로젝트에서 컴포넌트 구조를 설계해봤다",
+        "확장성과 유지보수를 고려한 컴포넌트 설계가 가능하다"
+      ]
+    },
+    {
+      question: "8. 디자인 시안을 보고 비슷한 화면을 구현해본 경험이 있나요?",
+      options: [
+        "시안을 보고 구현해본 적이 없다",
+        "단순한 화면만 구현해봤다",
+        "시안과 유사한 화면을 구현할 수 있다",
+        "디테일까지 맞추어 구현해본 경험이 있다",
+        "디자인 의도를 해석해 구현할 수 있다"
+      ]
+    },
+    {
+      question: "9. 브라우저 개발자 도구로 디버깅해본 경험이 있나요?",
+      options: [
+        "개발자 도구를 사용해본 적이 없다",
+        "콘솔 로그 정도만 확인해봤다",
+        "스타일/요소를 수정하며 확인해봤다",
+        "네트워크·콘솔을 활용해 문제를 해결해봤다",
+        "개발자 도구를 적극적으로 활용해 디버깅한다"
+      ]
+    },
+    {
+      question: "10. Git으로 협업해본 경험이 있나요?",
+      options: [
+        "Git을 거의 사용해본 적이 없다",
+        "개인 프로젝트에서만 사용해봤다",
+        "브랜치를 사용해 작업해봤다",
+        "충돌을 해결하며 협업해본 경험이 있다",
+        "협업 흐름을 이해하고 Git을 사용할 수 있다"
+      ]
+    }
+  ],
+
+  BACKEND: [
+    {
+      question: "1. Django 같은 서버 프레임워크를 사용해 본 적이 있나요?",
+      options: [
+        "사용해본 적 없다",
+        "튜토리얼을 따라 실행해봤다",
+        "간단한 API나 페이지를 만들어봤다",
+        "프로젝트 구조를 이해하고 개발해봤다",
+        "구조를 설계하며 개발할 수 있다"
+      ]
+    },
+    {
+      question: "2. 데이터베이스를 설계해본 경험이 있나요?",
+      options: [
+        "DB를 직접 다뤄본 적이 없다",
+        "기존 테이블을 사용해본 적이 있다",
+        "간단한 테이블을 직접 설계해봤다",
+        "관계를 고려한 DB 설계를 해봤다",
+        "정규화를 고려한 DB 설계가 가능하다"
+      ]
+    },
+    {
+      question: "3. ORM(Django ORM 등)을 사용해본 경험이 있나요?",
+      options: [
+        "ORM을 사용해본 적이 없다",
+        "기본 CRUD만 사용해봤다",
+        "필터링/정렬을 사용해봤다",
+        "관계 모델을 활용해본 경험이 있다",
+        "ORM 쿼리를 설계 단계에서 고려한다"
+      ]
+    },
+    {
+      question: "4. REST API를 설계해본 적이 있나요?",
+      options: [
+        "API 개념이 익숙하지 않다",
+        "예제를 따라 만들어봤다",
+        "간단한 API를 직접 설계해봤다",
+        "여러 API를 일관성 있게 설계해봤다",
+        "확장성과 유지보수를 고려한 설계가 가능하다"
+      ]
+    },
+    {
+      question: "5. 로그인(인증) 기능을 구현해본 적이 있나요?",
+      options: [
+        "구현해본 적 없다",
+        "라이브러리를 그대로 사용해봤다",
+        "로그인/회원가입을 구현해봤다",
+        "권한에 따른 접근 제어를 구현해봤다",
+        "보안을 고려한 인증 구조를 설계해봤다"
+      ]
+    },
+    {
+      question: "6. 에러 처리 및 예외 처리를 해본 적이 있나요?",
+      options: [
+        "거의 해본 적 없다",
+        "오류 발생 시 로그만 찍어봤다",
+        "기본적인 예외 처리를 해봤다",
+        "사용자/서버 에러를 구분해 처리해봤다",
+        "에러 상황을 설계 단계에서 고려한다"
+      ]
+    },
+    {
+      question: "7. 외부 API 연동 경험이 있나요?",
+      options: [
+        "외부 API를 사용해본 적 없다",
+        "예제 API를 호출해봤다",
+        "프로젝트에서 외부 API를 사용해봤다",
+        "실패 상황을 고려해 연동해봤다",
+        "외부 API 의존성을 고려해 구조를 설계한다"
+      ]
+    },
+    {
+      question: "8. 서버를 배포해본 적이 있나요?",
+      options: [
+        "배포해본 적 없다",
+        "튜토리얼을 따라 배포해봤다",
+        "개인 프로젝트를 배포해봤다",
+        "여러 번 배포하며 문제를 해결해봤다",
+        "배포 구조를 이해하고 설명할 수 있다"
+      ]
+    },
+    {
+      question: "9. 성능이나 쿼리 최적화를 고민해본 경험이 있나요?",
+      options: [
+        "고민해본 적 없다",
+        "속도 차이를 느껴본 적은 있다",
+        "인덱스나 쿼리를 수정해본 적 있다",
+        "성능 문제를 직접 해결해봤다",
+        "성능을 고려한 설계가 가능하다"
+      ]
+    },
+    {
+      question: "10. Git으로 협업해본 경험이 있나요?",
+      options: [
+        "Git을 거의 사용해본 적이 없다",
+        "개인 프로젝트에서만 사용해봤다",
+        "브랜치를 사용해 협업해봤다",
+        "충돌 해결 경험이 있다",
+        "협업 규칙을 이해하고 사용한다"
+      ]
+    }
+  ],
+
+  PM: [
+    {
+      question: "1. 프로젝트 목표를 문서로 정리해 팀과 공유해본 적이 있나요?",
+      options: [
+        "해본 적 없다",
+        "간단히 메모한 적 있다",
+        "요구사항을 정리해본 적 있다",
+        "팀원과 공유할 문서를 작성해봤다",
+        "프로젝트 방향을 명확히 정리할 수 있다"
+      ]
+    },
+    {
+      question: "2. 사용자 관점에서 기능을 정의해본 적이 있나요?",
+      options: [
+        "해본 적 없다",
+        "기능 목록만 작성해봤다",
+        "사용자 흐름을 고려해봤다",
+        "유저 시나리오를 작성해봤다",
+        "UX 관점에서 기능을 설계할 수 있다"
+      ]
+    },
+    {
+      question: "3. 와이어프레임이나 화면 구조를 기획해본 경험이 있나요?",
+      options: [
+        "해본 적 없다",
+        "참고 자료만 본 적 있다",
+        "간단한 화면 구성을 해봤다",
+        "프로젝트용 와이어프레임을 만들어봤다",
+        "개발을 고려한 화면 설계가 가능하다"
+      ]
+    },
+    {
+      question: "4. 일정과 작업을 나누고 우선순위를 정해본 적이 있나요?",
+      options: [
+        "해본 적 없다",
+        "개인 일정만 관리해봤다",
+        "팀 작업을 나누어본 적 있다",
+        "일정 조율 경험이 있다",
+        "현실적인 일정 계획이 가능하다"
+      ]
+    },
+    {
+      question: "회의를 진행해 팀을 움직여본 적이 있나요?",
+      options: [
+        "해본 적 없다",
+        "회의에 참여만 해봤다",
+        "간단한 회의 정리를 해봤다",
+        "회의를 주도해본 경험이 있다",
+        "논의를 구조적으로 정리할 수 있다"
+      ]
+    },
+    {
+      question: "6. 개발자와 소통하며 기획을 조정해본 경험이 있나요?",
+      options: [
+        "경험 없다",
+        "피드백을 받아본 적 있다",
+        "의견을 반영해 수정해봤다",
+        "개발 제약을 고려해 기획을 조정해봤다",
+        "기술과 기획을 연결할 수 있다"
+      ]
+    },
+    {
+      question: "7. 요구사항 변경을 관리해본 경험이 있나요?",
+      options: [
+        "경험 없다",
+        "변경을 겪어본 적은 있다",
+        "변경 내용을 정리해봤다",
+        "변경으로 인한 영향을 고려해봤다",
+        "변경 관리를 주도해봤다"
+      ]
+    },
+    {
+      question: "8. 프로젝트 진행 상황을 점검해본 경험이 있나요?",
+      options: [
+        "해본 적 없다",
+        "개인 진도만 확인해봤다",
+        "팀 진도를 확인해봤다",
+        "문제를 발견하고 공유해봤다",
+        "전체 흐름을 관리할 수 있다"
+      ]
+    },
+    {
+      question: "9. 결과물을 회고하고 개선점을 도출해본 적이 있나요?",
+      options: [
+        "해본 적 없다",
+        "개인적으로 정리해봤다",
+        "팀 회고를 작성해봤다",
+        "개선점을 도출해봤다",
+        "다음 프로젝트에 반영해봤다"
+      ]
+    },
+    {
+      question: "10. 프로젝트를 처음부터 끝까지 책임지고 진행해본 경험이 있나요?",
+      options: [
+        "없다",
+        "일부 역할만 맡아봤다",
+        "작은 프로젝트를 관리해봤다",
+        "중간 규모 프로젝트를 책임져봤다",
+        "프로젝트 전체를 주도해본 경험이 있다"
+      ]
+    }
+  ]
+};
+
+
+let currentTrack = '';
+let currentQuestion = 0;
+let answers = [];
+
+
+//답변 초기화
+window.addEventListener('DOMContentLoaded', function() {
+    currentTrack = document.getElementById('selected-track').value;
+    answers = new Array(10).fill(null);
+    
+    showQuestion(0);
+});
+
+// 문항 표시
+function showQuestion(index) {
+    currentQuestion = index;
+    const questionData = questions[currentTrack][index];
+    
+    document.getElementById('question-number').textContent = `${index + 1}/10`;
+    document.getElementById('question-title').textContent = questionData.question;
+    
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    
+    questionData.options.forEach((option, i) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option-item';
+        optionDiv.innerHTML = `
+            <input type="radio" name="question-${index}" id="option-${i}" value="${i + 1}" ${answers[index] === i + 1 ? 'checked' : ''}>
+            <label for="option-${i}">${option}</label>
+        `;
+        optionsContainer.appendChild(optionDiv);
+    });
+    
+    // 진행률 업데이트
+    const progress = ((index + 1) / 10) * 100;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    
+    // 버튼 표시 제어
+    document.getElementById('btn-prev').style.display = index > 0 ? 'block' : 'none';
+    document.getElementById('btn-next').style.display = index < 9 ? 'block' : 'none';
+    document.getElementById('btn-submit').style.display = index === 9 ? 'block' : 'none';
+}
+
+// 이전 버튼
+document.getElementById('btn-prev').addEventListener('click', function() {
+    if (currentQuestion > 0) {
+        showQuestion(currentQuestion - 1);
+    }
+});
+
+// 다음 버튼
+document.getElementById('btn-next').addEventListener('click', function() {
+    const selected = document.querySelector(`input[name="question-${currentQuestion}"]:checked`);
+    if (!selected) {
+        alert('답변을 선택해주세요.');
+        return;
+    }
+    
+    answers[currentQuestion] = parseInt(selected.value);
+    
+    if (currentQuestion < 9) {
+        showQuestion(currentQuestion + 1);
+    }
+});
+
+// 제출
+document.getElementById('level-test-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const selected = document.querySelector(`input[name="question-${currentQuestion}"]:checked`);
+    if (!selected) {
+        alert('답변을 선택해주세요.');
+        return;
+    }
+    
+    answers[currentQuestion] = parseInt(selected.value);
+    
+    // 점수 계산 (1번=1점, 2번=2점, 3번=3점, 4번=4점, 5번=5점)
+    const totalScore = answers.reduce((sum, score) => sum + score, 0);
+    
+    // 레벨 판정
+    let level = 0;
+    let description = '';
+    
+    if (totalScore <= 15) {
+        level = 1;
+        description = '기초를 다지는 단계입니다. 차근차근 학습하며 성장해보세요!';
+    } else if (totalScore <= 30) {
+        level = 2;
+        description = '기본기가 갖춰진 단계입니다. 실전 프로젝트로 경험을 쌓아보세요!';
+    } else if (totalScore <= 45) {
+        level = 3;
+        description = '실무 능력을 갖춘 단계입니다. 더 도전적인 프로젝트에 참여해보세요!';
+    } else {
+        level = 4;
+        description = '전문가 수준입니다. 후배들을 멘토링하며 함께 성장해보세요!';
+    }
+    
+    // 서버로 결과 전송
+    fetch('/api/level-test/submit/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            track: currentTrack,
+            total_score: totalScore,
+            level: level,
+            answers: answers
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 트랙 완료 표시
+            document.getElementById('track-completed').value = 'true';
+            
+            // 결과 표시
+            const trackNames = {
+                FRONTEND: '프론트엔드',
+                BACKEND: '백엔드',
+                PM: '기획자(PM)'
+            };
+            
+            document.getElementById('result-track').textContent = trackNames[currentTrack];
+            document.getElementById('result-level').textContent = level;
+            document.getElementById('result-score').textContent = totalScore;
+            document.getElementById('result-description').textContent = description;
+            
+            document.getElementById('questions-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'flex';
+        } else {
+            alert(data.error || '저장에 실패했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('오류가 발생했습니다. 다시 시도해주세요.');
+    });
+});
+
+// CSRF 토큰 가져오기 함수
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

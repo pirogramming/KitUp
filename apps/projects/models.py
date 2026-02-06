@@ -168,15 +168,6 @@ class Project(models.Model):
         help_text="즐겨찾기 여부",
     )
 
-    current_stage = models.ForeignKey(
-        "guides.GuideStage",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="projects",
-        help_text="현재 진행 중인 가이드 단계",
-    )
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

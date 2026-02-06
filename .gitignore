@@ -81,6 +81,11 @@ htmlcov/
 # 기타
 ############################
 .cache/
+/media/
+
 
 *.pem
 kitup-key.pem
+
+# AI용 프로젝트 압축 파일
+*.zip

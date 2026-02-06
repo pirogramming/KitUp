@@ -1,0 +1,139 @@
+<!-- 테스트용 임시 템플릿 -->
+<!-- 
+프론트 할것 
+ 1. 내보내기 아래에 복사하기 버튼 추가 (HTML + JS)
+ 2. 스타일 정리하기 (임시 스타일이므로 마음대로 정리해주세요! 템플릿 변수만 건드리지 말아주세요)
+ -->
+
+{% extends "base.html" %}
+{% load reflections_extras %}
+
+{% block title %}회고 상세{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:0 auto; padding:20px 16px; display:flex; flex-direction:column; gap:16px;">
+
+  <!-- 상단 바 -->
+  <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+    <div>
+      <div style="font-size:20px; font-weight:800; line-height:1.2;">
+        {{ note.title }}
+      </div>
+      <div style="margin-top:6px; font-size:13px; color:#6b7280;">
+        템플릿: {{ note.template_key }} ·
+        생성: {{ note.created_at|date:"Y-m-d H:i" }} ·
+        수정: {{ note.updated_at|date:"Y-m-d H:i" }}
+      </div>
+    </div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;">
+      <a href="{% url 'reflections:note_list' %}"
+         style="padding:10px 12px; border:1px solid #e5e7eb; border-radius:12px; text-decoration:none; color:#111827; background:#fff;">
+        목록
+      </a>
+
+      <a href="{% url 'reflections:note_update' note.id %}"
+         style="padding:10px 12px; border:1px solid #111827; border-radius:12px; text-decoration:none; color:#fff; background:#111827;">
+        수정하기
+      </a>
+
+      <button
+        data-bookmark-toggle
+        data-note-id="{{ note.id }}"
+        data-bookmarked="{{ note.bookmarked }}"
+      >
+        ★
+      </button>
+    </div>
+  </div>
+
+  <!-- 메타 카드 -->
+  <section style="border:1px solid #e5e7eb; border-radius:18px; overflow:hidden; background:#fff;">
+    <div style="padding:14px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+      <span style="font-size:12px; padding:6px 10px; border-radius:999px; background:#f3f4f6; color:#374151;">
+        bookmarked: {{ note.bookmarked|yesno:"true,false" }}
+      </span>
+
+      {% if note.project %}
+        <span style="font-size:12px; padding:6px 10px; border-radius:999px; background:#eef2ff; color:#3730a3;">
+          project: {{ note.project.title }}
+        </span>
+      {% else %}
+        <span style="font-size:12px; padding:6px 10px; border-radius:999px; background:#ecfeff; color:#155e75;">
+          개인 회고
+        </span>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 질문 리스트(보기 전용) -->
+  <div style="display:flex; flex-direction:column; gap:18px;">
+    {% for q in guide.questions %}
+      <section style="border:1px solid #e5e7eb; border-radius:18px; overflow:hidden; background:#fff;">
+        <div style="background:#eef2ff; padding:12px 14px; font-weight:700;">
+          {{ q.order|default:forloop.counter }}. {{ q.title }}
+        </div>
+        <div style="padding:14px;">
+          {{ answers|get_item:q.id|md }}
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  <!-- md는 내보내기용(접기) -->
+  <details style="border:1px solid #e5e7eb; border-radius:18px; background:#fff; overflow:hidden;">
+    <summary style="cursor:pointer; padding:12px 14px; font-weight:700; background:#f3f4f6;">
+      content_md 보기(내보내기용)
+    </summary>
+    <div style="padding:14px;">
+      <textarea
+        id="full_md"
+        rows="12"
+        readonly
+        style="width:100%; resize:vertical; border:1px solid #e5e7eb; border-radius:14px; padding:12px; outline:none; background:#f9fafb; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;"
+      >{{ note.content_md }}</textarea>
+      <button
+        type="button"
+        data-md-copy
+        data-target-id="full_md"
+      >
+        MD 복사
+      </button>
+    </div>
+    
+
+  </details>
+
+</div>
+<script>
+  document.querySelectorAll("[data-bookmark-toggle]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      console.log("bookmark toggle clicked: ", btn.dataset.bookmarked);
+      const noteId = btn.dataset.noteId;
+
+      // TODO: PATCH /retrospectives/{id}/
+      // body: { bookmarked: !current }
+
+      // 성공 시
+      btn.dataset.bookmarked = btn.dataset.bookmarked === "true" ? "false" : "true";
+    });
+  });
+
+  document.querySelectorAll("[data-md-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const ta = document.getElementById(btn.dataset.targetId);
+      // console.log("md copy clicked: ", ta);
+      if (!ta) return;
+
+      try {
+        await navigator.clipboard.writeText(ta.value);
+        alert("마크다운 복사됨");
+      } catch (e) {
+        console.error(e);
+        alert("복사 실패");
+      }
+    });
+  });
+
+</script>
+{% endblock %}

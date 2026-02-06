@@ -1,0 +1,11 @@
+<!-- 테스트용 임시 템플릿 -->
+
+{% extends "base.html" %}
+{% load reflections_extras %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  {% include "reflections/_note_form.html" with guide=guide tpl=tpl answers=answers %}
+</form>
+{% endblock %}
