@@ -32,9 +32,9 @@ services:
       python manage.py runserver 0.0.0.0:8000
       "
     volumes:
-      - .:/app 
+      # - .:/app 
       - static_volume:/app/staticfiles
-      - media_volume:/app/media
+      - ./media:/app/media
     ports:
       - "8000:8000"
     environment:
@@ -63,5 +63,4 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  media_volume:
   redis_data:

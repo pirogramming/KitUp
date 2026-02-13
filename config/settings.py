@@ -21,10 +21,19 @@ DEBUG = True
 ALLOWED_HOSTS = ['kitup.duckdns.org', '3.37.88.175', 'localhost', '127.0.0.1',]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://kitup.duckdns.org',
-    'http://kitup.duckdns.org:8000',
     'https://kitup.duckdns.org',
 ]
+
+if os.getenv("ENV", "dev") == "prod":
+    DEBUG = False
+
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+    CSRF_TRUSTED_ORIGINS = [
+        "https://kitup.duckdns.org",
+    ]
 
 # Application definition
 
@@ -57,6 +66,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -117,6 +127,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", '"KITUP" <noreply@kitup.com
 
 # 비밀번호 재설정
 ACCOUNT_PASSWORD_RESET_ON_CHANGE = False  # 비밀번호 변경 시 재로그인 불필요
+PASSWORD_RESET_TIMEOUT = 86400  # 비밀번호 초기화 토큰 유효시간 (초 단위, 24시간)
 
 LOGIN_URL = "/accounts/login/"
 LOGIN_REDIRECT_URL = "/"          # 로그인 성공 후
@@ -225,6 +236,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# WhiteNoise configuration for serving static files in production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Media files
 MEDIA_URL = "/media/"

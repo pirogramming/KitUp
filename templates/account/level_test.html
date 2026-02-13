@@ -10,7 +10,7 @@
 {% block content %}
 <div class="level-test-container">
     <!-- 숨겨진 트랙 체크 필드 -->
-    <input type="hidden" id="selected-track" name="selected_track" value="{{ role}}">
+    <input type="hidden" id="selected-track" name="selected_track" value="{{ role_code}}">
     <input type="hidden" id="track-completed" name="track_completed" value="false">
 
     <!-- 문항 화면 -->
@@ -122,7 +122,7 @@ const questions = {
       question: "7. 컴포넌트 단위로 UI를 나누어 만들어본 적이 있나요?",
       options: [
         "컴포넌트 개념이 익숙하지 않다",
-        "튜토리얼에서 컴포넌트를 사용해봤다",
+        "강의 예제를 따라 컴포넌트를 만들어본 적이 있다",
         "재사용 가능한 컴포넌트를 만들어봤다",
         "프로젝트에서 컴포넌트 구조를 설계해봤다",
         "확장성과 유지보수를 고려한 컴포넌트 설계가 가능하다"
@@ -376,9 +376,20 @@ let answers = [];
 //답변 초기화
 window.addEventListener('DOMContentLoaded', function() {
     currentTrack = document.getElementById('selected-track').value;
+    console.log('DEBUG: currentTrack 설정됨 -', currentTrack);
     answers = new Array(10).fill(null);
     
     showQuestion(0);
+  // 옵션 컨테이너 클릭 위임: 카드 클릭 시 라디오 바로 선택되도록 함
+  const optionsContainer = document.getElementById('options-container');
+  if (optionsContainer) {
+    optionsContainer.addEventListener('click', function(e) {
+      const item = e.target.closest('.option-item');
+      if (!item) return;
+      const input = item.querySelector('input[type="radio"]');
+      if (input) input.checked = true;
+    });
+  }
 });
 
 // 문항 표시
@@ -468,7 +479,8 @@ document.getElementById('level-test-form').addEventListener('submit', function(e
     }
     
     // 서버로 결과 전송
-    fetch('/api/level-test/submit/', {
+    console.log('제출 데이터:', {track: currentTrack, level: level});
+    fetch('/api/accounts/level-test/submit/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -481,8 +493,12 @@ document.getElementById('level-test-form').addEventListener('submit', function(e
             answers: answers
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('응답 상태:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('응답 데이터:', data);
         if (data.success) {
             // 트랙 완료 표시
             document.getElementById('track-completed').value = 'true';
@@ -496,7 +512,6 @@ document.getElementById('level-test-form').addEventListener('submit', function(e
             
             document.getElementById('result-track').textContent = trackNames[currentTrack];
             document.getElementById('result-level').textContent = level;
-            document.getElementById('result-score').textContent = totalScore;
             document.getElementById('result-description').textContent = description;
             
             document.getElementById('questions-screen').style.display = 'none';

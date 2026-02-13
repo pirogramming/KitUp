@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/kitup.css' %}">
+{% endblock %}
+{% block content %}
+<div class="kitup-page">
+  <div class="kitup-container">
+
+    <h1 class="kitup-title">KITUP에 진행된 프로젝트</h1>
+
+    {# 정렬 UI #}
+    {% with sort=request.GET.sort|default:"popular" %}
+      <div class="kitup-sort">
+        <a class="{% if sort == 'popular' %}is-active{% endif %}" href="?sort=popular">인기순</a>
+        <span class="kitup-sort-sep">|</span>
+        <a class="{% if sort == 'latest' %}is-active{% endif %}" href="?sort=latest">최신순</a>
+        <span class="kitup-sort-sep">|</span>
+        <a class="{% if sort == 'oldest' %}is-active{% endif %}" href="?sort=oldest">오래된순</a>
+        <span class="kitup-sort-sep">|</span>
+        <a class="{% if sort == 'my_projects' %}is-active{% endif %}" href="?sort=my_projects">내 프로젝트</a>
+      </div>
+    {% endwith %}
+
+    <div class="kitup-grid">
+      {% for project in projects %}
+        <a class="kitup-card" href="{% url 'projects:kitup_detail' project.id %}">
+          <div class="kitup-card-imgwrap">
+            {% if project.project_image %}
+              <img class="kitup-card-img" src="{{ project.project_image.url}}" alt="{{ project.title }}">
+            {% else %}
+              <img class="kitup-card-img" src="{% static 'images/service_default.png' %}" alt="{{ project.title }}">  
+            {% endif %}  
+          </div>
+
+          <div class="kitup-card-body">
+            <h3 class="kitup-card-title">{{ project.title }}</h3>
+            <p class="kitup-card-desc">
+              {{ project.description|default:""|truncatechars:60 }}
+            </p>
+            <div class="kitup-card-like">
+              <button 
+                type="button" 
+                class="kitup-like-btn" 
+                data-project-id="{{ project.id }}"
+                data-liked="{% if request.user in project.likes.all %}true{% else %}false{% endif %}"
+                aria-pressed="{% if request.user in project.likes.all %}true{% else %}false{% endif %}"
+              >
+                <!-- outline -->
+                <svg class="kitup-heart-icon is-outline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+                </svg>
+                <!-- filled -->
+                <svg class="kitup-heart-icon is-fill" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                </svg>
+                <span class="sr-only">좋아요</span>
+              </button>
+              <span class="kitup-like-count">{{ project.get_like_count }}</span>
+            </div>
+          </div>
+        </a>
+      {% empty %}
+        <div class="kitup-empty">
+          아직 공개된 프로젝트가 없습니다.
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  function getCookie(name) {
+    let v = null;
+    if (document.cookie && document.cookie !== '') {
+      document.cookie.split(';').forEach(function(c) {
+        c = c.trim();
+        if (c.substring(0, name.length + 1) === (name + '=')) {
+          v = decodeURIComponent(c.substring(name.length + 1));
+        }
+      });
+    }
+    return v;
+  }
+
+  // 페이지 로드 시 localStorage에서 최신 상태 적용
+  document.querySelectorAll('.kitup-like-btn').forEach(function(btn) {
+    var projectId = btn.getAttribute('data-project-id');
+    var storedState = localStorage.getItem('like-' + projectId);
+    
+    if (storedState !== null) {
+      // localStorage에 저장된 값이 있으면 그것을 사용
+      btn.setAttribute('aria-pressed', storedState);
+      btn.setAttribute('data-liked', storedState);
+    } else {
+      // 없으면 서버가 렌더링한 값 사용
+      var liked = btn.getAttribute('data-liked') === 'true';
+      btn.setAttribute('aria-pressed', String(liked));
+    }
+  });
+
+  document.querySelectorAll('.kitup-like-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var projectId = btn.getAttribute('data-project-id');
+      
+      fetch('/projects/all/' + projectId + '/like/', {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+        },
+      })
+      .then(function(res) {
+        if (!res.ok) throw new Error('API error: ' + res.status);
+        return res.json();
+      })
+      .then(function(data) {
+        var isLiked = String(data.is_liked);
+        btn.setAttribute('data-liked', isLiked);
+        btn.setAttribute('aria-pressed', isLiked);
+        
+        // localStorage에 저장
+        localStorage.setItem('like-' + projectId, isLiked);
+        
+        var countEl = btn.parentElement.querySelector('.kitup-like-count');
+        if (countEl) {
+          countEl.textContent = data.like_count;
+        }
+      })
+      .catch(function(err) {
+        console.error('좋아요 오류:', err);
+      });
+    });
+  });
+})();
+</script>
+
+{% endblock %}

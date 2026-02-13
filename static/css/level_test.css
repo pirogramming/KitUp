@@ -240,13 +240,13 @@
     }
 
     .button-container {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .btn-prev,
     .btn-next,
     .btn-submit {
-        width: 100%;
+        width: 50%;
     }
 
     .result-level-badge {

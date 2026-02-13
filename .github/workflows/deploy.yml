@@ -29,6 +29,8 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/pirogramming/startlinedev/web:latest
+          # 빌드 시 캐시로 인한 0바이트 파일 생성을 방지하고 싶다면 아래 옵션을 추가할 수 있습니다.
+          # no-cache: true 
 
   deploy:
     needs: build-and-push
@@ -41,14 +43,24 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}     
           script: |
-            cd /home/ubuntu/kitup
+            cd ~/kitup
             # 서버에서도 GHCR 이미지를 받을 수 있게 로그인
-            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            # 최신 이미지 가져오고 컨테이너 재실행
+            # 1. 기존의 <none> 태그 이미지(Dangling Images)를 정리하여 용량 확보 및 이미지 꼬임 방지
+            docker image prune -f
+            
+            # 2. 최신 이미지 가져오기
             docker-compose pull web
-            docker-compose up -d --build web
             
-            # 후처리 작업 (DB 동기화 및 정적파일 수집)
+            # 3. 컨테이너 재실행
+            docker-compose up -d web
+            
+            # 4. 배포 직후 다시 한번 정리 (선택사항이지만 서버를 깨끗하게 유지해줍니다)
+            docker image prune -f
+            
+            # 5. 후처리 작업 (DB 동기화 및 정적파일 수집)
+            # 컨테이너가 뜰 시간을 잠깐 주기 위해 sleep을 넣는 것도 안정적입니다.
+            sleep 3
             docker-compose exec -T web python manage.py migrate
             docker-compose exec -T web python manage.py collectstatic --noinput

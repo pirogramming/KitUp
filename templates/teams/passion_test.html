@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}KITUP - 열정 레벨 진단{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/level_test.css' %}">
+<link rel="stylesheet" href="{% static 'css/passion_test.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="level-test-container">
+    <!-- 숨겨진 역할 필드 -->
+    <input type="hidden" id="selected-role" name="selected_role" value="{{ role }}">
+
+    <!-- 문항 화면 -->
+    <div id="questions-screen" class="questions-screen">
+        <!-- 헤더 설명 -->
+        <div class="passion-header">
+            <h1 class="passion-title">열정 레벨 판별 설문</h1>
+            <p class="passion-description">
+                <br>
+                비슷한 상황과 몰입도의 팀원을 매칭하기 위한 설문입니다.<br>
+                본인의 상황에 가장 가까운 항목을 골라주세요!<br>
+            </p>
+        </div>
+
+        <div class="progress-bar" style="margin-top: 30px;">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <div class="question-header">
+            <span class="question-number" id="question-number">1/10</span>
+            <h2 class="question-title" id="question-title"></h2>
+        </div>
+
+        <form id="passion-test-form">
+            <div class="options-container" id="options-container">
+                <!-- 동적으로 생성될 옵션들 -->
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="btn-prev" id="btn-prev" style="display: none;">이전</button>
+                <button type="button" class="btn-next" id="btn-next">다음</button>
+                <button type="submit" class="btn-submit" id="btn-submit" style="display: none;">제출하기</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 결과 화면 (점수 표시 제거) -->
+    <div id="result-screen" class="result-screen" style="display: none;">
+        <div class="result-content">
+            <div class="result-icon">🎉</div>
+            <h2>진단이 완료되었습니다!</h2>
+            <p class="passion-result-message">팀 매칭 신청이 완료되었습니다</p>
+            <div class="result-level-badge">
+                <span class="level-text">열정 Level</span>
+                <span class="level-number" id="result-level"></span>
+            </div>
+            <p class="result-description" id="result-description"></p>
+            <button class="btn-home" onclick="location.href='/'">홈으로 돌아가기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// 열정 레벨 문항 데이터
+const passionQuestions = [
+    {
+        question: "1. 1주일동안 이 프로젝트에 어느 정도 시간을 사용할 수 있나요?",
+        options: [
+            "상황에 따라 5시간 미만일 것 같다",
+            "평균적으로 5~10시간 정도 가능할 것 같다",
+            "10~15시간 정도는 꾸준히 사용할 수 있다",
+            "15~20시간 정도 사용할 수 있다",
+            "20시간 이상 충분히 사용할 수 있다"
+        ]
+    },
+    {
+        question: "2. 프로젝트 기간(6주) 동안 업무 참여가 어려운 날은 어느 정도 있을까요?",
+        options: [
+            "비교적 많은 날 참여가 어려울 것 같다",
+            "간간이 참여가 어려운 날이 있을 것 같다",
+            "일부 일정만 조정하면 괜찮을 것 같다",
+            "대부분의 기간 참여 가능할 것 같다",
+            "거의 모든 기간 참여 가능할 것 같다"
+        ]
+    },
+    {
+        question: "3. 활동 기간 동안 이 프로젝트 외에 병행하는 주요 활동은 어느 정도인가요?",
+        options: [
+            "여러 활동을 동시에 진행할 것 같다",
+            "비교적 활동이 많은 편이다",
+            "몇 가지 활동을 병행한다",
+            "1~2개의 활동만 병행한다",
+            "이 프로젝트에 집중할 계획이다"
+        ]
+    },
+    {
+        question: "4. 이 프로젝트를 통해 기대하는 개인적인 목표는 무엇인가요?",
+        options: [
+            "참여 경험 자체에 의미를 두고 있다",
+            "전반적인 협업 경험을 쌓고 싶다",
+            "기본적인 기능 구현을 목표로 한다",
+            "완성도 있는 결과물을 만들고 싶다",
+            "실제 활용이나 확장까지 고려하고 있다"
+        ]
+    },
+    {
+        question: "5. 팀원 중 일정이나 진행에 어려움을 겪는 사람이 있을 때, 보통 어떤 편인가요?",
+        options: [
+            "각자 상황이 있을 수 있다고 생각한다",
+            "필요할 때만 간단히 소통한다",
+            "상황을 공유하며 조율하려 한다",
+            "해결 방향을 함께 고민한다",
+            "일정 조율이나 대안을 제안하는 편이다"
+        ]
+    },
+    {
+        question: "6. 프로젝트 기간 동안 팀과의 정기적인 소통(회의/스크럼)에 어느 정도 참여가 가능하신가요?",
+        options: [
+            "상황에 따라 참여가 어려울 수 있다",
+            "주 1~2회 정도 참여할 수 있다",
+            "주 3~5일 정도 참여할 수 있다",
+            "대부분의 날에 참여할 수 있다",
+            "매일 규칙적인 스크럼 형태의 소통이 가능하다"
+        ]
+    },
+    {
+        question: "7. 개인 사정으로 일정 조정이 필요할 때, 보통 어떤 방식으로 팀에 공유하시나요?",
+        options: [
+            "상황이 생긴 후에 공유하는 편이다",
+            "가능한 한 빠르게 공유하려 한다",
+            "미리 공유하려 노력한다",
+            "일정 조정안을 함께 제시한다",
+            "팀 일정에 맞춰 개인 일정을 조정한다"
+        ]
+    },
+    {
+        question: "8. 프로젝트 진행 중 막히는 문제나 어려움이 생겼을 때, 보통 어떻게 대응하시나요?",
+        options: [
+            "당장 할 수 있는 범위 내에서 처리한다",
+            "검색이나 자료를 참고해본다",
+            "시도한 내용을 정리하며 해결한다",
+            "팀과 공유하며 해결 방향을 찾는다",
+            "해결 과정을 정리해 팀에 공유한다"
+        ]
+    },
+    {
+        question: "9. 프로젝트 중간에 집중도나 동기부여가 떨어질 때, 본인의 일반적인 태도는 어떤 편인가요?",
+        options: [
+            "가능한 범위 내에서만 참여한다",
+            "맡은 역할 위주로 참여한다",
+            "일정에 맞춰 다시 페이스를 맞춘다",
+            "목표를 재정리하며 참여한다",
+            "팀 분위기를 살리려 노력한다"
+        ]
+    },
+    {
+        question: "10. 프로젝트 종료 후 회고나 기록 작성에 대해 어떻게 생각하시나요?",
+        options: [
+            "필수라면 간단히 작성한다",
+            "중요한 부분 위주로 정리한다",
+            "개인 기록으로 남긴다",
+            "포트폴리오 활용을 고려해 작성한다",
+            "경험을 정리하는 과정이 중요하다고 생각한다"
+        ]
+    }
+];
+
+// 점수 매핑 (0점, 2.5점, 5점, 7.5점, 10점)
+const scoreMap = [0, 2.5, 5, 7.5, 10];
+
+let currentRole = '';
+let currentQuestion = 0;
+let answers = [];
+
+// 페이지 로드 시 초기화
+window.addEventListener('DOMContentLoaded', function() {
+    currentRole = document.getElementById('selected-role').value;
+    answers = new Array(10).fill(null);
+    
+    showQuestion(0);
+});
+
+// 옵션 컨테이너 클릭 위임: 카드 클릭 시 라디오 바로 선택되도록 함 (level_test와 동일한 동작)
+const optionsContainer = document.getElementById('options-container');
+if (optionsContainer) {
+    optionsContainer.addEventListener('click', function(e) {
+        const item = e.target.closest('.option-item');
+        if (!item) return;
+        const input = item.querySelector('input[type="radio"]');
+        if (input) input.checked = true;
+    });
+}
+// 문항 표시
+function showQuestion(index) {
+    currentQuestion = index;
+    const questionData = passionQuestions[index];
+    
+    document.getElementById('question-number').textContent = `${index + 1}/10`;
+    document.getElementById('question-title').textContent = questionData.question;
+    
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    
+    questionData.options.forEach((option, i) => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'option-item';
+        optionDiv.innerHTML = `
+            <input type="radio" name="question-${index}" id="option-${i}" value="${i}" ${answers[index] === i ? 'checked' : ''}>
+            <label for="option-${i}">${option}</label>
+        `;
+        optionsContainer.appendChild(optionDiv);
+    });
+    
+    // 진행률 업데이트
+    const progress = ((index + 1) / 10) * 100;
+    document.getElementById('progress-fill').style.width = progress + '%';
+    
+    // 버튼 표시 제어
+    document.getElementById('btn-prev').style.display = index > 0 ? 'block' : 'none';
+    document.getElementById('btn-next').style.display = index < 9 ? 'block' : 'none';
+    document.getElementById('btn-submit').style.display = index === 9 ? 'block' : 'none';
+}
+
+// 이전 버튼
+document.getElementById('btn-prev').addEventListener('click', function() {
+    if (currentQuestion > 0) {
+        showQuestion(currentQuestion - 1);
+    }
+});
+
+// 다음 버튼
+document.getElementById('btn-next').addEventListener('click', function() {
+    const selected = document.querySelector(`input[name="question-${currentQuestion}"]:checked`);
+    if (!selected) {
+        alert('답변을 선택해주세요.');
+        return;
+    }
+    
+    answers[currentQuestion] = parseInt(selected.value);
+    
+    if (currentQuestion < 9) {
+        showQuestion(currentQuestion + 1);
+    }
+});
+
+// 제출
+document.getElementById('passion-test-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const selected = document.querySelector(`input[name="question-${currentQuestion}"]:checked`);
+    if (!selected) {
+        alert('답변을 선택해주세요.');
+        return;
+    }
+    
+    answers[currentQuestion] = parseInt(selected.value);
+    
+    // 점수 계산 (0점, 2.5점, 5점, 7.5점, 10점)
+    const totalScore = answers.reduce((sum, answerIndex) => sum + scoreMap[answerIndex], 0);
+    
+    // 열정 레벨 판정 (1~4)
+    let passionLevel = 0;
+    let description = '';
+    
+    if (totalScore < 25) {
+        passionLevel = 1;
+        description = '여유롭게 프로젝트에 참여하실 수 있습니다. 부담 없이 시작해보세요!';
+    } else if (totalScore < 50) {
+        passionLevel = 2;
+        description = '안정적인 페이스로 프로젝트를 진행하실 수 있습니다!';
+    } else if (totalScore < 75) {
+        passionLevel = 3;
+        description = '적극적으로 프로젝트에 참여하실 의지가 있으시네요!';
+    } else {
+        passionLevel = 4;
+        description = '프로젝트에 대한 열정이 대단하시네요! 멋진 결과물을 기대합니다!';
+    }
+    
+    // 서버로 결과 전송
+    console.log('제출 데이터:', {passion_level: passionLevel, total_score: totalScore});
+    fetch('/api/teams/passion-test/submit/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            role: currentRole,
+            total_score: totalScore,
+            passion_level: passionLevel,
+            answers: answers
+        })
+    })
+    .then(response => {
+        console.log('응답 상태:', response.status);
+        return response.json();
+    })
+    .then(data => {
+        console.log('응답 데이터:', data);
+        if (data.success) {
+            // 결과 표시 (점수는 보이지 않음)
+            document.getElementById('result-level').textContent = passionLevel;
+            document.getElementById('result-description').textContent = description;
+            
+            document.getElementById('questions-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'flex';
+        } else {
+            alert(data.error || '저장에 실패했습니다.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('오류가 발생했습니다. 다시 시도해주세요.');
+    });
+});
+
+// CSRF 토큰 가져오기 함수
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}

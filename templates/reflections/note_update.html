@@ -1,11 +1,17 @@
-<!-- 테스트용 임시 템플릿 -->
+{% extends 'base.html' %}
+{% load static %}
 
-{% extends "base.html" %}
-{% load reflections_extras %}
+{% block title %}회고 수정{% endblock %}
+
+{% block header %}
+  <link rel="stylesheet" href="{% static 'css/reflections.css' %}">
+{% endblock %}
 
 {% block content %}
-<form method="post">
+<form method="post" class="ref-form" data-ref-form>
   {% csrf_token %}
-  {% include "reflections/_note_form.html" with note=note guide=guide tpl=tpl answers=answers %}
+  {% include "reflections/_note_form.html" %}
 </form>
+
+<script defer src="{% static 'js/reflections.js' %}"></script>
 {% endblock %}

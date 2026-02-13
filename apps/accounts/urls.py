@@ -4,6 +4,11 @@ from . import views
 app_name = "accounts"
 
 urlpatterns = [
+    # 검증 API
+    path("check-username/", views.check_username, name="check_username"),
+    path("check-email/", views.check_email, name="check_email"),
+    path("check-nickname/", views.check_nickname, name="check_nickname"),
+    
     # 온보딩
     path("onboarding/profile/", views.onboarding_profile, name="onboarding_profile"),
     

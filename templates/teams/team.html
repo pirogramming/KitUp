@@ -1,66 +1,81 @@
 {% extends 'base.html' %} {% load static %} {% block header %}
 <link rel="stylesheet" href="{% static 'css/team.css' %}" />
 {% endblock %} {% block content %}
-<!-- 매칭 성공 -->
+<!-- 1. 팀 매칭 성공 -->
+{% if team_matched %}
 <div class="team_success">
 	<h3>
 		팀 매칭이 완료 되었어요. <br />
 		내 프로젝트에서 업데이트 된 팀 정보를 확인해보세요.
 	</h3>
 	<div class="team_member">
+		{% for member in team_members %}
 		<div class="t_member">
-			<img
-				src="{% static 'images/default_img.png' %}"
-				alt="프로필사진"
-				class="profile_img"
-			/>
-			<img
-				src="{% static 'images/level3.png' %}"
-				alt="level"
-				class="level_img"
-			/>
-			<p class="u_name">user1 (Lv3)</p>
-			<p class="u_stack">프론트엔드</p>
+			<div class="profile_section">
+				<!-- 프로필 사진 -->
+				{% if member.user.profile_image %}
+				<img
+					src="{{ item.user.profile_image.url }}"
+					alt="프로필사진"
+					class="profile_img"
+				/>
+				{% else %}
+				<img
+					src="{% static 'images/default_img.png' %}"
+					alt="프로필사진"
+					class="profile_img"
+				/>
+				{% endif %}
+				<!-- 레벨 사진 -->
+				{% if member.level == 1 %}
+				<img
+					src="{% static 'images/Level1.png' %}"
+					alt="레벨1"
+					class="level_img"
+				/>
+				{% elif member.level == 2 %}
+				<img
+					src="{% static 'images/Level2.png' %}"
+					alt="레벨2"
+					class="level_img"
+				/>
+				{% elif member.level == 3 %}
+				<img
+					src="{% static 'images/Level3.png' %}"
+					alt="레벨3"
+					class="level_img"
+				/>
+				{% elif member.level == 4 %}
+				<img
+					src="{% static 'images/Level4.png' %}"
+					alt="레벨4"
+					class="level_img"
+				/>
+				{% endif %}
+			</div>
+			<p class="u_name">{{ member.user.nickname }} <br>
+			<span>Lv{{ member.level }}</span>	</p>
+			{% if member.role.code == "PM" %}
+			<p class="u_design">기획자</p>
+			{% elif member.role.code == "FRONTEND" %}
+			<p class="u_frontend">프론트엔드</p>
+			{% elif member.role.code == "BACKEND" %}
+			<p class="u_backend">백엔드</p>
+			{% endif %}
 		</div>
-		<div class="t_member">
-			<img
-				src="{% static 'images/default_img.png' %}"
-				alt="프로필사진"
-				class="profile_img"
-			/>
-			<img
-				src="{% static 'images/level3.png' %}"
-				alt="level"
-				class="level_img"
-			/>
-			<p class="u_name">user1 (Lv3)</p>
-			<p class="u_stack">프론트엔드</p>
-		</div>
-        <div class="t_member">
-            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
-            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
-            <p class="u_name">user1 (Lv3)</p>
-            <p class="u_stack">프론트엔드</p>
-        </div>
-        <div class="t_member">
-            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
-            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
-            <p class="u_name">user1 (Lv3)</p>
-            <p class="u_stack">프론트엔드</p>
-        </div>
-        <div class="t_member">
-            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile_img">
-            <img src="{% static 'images/level3.png' %}" alt="level" class="level_img">
-            <p class="u_name">user1 (Lv3)</p>
-            <p class="u_stack">프론트엔드</p>
-        </div>
+		{% endfor %}
 	</div>
-    <a href="{% url 'projects:dashboard' %}" class="go_project"><p>내 프로젝트로 이동</p></a>
+	<a href="{% url 'projects:dashboard' %}" class="go_project"
+		><p>내 프로젝트로 이동</p></a
+	>
 </div>
-<!-- 매칭 실패 -->
-<!-- <div class="team_fail">
+
+<!-- 2. 팀 매칭 실패 -->
+{% else %}
+<div class="team_fail">
     <h3>팀 매칭에 실패했어요. <br>
     다음 팀 매칭을 기다려주세요.</h3>
     <a href="{% url 'main' %}"><p>메인화면으로 이동</p></a>
-</div> -->
+</div>
+{% endif %}
 {% endblock %}

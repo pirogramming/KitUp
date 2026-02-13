@@ -3,30 +3,17 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils.translation import ngettext
 
-from .models import Season, Project, ProjectApplication
-from .services import TeamMatchingService
+from .models import Season, Project
+from .services import TeamMatchingService, EmailService
 
 
 @admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
-    list_display = ["name", "status", "is_active", "matching_start", "matching_end", "project_start", "project_end"]
-    list_filter = ["status", "is_active", "created_at"]
+    list_display = ["name", "status", "matching_start", "matching_end", "project_start", "project_end"]
+    list_filter = ["status", "created_at"]
     search_fields = ["name"]
     ordering = ["-created_at"]
-    actions = ["activate_season", "deactivate_season", "run_team_matching"]
-    
-    def activate_season(self, request, queryset):
-        """시즌 활성화 (이전 활성 시즌은 자동 비활성화)"""
-        # 모든 시즌 비활성화
-        Season.objects.all().update(is_active=False)
-        # 선택된 시즌만 활성화
-        queryset.update(is_active=True)
-        self.message_user(request, "시즌이 활성화되었습니다.")
-    
-    def deactivate_season(self, request, queryset):
-        """시즌 비활성화"""
-        queryset.update(is_active=False)
-        self.message_user(request, "시즌이 비활성화되었습니다.")
+    actions = ["run_team_matching", "send_matching_start_email", "send_matching_results_email"]
     
     def run_team_matching(self, request, queryset):
         """팀 매칭 알고리즘 실행"""
@@ -37,7 +24,7 @@ class SeasonAdmin(admin.ModelAdmin):
                     request,
                     f"✅ [{season.name}] 팀 매칭 완료: "
                     f"{result['teams_created']}팀 생성, "
-                    f"{result['total_matched']}명 매칭",
+                    f"{result['total_users_matched']}명 매칭",
                     messages.SUCCESS,
                 )
             except ValidationError as e:
@@ -52,10 +39,46 @@ class SeasonAdmin(admin.ModelAdmin):
                     f"❌ [{season.name}] 팀 매칭 오류: {str(e)}",
                     messages.ERROR,
                 )
-    run_team_matching.short_description = "🤝 팀 매칭 알고리즘 실행"
     
-    activate_season.short_description = "✅ 선택된 시즌 활성화"
-    deactivate_season.short_description = "❌ 선택된 시즌 비활성화"
+    def send_matching_results_email(self, request, queryset):
+        """팀 매칭 결과 이메일 발송"""
+        for season in queryset:
+            try:
+                result = EmailService.send_matching_results(season.id)
+                self.message_user(
+                    request,
+                    f"📧 [{season.name}] 팀 매칭 결과 이메일 발송 완료: "
+                    f"{result['sent_count']}개 팀 / {result['failed_count']}개 실패",
+                    messages.SUCCESS,
+                )
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"❌ [{season.name}] 이메일 발송 오류: {str(e)}",
+                    messages.ERROR,
+                )
+    
+    def send_matching_start_email(self, request, queryset):
+        """팀 매칭 기간 시작 알림 이메일 발송"""
+        for season in queryset:
+            try:
+                result = EmailService.send_matching_start_notification(season.id)
+                self.message_user(
+                    request,
+                    f"📧 [{season.name}] 팀 매칭 시작 알림 이메일 발송 완료: "
+                    f"{result['sent_count']}명 / {result['failed_count']}명 실패",
+                    messages.SUCCESS,
+                )
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"❌ [{season.name}] 이메일 발송 오류: {str(e)}",
+                    messages.ERROR,
+                )
+    
+    run_team_matching.short_description = "🤝 팀 매칭 알고리즘 실행"
+    send_matching_start_email.short_description = "📢 팀 매칭 시작 알림 이메일 발송"
+    send_matching_results_email.short_description = "📧 팀 매칭 결과 이메일 발송"
 
 
 @admin.register(Project)
@@ -141,11 +164,3 @@ class ProjectAdmin(admin.ModelAdmin):
             messages.SUCCESS,
         )
     change_status_to_archived.short_description = "📦 상태 변경: 보관됨"
-
-
-@admin.register(ProjectApplication)
-class ProjectApplicationAdmin(admin.ModelAdmin):
-    list_display = ["id", "project", "user", "role", "passion_level", "status", "applied_at"]
-    list_filter = ["status", "role", "passion_level"]
-    search_fields = ["project__title", "user__nickname"]
-    ordering = ["-applied_at"]

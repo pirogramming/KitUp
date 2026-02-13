@@ -4,7 +4,6 @@ EXEMPT_PREFIXES = (
     "/admin/",
     "/accounts/",
     "/logout/",
-    "/users/onboarding/",
     "/static/",
     "/media/",
     "/api/",  # Swagger 및 API 테스트용
@@ -17,5 +16,5 @@ class RequireProfileMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated and not request.user.nickname:
             if not request.path.startswith(EXEMPT_PREFIXES):
-                return redirect("/users/onboarding/profile/")
+                return redirect("/accounts/onboarding/profile/")
         return self.get_response(request)

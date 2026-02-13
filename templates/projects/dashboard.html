@@ -1,33 +1,47 @@
 {% extends 'base.html' %} 
 {% load static %}
+{% load markdown_tags %}
 {% block header %}
 <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
 {% endblock %} 
 {% block content %}
+{% if has_project == False %}
+<div class="no_project">
+    <h3>진행 중인 프로젝트가 없어요.</h3>
+    <a href="/"><p>메인화면으로 이동</p></a>
+</div>
+{% else %}
 <section class="p_header">
     <a href="{% url 'projects:dashboard' %}" class="p_dashboard"><p>DASHBOARD</p></a>
     <a href="{% url 'guides:mission' %}" class="p_mission"><p>MISSION</p></a>
 </section>
 <div class="dashboard">
-<!-- 메모장에 있는 것 복붙하기 -->
     <div class="d_service">
+        {% if project.project_image %}
+        <img src="{{ project.project_image.url }}" alt="{{ project.title }}" class="project_image">
+        {% else %}
         <img src="{% static 'images/service_default.png' %}" alt="서비스이미지">
-        <h3>{서비스명}</h3>
-        <p>{서비스는 어떤 문제를 해결하기 위한 어떤 서비스입니다.}</p>
+        {% endif %}
+        <h3>{{ project.title }}</h3>
+        <p>{{ project.description|default:"프로젝트 설명이 없습니다." }}</p>
     </div>
     <div class="d_period">
         <img src="{% static 'images/calender.png' %}" alt="달력이미지">
-        <p><span class="period_title">진행기간 </span>2026/01/25 ~ 2026/02/19</p>
+        <p><span class="period_title">진행기간 </span>
+            {% if project.starts_at and project.ends_at %}
+                {{ project.starts_at|date:"Y/m/d" }} ~ {{ project.ends_at|date:"Y/m/d" }}
+            {% else %}
+                미정
+            {% endif %}
+        </p>
     </div>
-    <div class="d_bookmark">
-        <div class="b_title">
-            <img src="{% static 'images/bookmark.png' %}" alt="북마크이미지">
-            <p>즐겨찾기</p>
+    <div class="d_link">
+        <div class="l_title">
+            <img src="{% static 'images/link.png' %}" alt="link">
+            <h3>관련 링크</h3>
         </div>
-        <div class="b_content">
-            <p>즐겨찾기 컨텐츠 1</p>
-            <p>즐겨찾기 컨텐츠 2</p>
-            <p>즐겨찾기 컨텐츠 3</p>
+        <div class="l_content">
+            <p>{{ project.related_links|markdown|safe }}</p>
         </div>
     </div>
     <hr>
@@ -37,72 +51,65 @@
             <h3>Team</h3>
             <div class="t_report">
                 <img src="{% static 'images/report.png' %}" alt="신고하기">
-                <a href=""><p>버스 탑승자 신고하기</p></a>
+                <a href="" class="btn_report"><p>버스 탑승자 신고하기</p></a>
             </div>
         </div>
         <div class="t_content">
             <p><span class="t_role">PM</span>
                    {% for member in members %}
-                    {% if member.role.name == "기획자" %}
+                    {% if member.role.code == "PM" %}
                     {{ member.user.username }}
                     {% endif %}
-                    {% endfor %}user1</p>
+                    {% endfor %}</p>
             <p><span class="t_role">FE</span> 
                    {% for member in members %}
-                    {% if member.role.name == "프론트엔드" %}
+                    {% if member.role.code == "FRONTEND" %}
                     {{ member.user.username }}
                     {% endif %}
-                    {% endfor %}                
-                user2 user3</p>
+                    {% endfor %}
+                </p>
             <p><span class="t_role">BE</span> 
                    {% for member in members %}
-                    {% if member.role.name == "백엔드" %}
+                    {% if member.role.code == "BACKEND" %}
                     {{ member.user.username }}
                     {% endif %}
-                    {% endfor %}                  
-                user4, user4</p>
+                    {% endfor %}
+                </p>
             <div class="t_member">
-                <!-- 멤버 정보 반복문 써야 함 -->
+                {% for item in members_with_level %}
                 <div class="member">
+                    <div class="profile_section">
+                    <!-- 프로필 사진 -->
+                    {% if item.member.user.profile_image %}
+                        <img src="{{ item.member.user.profile_image.url }}" alt="프로필사진" class="profile">
+                    {% else %}
                     <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
-                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                    <h3>user1</h3>
-                    <p class="info">✉️ user1@naver.com</p>
-                    <p class="info">🖥️ @user</p>
+                    {% endif %}
+                    <!-- 레벨 사진 -->
+                    {% if item.level == 1 %}
+                    <img src="{% static 'images/Level1.png' %}" alt="레벨1" class="level">
+                    {% elif item.level == 2 %}
+                    <img src="{% static 'images/Level2.png' %}" alt="레벨2" class="level">
+                    {% elif item.level == 3 %}
+                    <img src="{% static 'images/Level3.png' %}" alt="레벨3" class="level">
+                    {% elif item.level == 4 %}
+                    <img src="{% static 'images/Level4.png' %}" alt="레벨4" class="level">
+                    {% endif %}
+                    </div>
+                    <h3>{{ item.member.user.nickname|default:item.member.user.username }}</h3>
+                    <p class="info">✉️ {{ item.member.user.email }}</p>
+                    {% if item.member.user.github_id %}
+                        <p class="info">🖥️ @{{ item.member.user.github_id }}</p>
+                    {% endif %}
+                    {% if item.member.role.code == "PM" %}
                     <p class="role_design">기획자</p>
-                </div>
-                <div class="member">
-                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
-                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                    <h3>user1</h3>
-                    <p class="info">✉️ user1@naver.com</p>
-                    <p class="info">🖥️ @user</p>
+                    {% elif item.member.role.code == "FRONTEND" %}
                     <p class="role_frontend">프론트엔드</p>
-                </div>
-                <div class="member">
-                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
-                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                    <h3>user1</h3>
-                    <p class="info">✉️ user1@naver.com</p>
-                    <p class="info">🖥️ @user</p>
+                    {% elif item.member.role.code == "BACKEND" %}
                     <p class="role_backend">백엔드</p>
+                    {% endif %}
                 </div>
-                <div class="member">
-                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
-                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                    <h3>user1</h3>
-                    <p class="info">✉️ user1@naver.com</p>
-                    <p class="info">🖥️ @user</p>
-                    <p class="role_design">기획자</p>
-                </div>
-                <div class="member">
-                    <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
-                    <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                    <h3>user1</h3>
-                    <p class="info">✉️ user1@naver.com</p>
-                    <p class="info">🖥️ @user</p>
-                    <p class="role_design">기획자</p>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -112,35 +119,72 @@
             <h3>팀 규칙</h3>
         </div>
         <div class="r_content">
-            <p>1. 규칙 1번입니다.</p>
-            <p>2. 규칙 2번입니다.</p>
-            <p>3. 규칙 3번입니다.</p>
-            <p>4. 규칙 4번입니다.</p>
-            <p>5. 규칙 5번입니다.</p>
+            {% if project.team_rules %}
+                {{ project.team_rules|markdown|safe }}
+            {% else %}
+                <p>팀 규칙이 없습니다.</p>
+            {% endif %}
         </div>
     </div>
-    <div class="d_link">
-        <div class="l_title">
-            <img src="{% static 'images/link.png' %}" alt="link">
-            <h3>관련 링크</h3>
-        </div>
-        <div class="l_content">
-            <p>Notion : </p>
-            <p>Figma : </p>
-            <p>Github : </p>
-        </div>
-    </div>
+    <!-- 진척도 (수정 불가 - 표시만) -->
     <div class="d_progress">
         <div class="p_title">
             <img src="{% static 'images/progress.png' %}" alt="progress">
-            <h3>진척도</h3>
+            <div>
+                <h3>{{ project.title }}의 진척도</h3>
+            </div>
         </div>
-        <div class="p_content">
-            <div class="p_bar"></div>
-            <div class="p_real"></div>
+        <div class="role_progress_bar">
+            <h3>전체</h3>
+            <div class="progress_bar_container">
+                <div class="progress_bar_fill" style="width: {% if guide_progress %}{{ guide_progress.progress_percent }}{% else %}0{% endif %}%;"></div>
+            </div>
+            <span class="progress_percent">{% if guide_progress %}{{ guide_progress.progress_percent }}{% else %}0{% endif %}%</span>
         </div>
     </div>
-    <button type="button">수정하기</button>
-    <!-- 이하동문 --> 
+    {% if is_team_member %}
+    <a href="{% url 'projects:dashboard_edit' project.id %}" class="edit_button">
+        <button>수정하기</button>
+    </a>
+    {% endif %}
+    {% endif %}
 </div>
+<div id="reportModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>버스 탑승자 신고하기</h3>
+            <span class="close-btn">&times;</span>
+        </div>
+        
+        <form id="reportForm">
+            {% csrf_token %}
+            <div class="modal-body">
+                <p class="modal-desc">신고하실 팀원을 선택하고 사유를 입력해주세요.</p>
+                
+                <div class="member-select-list">
+                    {% for item in members_with_level %}
+                        {% if item.member.user != user %}
+                        <label class="member-option">
+                            <input type="radio" name="reported_user" value="{{ item.member.user.id }}">
+                            <div class="member-info">
+                                <img src="{% if item.member.user.profile_image %}{{ item.member.user.profile_image.url }}{% else %}{% static 'images/default_img.png' %}{% endif %}" alt="profile">
+                                <span class="member-name">{{ item.member.user.nickname }}</span>
+                                <span class="member-role">({{ item.member.role.code }})</span>
+                            </div>
+                        </label>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <textarea name="reason" placeholder="신고 이유를 입력해주세요"></textarea>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary close-btn">취소</button>
+                <button type="submit" class="btn-danger">신고하기</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="{% static 'js/dashboard.js' %}"></script>
 {% endblock %}

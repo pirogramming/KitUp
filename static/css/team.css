@@ -4,7 +4,7 @@ body {
 
 /* 매칭 성공 */
 .team_success {
-    margin-top: 50px;
+    margin-top: 7%;
     text-align: center;
     align-items: center;
 }
@@ -21,7 +21,7 @@ body {
 
 .t_member {
     position: relative;
-    width: 17%;
+    width: 16%;
     height: 250px;
     padding: 20px;
     background: #fff;
@@ -29,35 +29,80 @@ body {
     box-shadow: 0 2px 2px 0 #999;
 }
 
-.t_member .profile_img {
-    width: 120px; height: 120px;
+.profile_section {
+    position: relative;
+    width: 100%; height: 110px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
 }
 
-.t_member .level_img {
+.t_member > .profile_section > .profile_img {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+}
+
+.t_member >.profile_section> .level_img {
     width: 40px; height: 40px;
     position: absolute;
-    top: 100px; right: 30px;
+    bottom: 0;
+    right: calc(50% - 60px);
 }
 
 .t_member .u_name {
-    margin-top: 20px;
-    font-size: 18px; font-weight: 500;
+    margin: 10px 0;
+    font-size: 16px; font-weight: 500;
 }
 
-.t_member .u_stack {
-    margin: 10px auto 0;
-    width: 80%;
+.t_member .u_name > span {
+    font-size: 14px;
+    color: #999;
+}
+
+.t_member .u_design {
+    width: 45%;
+    padding: 5px 10px;
+    color: #00B9B0;
+    border-radius: 20px;
+    box-shadow: 1px 2px 2px 1px #00B9B0;
+    font-size: 16px;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.t_member .u_frontend {
+    width: 60%;
     padding: 5px 10px;
     color: #FFCE53;
     border-radius: 20px;
     box-shadow: 1px 2px 2px 1px #FFCE53;
     font-size: 16px;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.t_member .u_backend {
+    width: 45%;
+    padding: 5px 10px;
+    color: #FF3E88;
+    border-radius: 20px;
+    box-shadow: 1px 2px 2px 1px #FF3E88;
+    font-size: 16px;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .go_project {
     display: block;
     width: 20%; height: 40px;
-    margin: 50px auto 0;
+    margin: 50px auto 10%;
     padding: 10px 10px;
     background: #1F4CC0;
     text-decoration: none; color: #fff;
@@ -92,6 +137,7 @@ body {
     background: #1F4CC0;
     text-decoration: none; color: #fff;
     border-radius: 20px;
+    margin-bottom: 10%;
 }
 
 .team_fail a p {
@@ -101,4 +147,436 @@ body {
 .team_fail a:hover {
     background: #4272EF;
     transition: 0.3s ease;
+}
+
+
+/* ===================================
+   반응형 미디어 쿼리
+   =================================== */
+
+/* 노트북 (1024px ~ 1400px) - 5명 한 줄 유지 */
+@media (max-width: 1400px) {
+    .team_success h3 {
+        font-size: 23px;
+    }
+    
+    .team_member {
+        gap: 15px;
+    }
+    
+    .t_member {
+        width: 17%;
+        height: 240px;
+        padding: 18px;
+    }
+    
+    .profile_section {
+        height: 100px;
+    }
+    
+    .t_member > .profile_section > .profile_img {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .t_member > .profile_section > .level_img {
+        width: 35px;
+        height: 35px;
+        right: calc(50% - 55px);
+    }
+    
+    .t_member .u_name {
+        font-size: 15px;
+    }
+    
+    .t_member .u_name > span {
+        font-size: 13px;
+    }
+    
+    .t_member .u_design,
+    .t_member .u_frontend,
+    .t_member .u_backend {
+        font-size: 15px;
+        bottom: 20px;
+    }
+    
+    .go_project {
+        width: 25%;
+    }
+    
+    .team_fail h3 {
+        font-size: 28px;
+    }
+    
+    .team_fail a {
+        width: 25%;
+    }
+    
+    .team_fail a p {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .team_success {
+        margin-top: 10%;
+    }
+
+    .team_success h3 {
+        font-size: 21px;
+    }
+    
+    .team_member {
+        gap: 12px;
+    }
+    
+    .t_member {
+        width: 18%;
+        height: 220px;
+        padding: 15px;
+    }
+    
+    .profile_section {
+        height: 90px;
+    }
+    
+    .t_member > .profile_section > .profile_img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .t_member > .profile_section > .level_img {
+        width: 32px;
+        height: 32px;
+        right: calc(50% - 50px);
+    }
+    
+    .t_member .u_name {
+        font-size: 14px;
+        margin: 8px 0;
+    }
+    
+    .t_member .u_name > span {
+        font-size: 12px;
+    }
+    
+    .t_member .u_design,
+    .t_member .u_frontend,
+    .t_member .u_backend {
+        font-size: 13px;
+        padding: 4px 8px;
+        bottom: 18px;
+    }
+    
+    .go_project {
+        width: 30%;
+        height: 38px;
+    }
+    
+    .go_project p {
+        font-size: 14px;
+    }
+    
+    .team_fail h3 {
+        font-size: 26px;
+    }
+    
+    .team_fail a {
+        width: 30%;
+        height: 38px;
+    }
+    
+    .team_fail a p {
+        font-size: 16px;
+    }
+}
+
+/* 태블릿 (~ 768px) - 위 3개, 아래 2개 */
+@media (max-width: 768px) {
+    .team_success {
+        margin-top: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+    }
+    
+    .team_success h3 {
+        font-size: 18px;
+        padding: 0 20px;
+        line-height: 1.4;
+    }
+    
+    .team_member {
+        width: 90%;
+        max-width: 550px;
+        margin: 25px auto 0;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .t_member {
+        width: 30%;
+        min-width: 150px;
+        max-width: 170px;
+        max-height: 190px;
+        padding: 12px;
+    }
+    
+    .profile_section {
+        height: 85px;
+        margin-bottom: 10px;
+    }
+    
+    .t_member > .profile_section > .profile_img {
+        width: 85px;
+        height: 85px;
+    }
+    
+    .t_member > .profile_section > .level_img {
+        width: 30px;
+        height: 30px;
+        right: calc(50% - 47px);
+    }
+    
+    .t_member .u_name {
+        font-size: 13px;
+        margin: 8px 0;
+    }
+    
+    .t_member .u_name > span {
+        font-size: 11px;
+    }
+    
+    .t_member .u_design,
+    .t_member .u_frontend,
+    .t_member .u_backend {
+        font-size: 12px;
+        padding: 3px 6px;
+        bottom: 15px;
+    }
+    
+    .t_member .u_design {
+        width: 50%;
+    }
+    
+    .t_member .u_frontend {
+        width: 65%;
+    }
+    
+    .t_member .u_backend {
+        width: 50%;
+    }
+    
+    .go_project {
+        width: 45%;
+        height: 38px;
+        margin-top: 30px;
+        margin-bottom: 0;
+    }
+    
+    .go_project p {
+        font-size: 13px;
+    }
+    
+    .team_fail {
+        margin-top: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .team_fail h3 {
+        font-size: 22px;
+        padding: 0 20px;
+        line-height: 1.4;
+    }
+    
+    .team_fail a {
+        width: 45%;
+        height: 38px;
+        margin-bottom: 0;
+    }
+    
+    .team_fail a p {
+        font-size: 15px;
+    }
+}
+
+/* 모바일 (~ 480px) - 위 3개, 아래 2개 유지 */
+@media (max-width: 480px) {
+    .team_success {
+        margin-top: -7%;
+    }
+
+    .team_success h3 {
+        font-size: 16px;
+        padding: 0 15px;
+    }
+    
+    .team_member {
+        width: 95%;
+        max-width: 100%;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .t_member {
+        width: 30%;
+        min-width: 95px;
+        max-width: 110px;
+        max-height: 150px;
+        padding: 10px;
+    }
+    
+    .profile_section {
+        height: 65px;
+        margin-bottom: 8px;
+    }
+    
+    .t_member > .profile_section > .profile_img {
+        width: 65px;
+        height: 65px;
+    }
+    
+    .t_member > .profile_section > .level_img {
+        width: 24px;
+        height: 24px;
+        right: calc(50% - 38px);
+    }
+    
+    .t_member .u_name {
+        font-size: 11px;
+        margin: 6px 0;
+    }
+    
+    .t_member .u_name > span {
+        font-size: 10px;
+    }
+    
+    .t_member .u_design,
+    .t_member .u_frontend,
+    .t_member .u_backend {
+        font-size: 10px;
+        padding: 3px 5px;
+        bottom: 12px;
+    }
+    
+    .t_member .u_design {
+        width: 50%;
+    }
+    
+    .t_member .u_frontend {
+        width: 70%;
+    }
+    
+    .t_member .u_backend {
+        width: 50%;
+    }
+    
+    .go_project {
+        width: 55%;
+        height: 36px;
+        margin-top: 25px;
+    }
+    
+    .go_project p {
+        font-size: 12px;
+    }
+    
+    .team_fail h3 {
+        font-size: 18px;
+        padding: 0 15px;
+    }
+    
+    .team_fail a {
+        width: 55%;
+        height: 36px;
+    }
+    
+    .team_fail a p {
+        font-size: 13px;
+    }
+}
+
+/* 극소형 모바일 (~ 360px) */
+@media (max-width: 360px) {
+    .team_success h3 {
+        font-size: 14px;
+        padding: 0 10px;
+    }
+    
+    .team_member {
+        gap: 8px;
+        margin-top: 18px;
+    }
+    
+    .t_member {
+        width: 30%;
+        min-width: 85px;
+        max-width: 95px;
+        max-height: 125px;
+        padding: 8px;
+    }
+    
+    .profile_section {
+        height: 58px;
+        margin-bottom: 6px;
+    }
+    
+    .t_member > .profile_section > .profile_img {
+        width: 58px;
+        height: 58px;
+    }
+    
+    .t_member > .profile_section > .level_img {
+        width: 22px;
+        height: 22px;
+        right: calc(50% - 34px);
+    }
+    
+    .t_member .u_name {
+        font-size: 10px;
+        margin: 5px 0;
+    }
+    
+    .t_member .u_name > span {
+        font-size: 9px;
+    }
+    
+    .t_member .u_design,
+    .t_member .u_frontend,
+    .t_member .u_backend {
+        font-size: 9px;
+        padding: 2px 4px;
+        bottom: 10px;
+    }
+    
+    .go_project {
+        width: 65%;
+        height: 34px;
+        margin-top: 20px;
+    }
+    
+    .go_project p {
+        font-size: 11px;
+    }
+    
+    .team_fail h3 {
+        font-size: 16px;
+    }
+    
+    .team_fail a {
+        width: 65%;
+        height: 34px;
+    }
+    
+    .team_fail a p {
+        font-size: 12px;
+    }
 }

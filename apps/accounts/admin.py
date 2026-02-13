@@ -15,7 +15,7 @@ class UserRoleLevelInline(admin.TabularInline):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ["id", "username", "nickname", "email", "passion_level", "team_ban_count", "is_staff", "created_at"]
+    list_display = ["id", "username", "nickname", "email", "passion_level", "team_ban_count", "email_notifications_enabled", "is_staff", "created_at"]
     list_filter = ["is_staff", "is_active", "created_at", "passion_level"]
     search_fields = ["username", "nickname", "email"]
     ordering = ["-created_at"]
@@ -24,6 +24,7 @@ class UserAdmin(BaseUserAdmin):
     
     fieldsets = BaseUserAdmin.fieldsets + (
         ("프로필 정보", {"fields": ("nickname", "profile_image", "bio", "tech_stacks")}),
+        ("알림 설정", {"fields": ("email_notifications_enabled",)}),
         ("관리 정보", {"fields": ("passion_level", "team_ban_count")}),
     )
     
@@ -81,9 +82,15 @@ class TechStackAdmin(admin.ModelAdmin):
         ("기본 정보", {"fields": ["name", "category"]}),
     ]
     
+    def get_queryset(self, request):
+        """N+1 쿼리 최적화: annotate로 user_count 미리 계산"""
+        from django.db.models import Count
+        queryset = super().get_queryset(request)
+        return queryset.annotate(_user_count=Count('users', distinct=True))
+    
     def user_count(self, obj):
-        """이 기술을 보유한 사용자 수"""
-        return obj.users.count()
+        """annotate된 _user_count 사용 (DB 쿼리 없음)"""
+        return obj._user_count
     user_count.short_description = "사용자 수"
 
 
@@ -116,6 +123,8 @@ class ReportAdmin(admin.ModelAdmin):
         for report in pending_reports:
             # 피신고자에게 팀 밴 2회 추가
             report.reported_user.team_ban_count += 2
+            # TODO 팀에서 피신고자 제거하기 
+            
             report.reported_user.save()
             
             # 신고 상태 업데이트

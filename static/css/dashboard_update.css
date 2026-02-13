@@ -1,0 +1,1039 @@
+/* 프로젝트 헤더 */
+.p_header {
+	width: 90%;
+	height: 50px;
+	margin: 0 auto;
+	display: flex;
+}
+
+.p_header a {
+	display: block;
+	width: 50%;
+	text-align: center;
+	padding: 15px;
+	text-decoration: none;
+	background: #F6F8FF;
+}
+
+.p_header .p_dashboard {
+	background: #F6F8FF;
+	color: #1d294b;
+}
+
+.p_header .p_mission {
+	background: #fff;
+	color: #cad9ff;
+}
+
+.p_header .p_mission:hover {
+	background: #eaf0ff;
+	color: #1d294b;
+	transition: 0.3s ease-in-out;
+}
+
+.p_header a p {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.dashboard {
+    width: 85%;
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.no_project {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.no_project > h3 {
+    font-size: 40px; font-weight: 650;
+    margin: 150px auto 30px;
+}
+
+.no_project > a {
+    display: block;
+    text-align: center;
+    width: 200px; height: 40px;
+    margin: 0 auto;
+    text-decoration: none;
+    background: #4272EF;
+    border-radius: 20px;
+}
+
+.no_project > a:hover {
+    background: #1F4CC0;
+    transition: 0.3s ease;
+}
+
+.no_project > a > p {
+    color: #fff;
+    font-size: 20px; font-weight: 500;
+    line-height: 40px;
+}
+
+/* 프로젝트 개요 */
+.d_service {
+    margin: 60px auto 0;
+    text-align: center;
+}
+
+.d_service > img {
+    max-width: 500px;
+    width: 100%;
+}
+
+.project_image {
+    border-radius: 25px;
+}
+
+.d_service > input {
+    display: block;
+    margin: 0 auto;
+    width: 30%; height: 40px;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px; font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.d_service > input:focus {
+    border: none;
+    outline: 1px solid #1F4CC0;
+}
+
+.d_service > textarea {
+    width: 60%; height: 80px;
+    margin-top: 15px;
+    font-size: 16px; 
+}
+
+.d_service > textarea:focus {
+    border: none;
+    outline: 1px solid #4272EF;
+}
+
+/* 진행기간 & 즐겨찾기 */
+.d_period {
+    display: flex;
+    margin-top: 70px;
+    align-items: center;
+}
+
+.d_period > img {
+    width: 40px; height: 40px;
+    margin-right: 7px;
+}
+
+.d_period > p {
+    font-size: 18px;
+}
+
+.d_period > p > .period_title {
+    font-weight: 600; font-size: 22px;
+    margin-right: 5px;
+}
+
+.d_bookmark {
+    text-align: start;
+}
+
+.b_title {
+    display: flex;
+    margin-top: 15px;
+    align-items: center;
+}
+
+.b_title > img {
+    width: 40px; height: 40px;
+    margin-right: 7px;
+}
+
+.b_title > p {
+    font-weight: 600; font-size: 22px;
+    margin-top: 2px;
+}
+
+.b_content {
+    margin-top: 5px;
+    margin-left: 47px;
+}
+
+.b_content > p {
+    font-size: 18px;
+}
+
+hr {
+    margin-top: 50px;
+    border: 2px solid #F1F1F1;
+}
+
+/* 컨텐츠 */
+.d_team {
+    text-align: start;
+    margin-top: 50px;
+}
+
+.t_title {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.t_title > img {
+    width: 40px; height: 40px;
+    margin-right: 7px;
+}
+
+.t_title > h3 {
+    font-weight: 600; font-size: 22px;
+    margin-top: 2px;
+}
+
+.t_title > .t_report {
+    position: absolute;
+    top: 0; right: 0;
+    display: flex;
+    align-items: center;
+}
+
+.t_report > img {
+    width: 20px; height: 20px;
+    margin-right: 7px;
+}
+
+.t_report a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #FF0000;
+}
+
+.t_content {
+    margin-top: 5px;
+}
+
+.d_team > .t_content > p {
+    margin-left: 47px;
+    font-size: 18px;
+}
+
+.d_team > .t_content > p > .t_role {
+    font-weight: 600; font-size: 19px;
+    margin-right: 5px;
+}
+
+/* 팀원 카드 컨테이너 - 가로 스크롤 */
+.t_member {
+    width: 90%;
+    margin: 20px auto 0;
+    padding: 20px 0;
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+}
+
+.t_member::-webkit-scrollbar {
+    height: 8px;
+}
+
+/* 팀원 카드 */
+.t_member > .member {
+    position: relative;
+    background: #fff;
+    box-shadow: 1px 2px 2px 1px #ccc;
+    padding: 15px 25px;
+    max-width: 200px;
+    height: 300px;
+    text-align: center;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+ 
+.member > .profile_section {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.member > .profile_section > .profile {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.member > .profile_section > .level {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    bottom: 0;
+    right: calc(50% - 55px);
+}
+
+.member > h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 550;
+}
+
+.member > .info {
+    text-align: start;
+    font-size: 14px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+.member > .role_design {
+    position: absolute;
+    bottom: 15px; right: 50px;
+    font-size: 16px;
+    margin: 15px auto;
+    padding: 5px 0;
+    width: 50%;
+    height: 30px;
+    border: 1px solid #00B9B0;
+    border-radius: 20px;
+    color: #00B9B0;
+    box-shadow: 1px 2px 2px 1px #00B9B0;
+}
+
+.member > .role_frontend {
+    position: absolute;
+    bottom: 15px; right: 40px;
+    font-size: 16px;
+    margin: 15px auto;
+    padding: 5px 0;
+    width: 60%;
+    height: 30px;
+    border: 1px solid #FFCE53;
+    border-radius: 20px;
+    color: #FFCE53;
+    box-shadow: 1px 2px 2px 1px #FFCE53;
+}
+
+.member > .role_backend {
+    position: absolute;
+    bottom: 15px; right: 50px;
+    font-size: 16px;
+    margin: 15px auto;
+    padding: 5px 0;
+    width: 50%;
+    height: 30px;
+    border: 1px solid #FF3E88;
+    border-radius: 20px;
+    color: #FF3E88;
+    box-shadow: 1px 2px 2px 1px #FF3E88;
+}
+
+.d_rule {
+    margin-top: 50px;
+    text-align: start;
+}
+
+.r_title {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.r_title > img {
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+}
+
+.r_title > h3 {
+    font-weight: 600;
+    font-size: 22px;
+    margin-top: 2px;
+}
+
+.r_content {
+    margin-left: 47px;
+    margin-top: 5px;
+}
+
+.r_content > textarea {
+    width: 60%; height: 120px;
+    font-size: 14px;
+    line-height: 22px;
+    border: 1px solid #ccc;
+}
+
+.r_content > textarea:focus {
+    border: none;
+    outline: 1px solid #4272EF;
+}
+
+.d_link {
+    margin-top: 30px;
+    text-align: start;
+}
+
+.l_title {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.l_title > img {
+    width: 40px;
+    height: 40px;
+    margin-right: 7px;
+}
+
+.l_title > h3 {
+    font-weight: 600;
+    font-size: 22px;
+    margin-top: 2px;
+}
+
+.l_content {
+    margin-left: 47px;
+    margin-top: 5px;
+}
+
+.l_content > textarea {
+    width: 60%; height: 120px;
+    font-size: 14px;
+    line-height: 22px;
+    border: 1px solid #ccc;
+}
+
+.l_content > textarea:focus {
+    border: none;
+    outline: 1px solid #4272EF;
+}
+
+
+.d_progress {
+    margin-top: 30px;
+    text-align: start;
+    margin-bottom: 40px;
+}
+
+.p_title {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.p_title > img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.p_title > div > h3 {
+    font-weight: 600;
+    font-size: 22px;
+    margin: 0;
+}
+
+.role_progress_bar {
+    margin: 10px 0 15px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.role_progress_bar > h3 {
+    width: 40px;
+    font-size: 18px;
+    font-weight: 550;
+    margin: 0;
+}
+
+.progress_bar_container {
+    position: relative;
+    flex: 1;
+    height: 15px;
+    background: #DDDDDD;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress_bar_fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #5A88FF;
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+.progress_percent {
+    min-width: 45px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4272EF;
+}
+
+button {
+    width: 200px;
+    height: 40px;
+    background: #4272EF;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 200px;
+}
+
+button:hover {
+    cursor: pointer;
+    background: #1F4CC0;
+    transition: 0.3s ease;
+}
+
+/* 모달 배경 */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 9999;
+    display: none; 
+    justify-content: center;
+    align-items: center;
+}
+
+/* 팝업 박스 */
+.modal-content {
+    background: white;
+    width: 450px; height: 70%;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-header h3 { font-size: 20px; font-weight: 700; color: #1d294b; }
+
+.close-btn { cursor: pointer; font-size: 15px; color: #aaa; }
+
+/* 멤버 리스트 */
+.member-select-list {
+    margin: 15px 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.member-option {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.member-option:hover { background: #f6f8ff; }
+
+.member-info { 
+    display: flex; align-items: center; gap: 10px; 
+    margin-left: 10px;
+}
+
+.member-info img {
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    object-fit: cover; 
+}
+
+/* 입력창 */
+textarea {
+    width: 100%; height: 50px;
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-danger { 
+    background: #4272EF; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; 
+    font-size: 15px;
+}
+.btn-secondary { background: #f0f0f0; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; }
+
+/* ===================================
+   반응형 미디어 쿼리
+   =================================== */
+
+/* 노트북 (1024px ~ 1400px) */
+@media (max-width: 1400px) {
+    .dashboard {
+        width: 90%;
+    }
+    
+    .d_service > input {
+        width: 40%;
+    }
+    
+    .d_service > textarea {
+        width: 70%;
+    }
+    
+    .r_content > textarea,
+    .l_content > textarea {
+        width: 70%;
+    }
+}
+
+/* 태블릿 (768px ~ 1024px) */
+@media (max-width: 1024px) {
+    .dashboard {
+        width: 95%;
+    }
+    
+    .p_header a p {
+        font-size: 16px;
+    }
+    
+    .d_service > img {
+        max-width: 400px;
+    }
+    
+    .d_service > input {
+        width: 50%;
+        font-size: 24px;
+        height: 35px;
+    }
+    
+    .d_service > textarea {
+        width: 80%;
+        height: 70px;
+        font-size: 15px;
+    }
+    
+    .d_period > img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .d_period > p {
+        font-size: 16px;
+    }
+    
+    .d_period > p > .period_title {
+        font-size: 20px;
+    }
+    
+    .t_title > img,
+    .b_title > img,
+    .r_title > img,
+    .l_title > img {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .t_title > h3,
+    .b_title > p,
+    .r_title > h3,
+    .l_title > h3 {
+        font-size: 20px;
+    }
+    
+    .p_title > img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .t_member > .member {
+        max-width: 180px;
+        height: 280px;
+        padding: 12px 20px;
+    }
+    
+    .member > .profile_section > .profile {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .member > .profile_section > .level {
+        width: 32px;
+        height: 32px;
+        right: calc(50% - 50px);
+    }
+    
+    .member > h3 {
+        font-size: 18px;
+    }
+    
+    .member > .info {
+        font-size: 13px;
+    }
+    
+    .r_content > textarea,
+    .l_content > textarea {
+        width: 80%;
+        height: 100px;
+        font-size: 13px;
+    }
+    
+    .modal-content {
+        width: 400px;
+        height: 65%;
+    }
+}
+
+/* 모바일 (~ 768px) */
+@media (max-width: 768px) {
+    .dashboard {
+        width: 95%;
+    }
+    
+    .p_header {
+        width: 95%;
+        height: 45px;
+    }
+    
+    .p_header a {
+        padding: 12px;
+    }
+    
+    .p_header a p {
+        font-size: 14px;
+    }
+    
+    .no_project > h3 {
+        font-size: 28px;
+        margin: 100px auto 20px;
+    }
+    
+    .no_project > a {
+        width: 180px;
+        height: 35px;
+    }
+    
+    .no_project > a > p {
+        font-size: 16px;
+        line-height: 35px;
+    }
+    
+    .d_service {
+        margin: 40px auto 0;
+    }
+    
+    .d_service > img {
+        max-width: 300px;
+    }
+    
+    .d_service > input {
+        width: 70%;
+        font-size: 20px;
+        height: 32px;
+    }
+    
+    .d_service > textarea {
+        width: 90%;
+        height: 60px;
+        font-size: 14px;
+    }
+    
+    .d_period {
+        margin-top: 50px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .d_period > img {
+        width: 30px;
+        height: 30px;
+        margin-bottom: 5px;
+    }
+    
+    .d_period > p {
+        font-size: 14px;
+        margin-left: 0;
+    }
+    
+    .d_period > p > .period_title {
+        font-size: 16px;
+    }
+    
+    .b_title > img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .b_title > p {
+        font-size: 18px;
+    }
+    
+    .b_content {
+        margin-left: 37px;
+    }
+    
+    hr {
+        margin-top: 35px;
+    }
+    
+    .d_team,
+    .d_rule,
+    .d_link,
+    .d_progress {
+        margin-top: 35px;
+    }
+    
+    .t_title > img,
+    .r_title > img,
+    .l_title > img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .t_title > h3,
+    .r_title > h3,
+    .l_title > h3 {
+        font-size: 18px;
+    }
+    
+    .p_title > img {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .p_title > h3 {
+        font-size: 18px;
+    }
+    
+    .t_report > img {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .t_report a {
+        font-size: 12px;
+    }
+    
+    .d_team > .t_content > p {
+        margin-left: 37px;
+        font-size: 16px;
+    }
+    
+    .d_team > .t_content > p > .t_role {
+        font-size: 17px;
+    }
+    
+    .t_member {
+        margin-top: 15px;
+        padding: 15px 0;
+        gap: 12px;
+    }
+    
+    .t_member > .member {
+        max-width: 160px;
+        height: 260px;
+        padding: 10px 18px;
+    }
+    
+    .member > .profile_section {
+        height: 80px;
+        margin-bottom: 12px;
+    }
+    
+    .member > .profile_section > .profile {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .member > .profile_section > .level {
+        width: 28px;
+        height: 28px;
+        right: calc(50% - 45px);
+    }
+    
+    .member > h3 {
+        font-size: 16px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .member > .info {
+        font-size: 12px;
+    }
+    
+    .member > .role_design,
+    .member > .role_frontend,
+    .member > .role_backend {
+        font-size: 14px;
+        height: 28px;
+        padding: 4px 0;
+        bottom: 10px;
+    }
+    
+    .member > .role_design {
+        right: 40px;
+    }
+    
+    .member > .role_frontend {
+        right: 30px;
+    }
+    
+    .member > .role_backend {
+        right: 40px;
+    }
+    
+    .r_content,
+    .l_content {
+        margin-left: 37px;
+    }
+    
+    .r_content > textarea,
+    .l_content > textarea {
+        width: 90%;
+        height: 90px;
+        font-size: 13px;
+        line-height: 20px;
+    }
+    
+    .p_content {
+        margin: 5px 0 80px 37px;
+    }
+    
+    .p_bar {
+        height: 18px;
+    }
+    
+    button {
+        width: 180px;
+        height: 38px;
+        font-size: 16px;
+        margin-bottom: 150px;
+    }
+    
+    .modal-content {
+        width: 90%;
+        max-width: 350px;
+        height: 60%;
+        padding: 25px;
+    }
+    
+    .modal-header h3 {
+        font-size: 18px;
+    }
+    
+    .member-select-list {
+        max-height: 150px;
+    }
+    
+    .member-option {
+        padding: 10px;
+    }
+    
+    .member-info img {
+        width: 30px;
+        height: 30px;
+    }
+    
+    textarea {
+        height: 45px;
+        font-size: 13px;
+    }
+}
+
+/* 소형 모바일 (~ 480px) */
+@media (max-width: 480px) {
+    .p_header a p {
+        font-size: 13px;
+    }
+    
+    .d_service > img {
+        max-width: 250px;
+    }
+    
+    .d_service > input {
+        width: 85%;
+        font-size: 18px;
+        height: 30px;
+    }
+    
+    .d_service > textarea {
+        width: 95%;
+        height: 55px;
+        font-size: 13px;
+    }
+    
+    .d_period > p {
+        font-size: 13px;
+    }
+    
+    .t_member > .member {
+        max-width: 140px;
+        height: 240px;
+        padding: 10px 15px;
+    }
+    
+    .member > .profile_section {
+        height: 70px;
+    }
+    
+    .member > .profile_section > .profile {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .member > .profile_section > .level {
+        width: 25px;
+        height: 25px;
+        right: calc(50% - 40px);
+    }
+    
+    .member > h3 {
+        font-size: 15px;
+    }
+    
+    .member > .info {
+        font-size: 11px;
+    }
+    
+    .member > .role_design,
+    .member > .role_frontend,
+    .member > .role_backend {
+        font-size: 13px;
+        height: 26px;
+    }
+    
+    .r_content > textarea,
+    .l_content > textarea {
+        width: 95%;
+        font-size: 12px;
+    }
+    
+    button {
+        width: 160px;
+        height: 35px;
+        font-size: 15px;
+    }
+}

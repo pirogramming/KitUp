@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🎉 팀 매칭 완료</h1>
+        </div>
+
+        <!-- 본문 -->
+        <div class="content">
+            <div class="greeting">
+                안녕하세요, <strong>{{ user.nickname }}</strong>님! 👋
+            </div>
+
+            <p>
+                {{ season.name }} 팀 매칭이 완료되었습니다!<br>
+                함께할 팀원들을 소개합니다.
+            </p>
+
+            <!-- 기간 정보 -->
+            <div class="period-info" style="background-color: #f0f4ff; border-left: 4px solid #667eea; padding: 20px; margin: 20px 0; border-radius: 4px;">
+                <p style="margin: 8px 0; font-size: 18px; font-weight: 600;">📅 <strong>프로젝트 기간</strong></p>
+                <p style="margin: 8px 0; font-size: 18px; font-weight: 600; color: #667eea;">{{ project_start }} ~ {{ project_end }}</p>
+            </div>
+
+            <!-- 팀원 정보 -->
+            <div class="team-section" style="margin: 30px 0;">
+                <h2 style="font-size: 18px; color: #667eea; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">👥 당신의 팀</h2>
+                <table class="team-members" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+                    <thead style="background-color: #667eea; color: white;">
+                        <tr>
+                            <th style="padding: 16px 25px; text-align: left; font-weight: 600; font-size: 14px;">닉네임</th>
+                            <th style="padding: 16px 25px; text-align: left; font-weight: 600; font-size: 14px;">역할</th>
+                            <th style="padding: 16px 25px; text-align: left; font-weight: 600; font-size: 14px;">레벨</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in team_members %}
+                        <tr>
+                            <td class="member-name" style="padding: 25px 25px; border-bottom: 1px solid #e0e0e0; vertical-align: middle; font-weight: 600; color: #333; font-size: 15px;">{{ member.user.nickname }}</td>
+                            <td style="padding: 25px 25px; border-bottom: 1px solid #e0e0e0; vertical-align: middle;">
+                                {% if member.role.code == "PM" %}
+                                    <span class="role-badge role-pm" style="display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; background-color: #FFE5B4; color: #FF8C00;">기획자 (PM)</span>
+                                {% elif member.role.code == "FRONTEND" %}
+                                    <span class="role-badge role-fe" style="display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; background-color: #B4E5FF; color: #0066CC;">프론트엔드 (FE)</span>
+                                {% elif member.role.code == "BACKEND" %}
+                                    <span class="role-badge role-be" style="display: inline-block; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; white-space: nowrap; background-color: #B4FFB4; color: #006600;">백엔드 (BE)</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 25px 25px; border-bottom: 1px solid #e0e0e0; vertical-align: middle; font-weight: 600; color: #667eea; font-size: 15px;">Lv{{ member.level }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 14px; color: #666;">
+                KITUP 대시보드에서 팀 정보와 프로젝트 세부사항을 확인할 수 있습니다.
+            </p>
+        </div>
+
+        <!-- 푸터 -->
+        <div class="footer">
+            <p>이 이메일은 KITUP에서 자동으로 발송된 메일입니다.</p>
+            <p>&copy; 2026 KITUP. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -57,22 +57,20 @@
 
             <button type="submit" class="submit-btn">회원가입</button>
         </form>
-
+              <!-- 소셜 로그인 -->
         <div class="social-login">
-            <p class="social-title">간편 가입</p>
+            <p class="social-title-1">간편 가입</p>
             <div class="social-icons">
                 <a href="{% url 'kakao_login' %}" class="social-icon">
-                    <img src="{% static 'images/kakao-icon.png' %}">
-                </a>
-                <a href="{% url 'naver_login' %}" class="social-icon">
-                    <img src="{% static 'images/naver-icon.jpeg' %}">
+                    <img src="{% static 'images/kakao-icon.png' %}" alt="Kakao">
                 </a>
                 <a href="{% url 'google_login' %}" class="social-icon">
-                    <img src="{% static 'images/google-icon.png' %}">
+                    <img src="{% static 'images/google-icon.png' %}" alt="Google">
                 </a>
                 <a href="{% url 'github_login' %}" class="social-icon">
-                    <img src="{% static 'images/github-icon.png' %}">
+                    <img src="{% static 'images/github-icon.png' %}" alt="GitHub">
                 </a>
+                </div>
             </div>
         </div>
     </div>

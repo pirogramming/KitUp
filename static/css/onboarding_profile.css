@@ -141,6 +141,8 @@ form > div:first-child.has-image::before {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  /* allow JS to set a custom profile image via CSS variable */
+  background-image: var(--profile-url, linear-gradient(135deg, var(--light-blue) 0%, #B3CDFC 100%));
 }
 
 /* Second div - Nickname field with button */
@@ -151,7 +153,7 @@ form > div:nth-child(2) {
 /* Nickname input styling */
 form > div:nth-child(2) input[type="text"] {
   width: 100%;
-  padding: 12px 80px 12px 16px;
+  padding: 12px 16px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   font-size: 15px;
@@ -166,29 +168,6 @@ form > div:nth-child(2) input[type="text"]:focus {
   border-color: var(--primary-blue);
   background-color: var(--white);
   box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
-}
-
-/* Create "확인" button using ::after on the second div */
-form > div:nth-child(2)::after {
-  content: '확인';
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-top: 14px;
-  background-color: var(--primary-blue);
-  color: var(--white);
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  pointer-events: auto;
-}
-
-form > div:nth-child(2)::after:hover {
-  background-color: var(--primary-hover);
 }
 
 /* Labels */
@@ -288,15 +267,30 @@ form > div:last-of-type label:hover {
 }
 
 /* Checked state */
-form > div:last-of-type input[type="checkbox"]:checked + label {
+/* Use :has to style the label when its contained input is checked (modern browsers) */
+form > div:last-of-type label:has(input[type="checkbox"]:checked) {
   background-color: var(--primary-blue);
   border-color: var(--primary-blue);
   color: var(--white);
   font-weight: 600;
 }
 
-/* Add checkmark icon to checked items */
-form > div:last-of-type input[type="checkbox"]:checked + label::before {
+/* Add checkmark icon to checked items (when input is checked) */
+form > div:last-of-type label:has(input[type="checkbox"]:checked)::before {
+  content: '✓';
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+/* JS fallback class when :has is unsupported */
+form > div:last-of-type label.is-checked {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  font-weight: 600;
+}
+
+form > div:last-of-type label.is-checked::before {
   content: '✓';
   margin-right: 6px;
   font-weight: bold;

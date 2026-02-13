@@ -29,6 +29,38 @@ from apps.projects.models import Project
 from apps.teams.models import TeamMember
 
 
+def _get_my_projects_and_roles(user):
+    """
+    내 프로젝트와 프로젝트에서의 내 역할 찾기
+    """
+    my_project_ids = (
+        TeamMember.objects
+        .filter(user=user)
+        .values_list("team__project_id", flat=True)
+        .distinct()
+    )
+
+    my_projects = (
+        Project.objects
+        .filter(Q(id__in=my_project_ids) | Q(owner=user))
+        .order_by("title")
+    )
+
+    # 프로젝트별 내 role 코드(TeamMember.role.code) 매핑
+    role_map = {}
+    tm_qs = (
+        TeamMember.objects
+        .filter(user=user, team__project__in=my_projects)
+        .select_related("role", "team__project")
+    )
+    for tm in tm_qs:
+        pid = tm.team.project_id
+        # 같은 프로젝트에 팀멤버가 여러개면(이상 케이스) 첫 값 유지
+        role_map.setdefault(pid, getattr(tm.role, "code", None))
+
+    return my_projects, role_map
+
+
 @login_required
 def note_list(request):
     """
@@ -57,26 +89,20 @@ def note_list(request):
         )
     
     # 스택 필터
-    role_codes  = request.GET.getlist("roles")
-    if role_codes :
-        get_personnal_retro = "none" in role_codes 
+    role = (request.GET.get("roles") or "").strip()
 
+    if role == "none":
+        qs = qs.filter(project__isnull=True)
+
+    elif role in ("PM", "FRONTEND", "BACKEND"):
         role_project_ids = (
             TeamMember.objects
-            .filter(user=request.user, role__code__in=role_codes )
+            .filter(user=request.user, role__code=role)
             .values_list("team__project_id", flat=True)
             .distinct()
         )
-
-        if get_personnal_retro and role_project_ids:
-            qs = qs.filter(
-                Q(project__isnull=True) | 
-                Q(project_id__in = role_project_ids)
-            )
-        elif get_personnal_retro:
-            qs = qs.filter(project__isnull=True)
-        elif role_project_ids:
-            qs = qs.filter(project_id__in = role_project_ids)
+        # ✅ 매칭 프로젝트가 없으면 결과 0개가 맞음
+        qs = qs.filter(project_id__in=role_project_ids)
 
     # 북마크 필터
     bookmarked = request.GET.get("bookmarked")
@@ -108,6 +134,7 @@ def note_list(request):
     context = {
         "notes" : qs,
         "my_projects": my_projects, # 내 프로젝트 조회 -> 필터에 보여주기
+        "role": role,
         "q" : q,
         "bookmarked": bookmarked,
         "sort": sort,
@@ -124,7 +151,7 @@ def note_create(request):
       :tpl: 선택할 질문 템플릿 (현재는 default 하나만)
       
     """
-    tpl_key = request.GET.get("tpl") or "default"
+    tpl_key = request.GET.get("tpl") or "compact"
     guide = load_guide(tpl_key)
 
     # ✅ draft_key 발급/유지
@@ -132,12 +159,30 @@ def note_create(request):
         request.session["retro_draft_key"] = str(uuid.uuid4())
     draft_key = request.session["retro_draft_key"]
     
+    my_projects, my_role_map = _get_my_projects_and_roles(request.user)
+
     if request.method == "POST":
         title = (request.POST.get("title") or "빈 제목").strip()
+        project_id_raw = (request.POST.get("project_id") or "").strip()
+        role_code = (request.POST.get("role") or "").strip()
+
         if not title:
             context = {"guide": guide, "tpl": tpl_key, "error": "제목은 필수입니다."}
             return render(request, "reflections/note_create.html", context)
         
+        project = None
+        if project_id_raw:
+            project = get_object_or_404(Project, id=project_id_raw)
+
+            # 보안/권한: 내 프로젝트가 아니면 막기
+            if project not in my_projects:
+                messages.error(request, "내 프로젝트만 선택할 수 있습니다.")
+                return redirect("reflections:note_create")
+
+            # role 자동 채움 정책: role이 비어있으면 프로젝트 기준 role_map에서 채움
+            if not role_code:
+                role_code = my_role_map.get(project.id) or ""
+
         answers = dict() # qid: "답변 내용" 형식
         for q in guide["questions"]:
             qid = q["id"]
@@ -147,6 +192,7 @@ def note_create(request):
 
         note = Retrospective.objects.create(
             user= request.user,
+            project=project,
             template_key=tpl_key,
             title=title,
             answers_json=answers,
@@ -169,6 +215,9 @@ def note_create(request):
         "tpl": tpl_key,
         "answers": {},
         "draft_key": draft_key,
+        "my_projects": my_projects,
+        "my_role_map": my_role_map,  
+        "note": None
     }
     return render(request, "reflections/note_create.html", context)
 
@@ -191,14 +240,19 @@ def note_update(request, note_id):
     """회고 수정 - note_create와 동일하게 guide 기반으로 렌더/저장"""
     note = get_object_or_404(Retrospective, id=note_id, user=request.user)
 
-    tpl = note.template_key or "default"
+    tpl = note.template_key or "compact"
     guide = load_guide(tpl)
 
     # 기존 답변(answers_json)로 textarea 기본값 채우기
     existing_answers = note.answers_json or {}
 
+    my_projects, my_role_map = _get_my_projects_and_roles(request.user)
+
     if request.method == "POST":
         title = (request.POST.get("title") or "빈 제목").strip()
+        project_id_raw = (request.POST.get("project_id") or "").strip()
+        role_code = (request.POST.get("role") or "").strip()
+        
         if not title:
             context = {
                 "note": note,
@@ -208,6 +262,17 @@ def note_update(request, note_id):
                 "error": "제목은 필수입니다.",
             }
             return render(request, "reflections/note_update.html", context)
+        
+        project = None
+        if project_id_raw:
+            project = get_object_or_404(Project, id=project_id_raw)
+            if project not in my_projects:
+                messages.error(request, "내 프로젝트만 선택할 수 있습니다.")
+                return redirect("reflections:note_update", note_id=note.id)
+
+            # role 비어있으면 자동, 있으면 사용자가 고른 값 존중
+            if not role_code:
+                role_code = my_role_map.get(project.id) or ""
 
         answers = {}
         for q in guide["questions"]:
@@ -217,6 +282,7 @@ def note_update(request, note_id):
         content_md = build_markdown(guide, answers)
 
         note.title = title
+        note.project = project
         note.answers_json = answers
         note.content_md = content_md
         note.save(update_fields=["title", "answers_json", "content_md", "updated_at"])
@@ -228,6 +294,8 @@ def note_update(request, note_id):
         "guide": guide,
         "tpl": tpl,
         "answers": existing_answers,
+        "my_projects": my_projects or {},
+        "my_role_map": my_role_map or [],
     }
     return render(request, "reflections/note_update.html", context)
 

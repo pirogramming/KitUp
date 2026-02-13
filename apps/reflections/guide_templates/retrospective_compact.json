@@ -1,0 +1,10 @@
+{
+  "key": "compact",
+  "title": "오늘의 회고",
+  "intro": [],
+  "questions": [
+    { "id": "q1_study", "order": 1, "title": "오늘 무엇을 공부했나요?" },
+    { "id": "q2_hard", "order": 2, "title": "어려웠던 지점은 무엇이었고, 어떻게 해결하거나 해결하지 못했나요?" },
+    { "id": "q3_tomorrow", "order": 3, "title": "내일은 무엇을 할 것인가요?" }
+  ]
+}

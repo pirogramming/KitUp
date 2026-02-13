@@ -12,19 +12,21 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
+    margin: 0;
 }
 
 .login-container {
-    position: relative;
-    width: 100%;
-    max-width: 440px;
+    /* position: relative; */
+    width: 450px;
 }
+
 
 .login-box {
     background: white;
     border-radius: 16px;
-    padding: 48px 40px;
+    padding: 48px 75px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
 }
 
 .logo {
@@ -52,7 +54,7 @@ body {
 }
 
 .input-group {
-    position: relative;
+    /* position: relative; */
 }
 
 .input-group input {
@@ -63,6 +65,8 @@ body {
     font-size: 15px;
     transition: all 0.3s ease;
     background-color: #fafafa;
+    align-items: center;
+
 }
 
 .input-group input:focus {
@@ -117,7 +121,7 @@ body {
 }
 
 .social-login {
-    display: flex;
+    
     justify-content: center;
     gap: 16px;
     margin-top: 32px;
@@ -126,14 +130,14 @@ body {
 }
 
 .social-icon {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
     background: white;
-    border: 1px solid #e0e0e0;
+    border: 0.5px solid #e0e0e0;
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -150,23 +154,199 @@ body {
     border-radius: 50%;
 }
 
-/* 반응형 디자인 */
+/* ===================================
+   반응형 미디어 쿼리 추가
+   =================================== */
+
+/* 태블릿 (768px 이하) */
+@media (max-width: 768px) {
+    .login-container {
+        width: 400px;
+    }
+    
+    .login-box {
+        width: 100%;
+        padding: 40px 60px;
+    }
+    
+    .logo h3 {
+        font-size: 28px;
+    }
+    
+    .login-title {
+        font-size: 22px;
+        margin-bottom: 28px;
+    }
+    
+    .input-group input {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .login-button {
+        padding: 12px;
+        font-size: 15px;
+    }
+    
+    .links {
+        margin-top: 18px;
+    }
+    
+    .link {
+        font-size: 13px;
+    }
+    
+    .social-login {
+        margin-top: 28px;
+        padding-top: 28px;
+    }
+    
+    .social-title {
+        font-size: 13px;
+    }
+    
+    .social-icons {
+        gap: 14px;
+    }
+    
+    .social-icon {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .social-icon img {
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* 모바일 (480px 이하) */
 @media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .login-container {
+        width: 350px;
+    }
+    
     .login-box {
         padding: 32px 24px;
+        width: 100%;
     }
-
+    
+    .logo {
+        margin-bottom: 24px;
+    }
+    
+    .logo h3 {
+        font-size: 26px;
+    }
+    
     .login-title {
         font-size: 20px;
+        margin-bottom: 24px;
     }
-
+    
+    .login-form {
+        gap: 14px;
+    }
+    
+    .input-group input {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .login-button {
+        padding: 12px;
+        font-size: 14px;
+        margin-top: 6px;
+    }
+    
+    .links {
+        margin-top: 16px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .link {
+        font-size: 13px;
+    }
+    
+    .social-login {
+        margin-top: 24px;
+        padding-top: 24px;
+    }
+    
+    .social-title {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    .social-icons {
+        gap: 12px;
+    }
+    
     .social-icon {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .social-icon img {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .error-messages, .messages {
+        font-size: 13px;
+    }
+    
+    .error {
+        font-size: 13px;
+    }
+}
+
+/* 극소형 모바일 (360px 이하) */
+@media (max-width: 360px) {
+    .login-container {
+        width: 320px;
     }
 
+    .login-box {
+        width: 100%;
+        padding: 28px 20px;
+    }
+    
+    .logo h3 {
+        font-size: 24px;
+    }
+    
+    .login-title {
+        font-size: 18px;
+    }
+    
+    .input-group input {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    
+    .login-button {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .social-icons {
+        gap: 10px;
+    }
+    
+    .social-icon {
+        width: 38px;
+        height: 38px;
+    }
+    
     .social-icon img {
-        width: 20px;
-        height: 20px;
+        width: 34px;
+        height: 34px;
     }
 }

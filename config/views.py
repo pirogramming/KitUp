@@ -17,12 +17,20 @@ def main_view(request):
     """
     
     user = request.user
-    context = {}
+    season = Season.get_active_season()
+    context = {
+        'season': season,
+        'user_obj': user,
+    }
     
     # 로그인 상태만 추가 데이터 조회
     if user.is_authenticated:
         """회고 부분"""
+        recent_reflections = Retrospective.objects.filter(
+            user=user
+        ).order_by('-created_at')[:4]
         
+        context["recent_reflections"] = recent_reflections
         """팀 매칭 부분"""
         season = Season.get_active_season()
         is_matching_period = season and season.is_matching_period() if season else False

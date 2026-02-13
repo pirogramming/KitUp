@@ -16,7 +16,7 @@
         </div>
 
         <!-- 로그인 제목 -->
-        <h1 class="login-title">로그인</h1>
+        <h1 class="login-title">로그인  </h1>
 
         <!-- 에러 메시지만 표시 (로그인 실패 시) -->
         {% if form.errors %}
@@ -58,9 +58,6 @@
             <div class="social-icons">
                 <a href="{% url 'kakao_login' %}" class="social-icon">
                     <img src="{% static 'images/kakao-icon.png' %}" alt="Kakao">
-                </a>
-                <a href="{% url 'naver_login' %}" class="social-icon">
-                    <img src="{% static 'images/naver-icon.jpeg' %}" alt="Naver">
                 </a>
                 <a href="{% url 'google_login' %}" class="social-icon">
                     <img src="{% static 'images/google-icon.png' %}" alt="Google">

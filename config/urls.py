@@ -19,7 +19,7 @@ urlpatterns = [
     path("signup/", RedirectView.as_view(url="/accounts/signup/")),
     
     # template views: HTML로 보여줄 주소들
-    path("users/", include("apps.accounts.urls")),
+    path("accounts/", include("apps.accounts.urls")),
     path("projects/", include("apps.projects.urls")),
     path("teams/", include("apps.teams.urls")),
     path("guides/", include("apps.guides.urls")),

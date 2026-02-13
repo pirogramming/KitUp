@@ -1,7 +1,7 @@
 {% extends 'base.html' %} 
 {% load static %}
 {% block header %}
-<link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+<link rel="stylesheet" href="{% static 'css/dashboard_update.css' %}" />
 {% endblock %} 
 {% block content %}
 <section class="p_header">
@@ -15,31 +15,35 @@
         <!-- 프로젝트 개요 (수정 불가 - 표시만) -->
         <div class="d_service">
             {% if project.project_image %}
-                <img src="{{ project.project_image.url }}" alt="서비스이미지">
+                <img src="{{ project.project_image.url }}" alt="서비스이미지" class="project_image">
             {% else %}
                 <img src="{% static 'images/service_default.png' %}" alt="서비스이미지">
             {% endif %}
-            <h3>{{ project.title }}</h3>
-            <p>{{ project.description }}</p>
+            <input type="text" name="title" value="{{ project.title }}" class="title_input" required>
+            <textarea name="description" class="description_input" required>{{ project.description }}</textarea>
         </div>
         
         <!-- 진행기간 (수정 불가 - 표시만) -->
         <div class="d_period">
             <img src="{% static 'images/calender.png' %}" alt="달력이미지">
-            <p><span class="period_title">진행기간 </span>{{ season.project_start|date:"Y/m/d" }} ~ {{ season.project_end|date:"Y/m/d" }}</p>
+            <p><span class="period_title">진행기간 </span>            
+                {% if project.starts_at and project.ends_at %}
+                {{ project.starts_at|date:"Y/m/d" }} ~ {{ project.ends_at|date:"Y/m/d" }}
+                {% else %}
+                미정
+                {% endif %}</p>
         </div>
         
-        <!-- 즐겨찾기 (수정 가능) -->
-        <div class="d_bookmark">
-            <div class="b_title">
-                <img src="{% static 'images/bookmark.png' %}" alt="북마크이미지">
-                <p>즐겨찾기</p>
+        <!-- 관련 링크 (수정 가능) -->
+        <div class="d_link">
+            <div class="l_title">
+                <img src="{% static 'images/link.png' %}" alt="link">
+                <h3>관련 링크</h3>
             </div>
-            <div class="b_content">
-                {{ form.is_favorite }}
+            <div class="l_content">
+                {{ form.related_links }}
             </div>
         </div>
-        
         <hr>
         
         <!-- 팀 정보 (수정 불가 - 표시만) -->
@@ -55,7 +59,7 @@
             <div class="t_content">
                 <p><span class="t_role">PM</span>
                     {% for member in members %}
-                        {% if member.role.name == "기획자" %}
+                        {% if member.role.code == "PM" %}
                             {{ member.user.username }}
                         {% endif %}
                     {% endfor %}
@@ -74,28 +78,40 @@
                         {% endif %}
                     {% endfor %}
                 </p>
-                <div class="t_member">
-                    {% for member in members %}
-                    <div class="member">
-                        {% if member.user.profile_image %}
-                            <img src="{{ member.user.profile_image.url }}" alt="프로필사진" class="profile">
+            <div class="t_member">
+                {% for item in members_with_level %}
+                <div class="member">
+                    <div class="profile_section">
+                        {% if item.member.user.profile_image %}
+                        <img src="{{ item.member.user.profile_image.url }}" alt="프로필사진" class="profile">
                         {% else %}
-                            <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
+                        <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
                         {% endif %}
-                        <img src="{% static 'images/level3.png' %}" alt="레벨사진" class="level">
-                        <h3>{{ member.user.username }}</h3>
-                        <p class="info">✉️ {{ member.user.email }}</p>
-                        <p class="info">🖥️ @{{ member.user.username }}</p>
-                        {% if member.role.name == "기획자" %}
-                            <p class="role_design">기획자</p>
-                        {% elif member.role.name == "프론트엔드" %}
-                            <p class="role_frontend">프론트엔드</p>
-                        {% elif member.role.name == "백엔드" %}
-                            <p class="role_backend">백엔드</p>
+                        
+                        {% if item.level == 1 %}
+                        <img src="{% static 'images/Level1.png' %}" alt="레벨1" class="level">
+                        {% elif item.level == 2 %}
+                        <img src="{% static 'images/Level2.png' %}" alt="레벨2" class="level">
+                        {% elif item.level == 3 %}
+                        <img src="{% static 'images/Level3.png' %}" alt="레벨3" class="level">
+                        {% elif item.level == 4 %}
+                        <img src="{% static 'images/Level4.png' %}" alt="레벨4" class="level">
                         {% endif %}
                     </div>
-                    {% endfor %}
+
+                    <h3>{{ item.member.user.username }}</h3>
+                    <p class="info">✉️ {{ item.member.user.email }}</p>
+                    <p class="info">🖥️ @{{ item.member.user.username }}</p>
+                    {% if item.member.role.code == "PM" %}
+                        <p class="role_design">기획자</p>
+                    {% elif item.member.role.name == "프론트엔드" %}
+                        <p class="role_frontend">프론트엔드</p>
+                    {% elif item.member.role.name == "백엔드" %}
+                        <p class="role_backend">백엔드</p>
+                    {% endif %}
                 </div>
+                {% endfor %}
+            </div>
             </div>
         </div>
         
@@ -110,32 +126,20 @@
             </div>
         </div>
         
-        <!-- 관련 링크 (수정 가능) -->
-        <div class="d_link">
-            <div class="l_title">
-                <img src="{% static 'images/link.png' %}" alt="link">
-                <h3>관련 링크</h3>
-            </div>
-            <div class="l_content">
-                <p>Notion : {{ links_form.notion_url }}</p>
-                <p>Figma : {{ links_form.figma_url }}</p>
-                <p>Github : {{ links_form.github_url }}</p>
-            </div>
-        </div>
-        
         <!-- 진척도 (수정 불가 - 표시만) -->
         <div class="d_progress">
             <div class="p_title">
                 <img src="{% static 'images/progress.png' %}" alt="progress">
-                <h3>진척도</h3>
+                <div>
+                    <h3>{{ project.title }}의 진척도</h3>
+                </div>
             </div>
-            <div class="p_content">
-                <div class="p_bar"></div>
-                {% if guide_progress %}
-                    <div class="p_real" style="width: {{ guide_progress.progress_percent }}%;"></div>
-                {% else %}
-                    <div class="p_real" style="width: 0%;"></div>
-                {% endif %}
+            <div class="role_progress_bar">
+                <h3>전체</h3>
+                <div class="progress_bar_container">
+                    <div class="progress_bar_fill" style="width: {% if guide_progress %}{{ guide_progress.progress_percent }}{% else %}0{% endif %}%;"></div>
+                </div>
+                <span class="progress_percent">{% if guide_progress %}{{ guide_progress.progress_percent }}{% else %}0{% endif %}%</span>
             </div>
         </div>
         

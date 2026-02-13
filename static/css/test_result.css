@@ -1,0 +1,207 @@
+/* test_result.css */
+
+.test-result-container {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+}
+
+.result-wrapper {
+    max-width: 600px;
+    width: 100%;
+    text-align: center;
+}
+
+/* 타이틀 */
+.result-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+
+/* 레벨 카드 */
+.level-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 60px 40px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    margin-bottom: 32px;
+    position: relative;
+}
+
+/* 레벨 아이콘 */
+.level-icon-wrapper {
+    margin-bottom: 24px;
+}
+
+.level-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    position: relative;
+}
+
+.level-icon.level-1 {
+    background: linear-gradient(135deg, #d4f1d4, #b8e6b8);
+    box-shadow: 0 8px 24px rgba(184, 230, 184, 0.4);
+}
+
+.level-icon.level-2 {
+    background: linear-gradient(135deg, #b8e6d5, #8ed1b8);
+    box-shadow: 0 8px 24px rgba(142, 209, 184, 0.4);
+}
+
+.level-icon.level-3 {
+    background: linear-gradient(135deg, #8ed1ff, #5b9cff);
+    box-shadow: 0 8px 24px rgba(91, 156, 255, 0.4);
+}
+
+.level-icon.level-4 {
+    background: linear-gradient(135deg, #ffd700, #ffb700);
+    box-shadow: 0 8px 24px rgba(255, 215, 0, 0.5);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* 레벨 배지 */
+.level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #5b73e8, #7c8fe8);
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    padding: 12px 40px;
+    border-radius: 50px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 16px rgba(91, 115, 232, 0.3);
+}
+
+/* 메시지 */
+.result-message {
+    margin-top: 24px;
+}
+
+.user-name {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.description {
+    font-size: 16px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 홈으로 버튼 */
+.btn-home {
+    background: #5b73e8;
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 16px 48px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(91, 115, 232, 0.3);
+}
+
+.btn-home:hover {
+    background: #4a5fc8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(91, 115, 232, 0.4);
+}
+
+.btn-home:active {
+    transform: translateY(0);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .test-result-container {
+        padding: 24px 16px;
+    }
+
+    .result-title {
+        font-size: 24px;
+        margin-bottom: 32px;
+    }
+
+    .level-card {
+        padding: 40px 24px;
+        border-radius: 20px;
+    }
+
+    .level-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 52px;
+    }
+
+    .level-badge {
+        font-size: 24px;
+        padding: 10px 32px;
+    }
+
+    .user-name {
+        font-size: 18px;
+    }
+
+    .description {
+        font-size: 14px;
+    }
+
+    .btn-home {
+        width: 100%;
+        padding: 14px 32px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-title {
+        font-size: 20px;
+    }
+
+    .level-card {
+        padding: 32px 20px;
+    }
+
+    .level-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 40px;
+        border-radius: 20px;
+    }
+
+    .level-badge {
+        font-size: 20px;
+        padding: 8px 24px;
+    }
+
+    .user-name {
+        font-size: 16px;
+    }
+}

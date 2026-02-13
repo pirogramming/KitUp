@@ -1,12 +1,18 @@
 from django.http import HttpResponseBadRequest
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 
 from rest_framework import viewsets
 from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from drf_spectacular.utils import extend_schema, extend_schema_view
+
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from apps.accounts.models import Role, UserRoleLevel
 from apps.projects.models import Season
@@ -18,6 +24,39 @@ from .serializers import TeamSerializer, TeamCreateSerializer, TeamMemberSeriali
 # ================================
 # Template Views (HTML 렌더링)
 # ================================
+
+# apps/teams/views.py
+
+@login_required
+@require_POST
+def enable_email_notifications(request):
+    """
+    사용자의 이메일 알림을 활성화하고 team_apply로 리다이렉트
+    """
+    user = request.user
+    user.email_notifications_enabled = True
+    user.save()
+    
+    messages.success(request, "✅ 알림을 활성화했습니다.")
+    return redirect("teams:team_apply")
+
+
+@login_required
+def team_matching_router(request):
+    """
+    사용자의 상태를 확인하여 매칭 신청 페이지 또는 결과 페이지로 보냄
+    """
+    season = Season.get_active_season()
+    
+    # 1. 사용자가 이미 팀에 속해 있는지 확인
+    user_has_team = TeamMember.objects.filter(user=request.user).exists()
+    
+    # 2. 팀이 있다면 결과 페이지(team.html)로 이동
+    if user_has_team:
+        return redirect('teams:team_status')
+    
+    # 3. 팀이 없다면 신청 페이지(team_apply.html)로 이동
+    return redirect('teams:team_apply')
 
 @login_required
 def team_apply(request):
@@ -42,7 +81,7 @@ def team_apply(request):
     )
 
     role_level_map = {
-        rl.role.code: rl
+        rl.role.code: rl.level
         for rl in role_levels
     }
     
@@ -74,6 +113,35 @@ def passion_test(request):
     return render(request, "teams/passion_test.html")
 
 @login_required
+@require_POST
+def passion_submit_api(request):
+    """
+    열정 테스트 결과 제출 처리 (API)
+    
+    - POST 요청으로 passion_level을 JSON으로 받음
+    - User 모델에 열정 레벨 저장
+    - JSON 응답으로 success 여부 반환
+    """
+    try:
+        data = json.loads(request.body)
+        passion_level = data.get("passion_level")
+        
+        if passion_level is None:
+            return JsonResponse({"success": False, "error": "필수 데이터가 없습니다."})
+        
+        request.user.passion_level = int(passion_level)
+        request.user.save(update_fields=["passion_level"])
+        
+        return JsonResponse({"success": True})
+    except json.JSONDecodeError:
+        return JsonResponse({"success": False, "error": "잘못된 JSON 형식입니다."})
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({"success": False, "error": str(e)})
+
+
+@login_required
 def passion_submit(request):
     """
     열정 테스트 결과 제출 처리
@@ -91,6 +159,34 @@ def passion_submit(request):
     request.user.save(update_fields=["passion_level"])
     
     return redirect("teams:team_status")
+
+@login_required
+def team_matching_cancel(request):
+    """
+    팀 매칭 신청 취소
+    
+    - 팀 매칭 기간 중에만 취소 가능
+    - 프로젝트 기간이면 취소 불가능
+    - 사용자의 TeamMember 레코드 삭제
+    - passion_level을 NULL로 초기화 (다시 열정 테스트 강제)
+    """
+    if request.method != "POST":
+        return HttpResponseBadRequest("잘못된 요청입니다.")
+    
+    season = Season.get_active_season()
+    
+    # 팀 매칭 기간이 아니면 취소 불가능
+    if not season or not season.is_matching_period():
+        messages.error(request, "❌ 팀 매칭 기간이 아닙니다. 취소할 수 없습니다.")
+        return redirect("teams:team_status")
+    
+    # 열정 레벨 초기화 및 이메일 알림 비활성화
+    request.user.passion_level = None
+    request.user.email_notifications_enabled = False
+    request.user.save(update_fields=["passion_level", "email_notifications_enabled"])
+    
+    messages.success(request, "✅ 팀 매칭 신청이 취소되었습니다.")
+    return redirect("teams:team_apply")
 
 
 @login_required

@@ -39,7 +39,8 @@
 /* 진척도 */
 .mission_progress {
     background: #F6F8FF;
-    width: 90%; height: 350px;
+    width: 90%;
+    height: 350px;
     padding: 50px 20px;
     margin: 0 auto 80px;
 }
@@ -50,11 +51,13 @@
 }
 
 .mp_title > img {
-    width: 100px; height: 100px;
+    width: 100px;
+    height: 100px;
 }
 
 .mp_title > div > h3 {
-    font-size: 25px; font-weight: 600;
+    font-size: 25px;
+    font-weight: 600;
     margin-bottom: 15px;
 }
 
@@ -63,88 +66,58 @@
     color: #FF0000;
 }
 
-.pm_progress {
+/* 진척도 바 */
+.role_progress_bar {
     margin: 20px 0 15px 100px;
     display: flex;
     align-items: center;
+    gap: 15px;
 }
 
-.pm_progress > h3 {
+.role_progress_bar > h3 {
     width: 30px;
-    font-size: 20px; font-weight: 550;
-    margin-right: 15px;
+    font-size: 20px;
+    font-weight: 550;
 }
 
-.pm_progress > .pm_bar {
+.progress_bar_container {
     position: relative;
-    width: 85%; height: 15px;
+    flex: 1;
+    height: 15px;
     background: #DDDDDD;
     border-radius: 20px;
+    overflow: hidden;
 }
 
-.pm_progress > .pm_bar > .pm_real {
+.progress_bar_fill {
     position: absolute;
-    top: 0; left: 0;
-    width: 60%; height: 100%;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.5s ease;
+}
+
+.progress_bar_fill.pm_color {
     background: #37D3BF;
-    border-radius: 20px;
 }
 
-.front_progress {
-    margin: 20px 0 15px 100px;
-    display: flex;
-    align-items: center;
-}
-
-.front_progress > h3 {
-    width: 30px;
-    font-size: 20px; font-weight: 550;
-    margin-right: 15px;
-}
-
-.front_progress > .front_bar {
-    position: relative;
-    width: 85%; height: 15px;
-    background: #DDDDDD;
-    border-radius: 20px;
-}
-
-.front_progress > .front_bar > .front_real {
-    position: absolute;
-    top: 0; left: 0;
-    width: 50%; height: 100%;
+.progress_bar_fill.fe_color {
     background: #FFDF6E;
-    border-radius: 20px;
 }
 
-.back_progress {
-    margin: 20px 0 15px 100px;
-    display: flex;
-    align-items: center;
-}
-
-.back_progress > h3 {
-    width: 30px;
-    font-size: 20px; font-weight: 550;
-    margin-right: 15px;
-}
-
-.back_progress > .back_bar {
-    position: relative;
-    width: 85%; height: 15px;
-    background: #DDDDDD;
-    border-radius: 20px;
-}
-
-.back_progress > .back_bar > .back_real {
-    position: absolute;
-    top: 0; left: 0;
-    width: 70%; height: 100%;
+.progress_bar_fill.be_color {
     background: #FF69A4;
-    border-radius: 20px;
 }
 
-/* 카드 */
+.progress_percent {
+    min-width: 45px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4272EF;
+}
+
+/* 미션 아이템 */
 .mission_item {
     width: 90%;
     margin: 0 auto;
@@ -152,6 +125,7 @@
     gap: 20px;
 }
 
+/* 타임라인 */
 .timeline_dot {
     display: flex;
     flex-direction: column;
@@ -161,7 +135,8 @@
 }
 
 .circle {
-    width: 30px; height: 30px;
+    width: 30px;
+    height: 30px;
     background: #EAF0FF;
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -172,7 +147,7 @@
     justify-content: center;
     font-size: 16px;
     font-weight: 700;
-    color: #fff;
+    color: #1d294b;
     transition: all 0.3s ease;
 }
 
@@ -200,10 +175,6 @@
 
 .mission_item.completed .line {
     background: #4272EF;
-}
-
-.mission_item:last-child .line {
-    display: none;
 }
 
 .mission_item:last-child .line {
@@ -256,37 +227,13 @@
     transform: scale(1.1);
 }
 
-/* 카드 내용 */
+/* 카드 내용 (기본 숨김) */
 .card_content {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     margin-top: 0;
-}
-
-.card_description {
-    font-size: 14px;
-    color: #6B7280;
-    margin: 15px 0 10px 0;
-}
-
-.mission_input {
-    width: 100%;
-    padding: 12px 16px;
-    border: 2px solid #E0E7FF;
-    border-radius: 12px;
-    font-size: 15px;
-    color: #9CA3AF;
-    background: #fff;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
-}
-
-.mission_input:focus {
-    outline: none;
-    border-color: #4272EF;
-    color: #1d294b;
 }
 
 /* 활성화된 카드 */
@@ -298,11 +245,488 @@
 }
 
 .mission_card.active .card_content {
-    max-height: 300px;
+    max-height: 500px;
     opacity: 1;
     margin-top: 15px;
 }
 
 .mission_card.completed {
     opacity: 0.8;
+}
+
+/* 마크다운 콘텐츠 스타일 */
+.mission_description {
+    font-size: 14px;
+    color: #374151;
+    line-height: 1.6;
+}
+
+.mission_description p {
+    margin: 10px 0;
+}
+
+.mission_description ul,
+.mission_description ol {
+    margin: 10px 0 10px 20px;
+}
+
+.mission_description li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.mission_description strong {
+    color: #4272EF;
+    font-weight: 600;
+}
+
+.mission_description em {
+    color: #6B7280;
+    font-style: italic;
+    font-size: 13px;
+}
+
+.mission_description code {
+    background: #F3F4F6;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.mission_description p {
+    margin: 8px 0;
+    white-space: pre-wrap;
+}
+
+.mission_description strong {
+    color: #4272EF;
+    font-weight: 600;
+}
+
+.mission_description ul {
+    list-style: disc;
+    margin-left: 20px;
+}
+
+.mission_description li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.mission_description li em {
+    display: block;
+    margin-top: 4px;
+    color: #6B7280;
+    font-size: 13px;
+}
+
+.m_footer {
+    width: 90%;
+    margin: 10% auto;
+    text-align: center;
+    font-size: 25px; font-weight: 550;
+}
+
+.m_footer > span {
+    font-weight: 600; 
+    color: #4272EF;
+}
+
+/* ========================================
+   반응형 미디어 쿼리
+======================================== */
+
+/* 데스크탑 (1200px 이상) - 기본 스타일 유지 */
+@media (min-width: 1200px) {
+    .p_header {
+        width: 90%;
+    }
+    
+    .mission_progress {
+        width: 90%;
+    }
+    
+    .mission_item {
+        width: 90%;
+    }
+}
+
+/* 노트북 (768px ~ 1199px) */
+@media (max-width: 1199px) {
+    .p_header {
+        width: 92%;
+    }
+    
+    .p_header a p {
+        font-size: 17px;
+    }
+    
+    .mission_progress {
+        width: 92%;
+        height: auto;
+        padding: 40px 20px;
+    }
+    
+    .mp_title > img {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .mp_title > div > h3 {
+        font-size: 23px;
+    }
+    
+    .mp_title > div > p {
+        font-size: 13px;
+    }
+    
+    .role_progress_bar {
+        margin: 18px 0 12px 90px;
+    }
+    
+    .role_progress_bar > h3 {
+        font-size: 19px;
+    }
+    
+    .progress_bar_container {
+        height: 14px;
+    }
+    
+    .progress_percent {
+        font-size: 13px;
+    }
+    
+    .mission_item {
+        width: 92%;
+    }
+    
+    .timeline_dot {
+        width: 70px;
+    }
+    
+    .circle {
+        width: 28px;
+        height: 28px;
+        font-size: 15px;
+    }
+    
+    .mission_card {
+        padding: 18px 22px;
+    }
+    
+    .card_header h3 {
+        font-size: 17px;
+    }
+    
+    .check_icon {
+        width: 26px;
+        height: 26px;
+    }
+    
+    .mission_description {
+        font-size: 13px;
+    }
+    
+    .m_footer {
+        margin: 8% auto;
+        font-size: 23px;
+    }
+}
+
+/* 태블릿 (481px ~ 767px) */
+@media (max-width: 767px) {
+    .p_header {
+        width: 95%;
+        height: 45px;
+    }
+    
+    .p_header a {
+        padding: 12px;
+    }
+    
+    .p_header a p {
+        font-size: 16px;
+    }
+    
+    .mission_progress {
+        width: 95%;
+        padding: 35px 15px;
+        margin-bottom: 60px;
+    }
+    
+    .mp_title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .mp_title > img {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 15px;
+    }
+    
+    .mp_title > div > h3 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .mp_title > div > p {
+        font-size: 12px;
+    }
+    
+    .role_progress_bar {
+        margin: 15px 0 10px 0;
+        gap: 10px;
+    }
+    
+    .role_progress_bar > h3 {
+        width: 25px;
+        font-size: 17px;
+    }
+    
+    .progress_bar_container {
+        height: 12px;
+    }
+    
+    .progress_percent {
+        min-width: 40px;
+        font-size: 12px;
+    }
+    
+    .mission_item {
+        width: 95%;
+        gap: 15px;
+    }
+    
+    .timeline_dot {
+        width: 60px;
+    }
+    
+    .circle {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+    
+    .line {
+        width: 2px;
+    }
+    
+    .mission_card {
+        padding: 16px 18px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+    }
+    
+    .card_header h3 {
+        font-size: 16px;
+    }
+    
+    .check_icon {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .mission_description {
+        font-size: 13px;
+    }
+    
+    .mission_description li {
+        margin-bottom: 10px;
+    }
+    
+    .mission_description em {
+        font-size: 12px;
+    }
+    
+    .mission_card.active .card_content {
+        max-height: 600px;
+    }
+    
+    .m_footer {
+        margin: 15% auto;
+        font-size: 19px;
+        padding: 0 20px;
+        line-height: 1.5;
+    }
+}
+
+/* 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    .p_header {
+        width: 100%;
+        height: 40px;
+    }
+    
+    .p_header a {
+        padding: 10px;
+    }
+    
+    .p_header a p {
+        font-size: 14px;
+    }
+    
+    .mission_progress {
+        width: 95%;
+        padding: 25px 12px;
+        margin-bottom: 50px;
+    }
+    
+    .mp_title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .mp_title > img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 12px;
+    }
+    
+    .mp_title > div > h3 {
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    
+    .mp_title > div > p {
+        font-size: 11px;
+        line-height: 1.4;
+    }
+    
+    .role_progress_bar {
+        margin: 12px 0 8px 0;
+        gap: 8px;
+    }
+    
+    .role_progress_bar > h3 {
+        width: 23px;
+        font-size: 15px;
+    }
+    
+    .progress_bar_container {
+        height: 10px;
+    }
+    
+    .progress_percent {
+        min-width: 38px;
+        font-size: 11px;
+    }
+    
+    .mission_item {
+        width: 95%;
+        gap: 12px;
+    }
+    
+    .timeline_dot {
+        width: 50px;
+    }
+    
+    .circle {
+        width: 24px;
+        height: 24px;
+        font-size: 13px;
+    }
+    
+    .line {
+        width: 2px;
+        margin-top: -8px;
+    }
+    
+    .mission_card {
+        padding: 14px 15px;
+        margin-bottom: 18px;
+        border-radius: 12px;
+    }
+    
+    .mission_card:hover {
+        transform: none;
+    }
+    
+    .mission_card.active {
+        transform: none;
+    }
+    
+    .card_header {
+        align-items: flex-start;
+    }
+    
+    .card_header h3 {
+        font-size: 15px;
+        line-height: 1.4;
+        padding-right: 5px;
+    }
+    
+    .check_icon {
+        width: 22px;
+        height: 22px;
+        flex-shrink: 0;
+    }
+    
+    .mission_card.active .card_content {
+        max-height: 700px;
+        margin-top: 12px;
+    }
+    
+    .mission_description {
+        font-size: 12px;
+    }
+    
+    .mission_description p {
+        margin: 6px 0;
+    }
+    
+    .mission_description ul,
+    .mission_description ol {
+        margin: 8px 0 8px 15px;
+    }
+    
+    .mission_description li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+    
+    .mission_description li em {
+        font-size: 11px;
+    }
+    
+    .mission_description code {
+        font-size: 11px;
+        padding: 1px 4px;
+    }
+    
+    .m_footer {
+        margin: 20% auto;
+        font-size: 16px;
+        padding: 0 15px;
+        line-height: 1.6;
+    }
+    
+    .no_project {
+        margin-top: 40%;
+        text-align: center;
+    }
+    
+    .no_project h3 {
+        font-size: 18px;
+        padding: 0 15px;
+    }
+}
+
+@media (max-width: 767px) {
+    .mission_card {
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .check_icon {
+        padding: 5px;
+        margin: -5px;
+    }
+    
+    .mission_card:hover {
+        box-shadow: 0 2px 8px rgba(66, 114, 239, 0.08);
+    }
+    
+    .mission_card:active {
+        box-shadow: 0 4px 12px rgba(66, 114, 239, 0.15);
+    }
 }

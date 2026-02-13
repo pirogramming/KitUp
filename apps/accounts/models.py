@@ -11,11 +11,9 @@ class TechStack(models.Model):
     """
 
     class Category(models.TextChoices):
-        LANGUAGE = "LANGUAGE", "프로그래밍 언어"
         FRONTEND = "FRONTEND", "프론트엔드"
         BACKEND = "BACKEND", "백엔드"
-        DATABASE = "DATABASE", "데이터베이스"
-        TOOL = "TOOL", "개발 도구"
+        PM = "PM", "기획"
 
     name = models.CharField(
         max_length=50,
@@ -39,7 +37,7 @@ class TechStack(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.get_category_display()})"
+        return self.name
 
 
 class User(AbstractUser):
@@ -95,6 +93,11 @@ class User(AbstractUser):
     team_ban_count = models.PositiveSmallIntegerField(
         default=0,
         help_text="남은 팀플 참여 금지 횟수",
+    )
+
+    email_notifications_enabled = models.BooleanField(
+        default=False,
+        help_text="이메일 알림 수신 여부",
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

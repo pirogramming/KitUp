@@ -65,7 +65,7 @@ class RetrospectiveWriteSerializer(serializers.ModelSerializer):
         return build_markdown(guide, answers_json, title=title)
 
     def create(self, validated_data):
-        template_key = validated_data.get("template_key") or "default"
+        template_key = validated_data.get("template_key") or "compact"
         answers_json = validated_data.get("answers_json") or {}
         title = validated_data.get("title")
 
@@ -76,7 +76,7 @@ class RetrospectiveWriteSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # 기존 값과 병합해서 md 재생성
-        template_key = validated_data.get("template_key", instance.template_key or "default")
+        template_key = validated_data.get("template_key", instance.template_key or "compact")
         answers_json = validated_data.get("answers_json", instance.answers_json or {})
         title = validated_data.get("title", instance.title)
 
