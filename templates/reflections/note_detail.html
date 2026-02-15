@@ -11,8 +11,6 @@
 {% block content %}
 <div class="ref-page">
   <div class="ref-detail-wrap">
-    
-    {# 상단 바 #}
     <div class="ref-detail-topbar">
       <div class="ref-detail-title-section">
         <h1 class="ref-detail-title">{{ note.title }}</h1>
@@ -20,7 +18,6 @@
       <div class="ref-detail-actions">
         <a href="{% url 'reflections:note_list' %}" class="ref-btn ref-btn-ghost">목록</a>
         
-        {# 북마크 버튼 #}
         <button 
           type="button" 
           class="bookmark-btn {% if note.bookmarked %}is-active{% endif %}"
@@ -64,7 +61,6 @@
     </div>
     <br>
 
-    {# 질문 리스트(보기 전용) #}
     <div class="ref-detail-qa-list">
       {% for q in guide.questions %}
         <section class="ref-detail-qa-card">

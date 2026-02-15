@@ -42,11 +42,9 @@
 	{% endif %}
 </div>
 <div class="main-team">
-	<!-- 팀 매칭 기간 X -->
 	{% if season.status != 'MATCHING' %}
 	<h3>지금은 팀 매칭 모집 기간이 아니예요.</h3>
 
-	<!-- 팀 매칭 O 매칭 신청 X -->
 	{% elif user_obj.passion_level == None %}
 	<h3>팀 매칭 모집이 시작됐어요</h3>
 	<p>
@@ -309,4 +307,10 @@
 		{% endif %}
 	</div>
 </div>
+{% endblock %}
+{% block footer %}
+<a href="{% url 'privacy_policy' %}"><p>KitUp 개인정보처리방침</p>
+</a>
+<p>Copyrightⓒ2026.KITUP. All rights reserved.
+</p>
 {% endblock %}

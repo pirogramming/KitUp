@@ -1,7 +1,6 @@
 {% extends 'base.html' %} {% load static %} {% block header %}
 <link rel="stylesheet" href="{% static 'css/team.css' %}" />
 {% endblock %} {% block content %}
-<!-- 1. 팀 매칭 성공 -->
 {% if team_matched %}
 <div class="team_success">
 	<h3>
@@ -12,7 +11,6 @@
 		{% for member in team_members %}
 		<div class="t_member">
 			<div class="profile_section">
-				<!-- 프로필 사진 -->
 				{% if member.user.profile_image %}
 				<img
 					src="{{ item.user.profile_image.url }}"
@@ -26,7 +24,6 @@
 					class="profile_img"
 				/>
 				{% endif %}
-				<!-- 레벨 사진 -->
 				{% if member.level == 1 %}
 				<img
 					src="{% static 'images/Level1.png' %}"
@@ -70,7 +67,6 @@
 	>
 </div>
 
-<!-- 2. 팀 매칭 실패 -->
 {% else %}
 <div class="team_fail">
     <h3>팀 매칭에 실패했어요. <br>

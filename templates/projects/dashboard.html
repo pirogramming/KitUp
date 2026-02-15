@@ -79,13 +79,11 @@
                 {% for item in members_with_level %}
                 <div class="member">
                     <div class="profile_section">
-                    <!-- 프로필 사진 -->
                     {% if item.member.user.profile_image %}
                         <img src="{{ item.member.user.profile_image.url }}" alt="프로필사진" class="profile">
                     {% else %}
                     <img src="{% static 'images/default_img.png' %}" alt="프로필사진" class="profile">
                     {% endif %}
-                    <!-- 레벨 사진 -->
                     {% if item.level == 1 %}
                     <img src="{% static 'images/Level1.png' %}" alt="레벨1" class="level">
                     {% elif item.level == 2 %}

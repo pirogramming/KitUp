@@ -1,12 +1,5 @@
-{# templates/reflections/_note_form.html #}
 {% load reflections_extras %}
 {% load static %}
-
-<!-- {# 기대 context:
-  - guide, tpl, answers
-  - note(옵션), draft_key(옵션)
-  - my_projects(옵션), my_role_map(옵션)
-#} -->
 
 <div class="ref-form-wrap"
      data-note-id="{% if note %}{{ note.id }}{% endif %}"
@@ -105,7 +98,6 @@
     </div>
   </div>
 
-  {# 파일 인풋 1개 재사용 #}
   <input id="assetFileInput" type="file" accept="image/*" class="ref-hidden-file" />
 
   {# 질문 카드들 #}
@@ -187,7 +179,6 @@
     <button class="ref-btn ref-btn-primary" type="submit">저장하기</button>
   </div>
 
-  <!-- 표 삽입용 modal -->
   <div class="ref-table-picker-backdrop" hidden>
     <div class="ref-table-picker-modal">
       <div class="ref-table-picker-title">표 크기 선택</div>
@@ -210,5 +201,4 @@
 
 </div>
 
-{# role_map JSON 전달 (Django json_script) #}
 {{ my_role_map|json_script:"roleMapJson" }}

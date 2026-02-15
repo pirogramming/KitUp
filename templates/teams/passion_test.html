@@ -10,12 +10,9 @@
 
 {% block content %}
 <div class="level-test-container">
-    <!-- 숨겨진 역할 필드 -->
     <input type="hidden" id="selected-role" name="selected_role" value="{{ role }}">
 
-    <!-- 문항 화면 -->
     <div id="questions-screen" class="questions-screen">
-        <!-- 헤더 설명 -->
         <div class="passion-header">
             <h1 class="passion-title">열정 레벨 판별 설문</h1>
             <p class="passion-description">
@@ -36,7 +33,6 @@
 
         <form id="passion-test-form">
             <div class="options-container" id="options-container">
-                <!-- 동적으로 생성될 옵션들 -->
             </div>
 
             <div class="button-container">
@@ -47,7 +43,6 @@
         </form>
     </div>
 
-    <!-- 결과 화면 (점수 표시 제거) -->
     <div id="result-screen" class="result-screen" style="display: none;">
         <div class="result-content">
             <div class="result-icon">🎉</div>

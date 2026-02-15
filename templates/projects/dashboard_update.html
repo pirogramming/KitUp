@@ -12,7 +12,6 @@
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         
-        <!-- 프로젝트 개요 (수정 불가 - 표시만) -->
         <div class="d_service">
             {% if project.project_image %}
                 <img src="{{ project.project_image.url }}" alt="서비스이미지" class="project_image">
@@ -23,7 +22,6 @@
             <textarea name="description" class="description_input" required>{{ project.description }}</textarea>
         </div>
         
-        <!-- 진행기간 (수정 불가 - 표시만) -->
         <div class="d_period">
             <img src="{% static 'images/calender.png' %}" alt="달력이미지">
             <p><span class="period_title">진행기간 </span>            
@@ -34,7 +32,6 @@
                 {% endif %}</p>
         </div>
         
-        <!-- 관련 링크 (수정 가능) -->
         <div class="d_link">
             <div class="l_title">
                 <img src="{% static 'images/link.png' %}" alt="link">
@@ -46,7 +43,6 @@
         </div>
         <hr>
         
-        <!-- 팀 정보 (수정 불가 - 표시만) -->
         <div class="d_team">
             <div class="t_title">
                 <img src="{% static 'images/team_flag.png' %}" alt="팀 아이콘">
@@ -115,7 +111,6 @@
             </div>
         </div>
         
-        <!-- 팀 규칙 (수정 가능) -->
         <div class="d_rule">
             <div class="r_title">
                 <img src="{% static 'images/rule.png' %}" alt="rule">
@@ -126,7 +121,6 @@
             </div>
         </div>
         
-        <!-- 진척도 (수정 불가 - 표시만) -->
         <div class="d_progress">
             <div class="p_title">
                 <img src="{% static 'images/progress.png' %}" alt="progress">

@@ -100,6 +100,15 @@ class User(AbstractUser):
         help_text="이메일 알림 수신 여부",
     )
 
+    preferred_role = models.ForeignKey(
+        "Role",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="applicants",
+        help_text="팀매칭 신청 시 선택한 직군",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

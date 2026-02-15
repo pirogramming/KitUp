@@ -1,8 +1,6 @@
 {% extends 'base.html' %} {% load static %} {% block header %}
 <link rel="stylesheet" href="{% static 'css/team_apply.css' %}" />
 {% endblock %} {% block content %}
-
-<!-- 팀 매칭 기간 X -->
 {% if season.status != 'MATCHING' %}
 <div class="match_wait">
 	<h3>
@@ -15,7 +13,6 @@
 	</form>
 </div>
 
-<!-- 팀 매칭 O 매칭 신청 X -->
 {% elif user_obj.passion_level == None %}
 <div class="team_matching">
 	<h3>팀 매칭 모집 기간이 시작됐어요!</h3>
@@ -141,7 +138,6 @@
 
 </div>
 
-<!-- 매칭 신청 완료 -->
 {% else %}
 <div class="team_waiting">
 	<h3>

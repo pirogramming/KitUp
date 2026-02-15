@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import TemplateView
 from django.views.generic import RedirectView
 from .views import main_view
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
@@ -10,6 +11,9 @@ urlpatterns = [
     
     path("", main_view, name="main"),  # 메인 화면 (main.html)
     path("admin/", admin.site.urls),
+    path('privacy-policy/', 
+     TemplateView.as_view(template_name='privacy-policy.html'), 
+     name='privacy_policy'),
     
     #   allauth (로그인/소셜로그인)
     path("accounts/", include("allauth.urls")),

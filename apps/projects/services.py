@@ -1,6 +1,9 @@
 """
 팀 매칭 알고리즘 및 관련 서비스
 """
+from collections import defaultdict
+from itertools import product
+
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
@@ -13,236 +16,274 @@ from apps.teams.models import Team, TeamMember
 
 
 class TeamMatchingService:
-    """팀 매칭 알고리즘 서비스"""
-    
-    TEAM_SIZE = 5
-    PM_COUNT_PER_TEAM = 1
-    FE_COUNT_PER_TEAM = 2
-    BE_COUNT_PER_TEAM = 2
-    
-    @staticmethod
-    def run_matching(season_id):
+    """
+    팀 매칭 알고리즘 서비스
+
+    핵심 전략:
+      1. preferred_role 기준으로 역할별 지원자 분류
+      2. 열정 레벨 인접 그룹(1-2, 2-3, 3-4)으로 묶기
+      3. 열정 그룹 내에서 실력 레벨 인접 그룹으로 세분화
+      4. 같은 열정 그룹 + 인접 실력 레벨 조합으로 팀 구성
+    """
+
+    PM_PER_TEAM = 1
+    FE_PER_TEAM = 2
+    BE_PER_TEAM = 2
+    TEAM_SIZE = PM_PER_TEAM + FE_PER_TEAM + BE_PER_TEAM
+
+    # 인접 레벨 윈도우 (차이 ≤ 1)
+    ADJACENT_WINDOWS = [(1, 2), (2, 3), (3, 4)]
+
+    # ──────────────────────────────────────────
+    # public API
+    # ──────────────────────────────────────────
+    @classmethod
+    def run_matching(cls, season_id):
         """
-        팀 매칭 실행
-        
-        Args:
-            season_id: Season ID
-            
+        팀 매칭 실행 (메인 엔트리포인트)
+
         Returns:
             dict: 매칭 결과 통계
-            
-        Raises:
-            ValidationError: 지원자 부족 등 조건 미충족
         """
         season = Season.objects.get(id=season_id)
-        
-        # 1️⃣ passion_level이 설정된 지원자만 필터링
-        # N+1 쿼리 최적화: UserRoleLevel을 미리 로드
-        applicants = User.objects.filter(
-            passion_level__isnull=False
-        ).prefetch_related('role_levels')
-        
+
+        # ── 1. 지원자 수집 (한 번의 쿼리로 모든 정보 로드) ──
+        applicants = (
+            User.objects
+            .filter(
+                passion_level__isnull=False,
+                preferred_role__isnull=False,
+            )
+            .select_related('preferred_role')
+            .prefetch_related('role_levels__role')
+        )
+
         if not applicants.exists():
             raise ValidationError("팀매칭 지원자가 없습니다.")
-        
-        # 2️⃣ 역할별로 그룹화
-        pm_candidates = TeamMatchingService._get_role_candidates(
-            applicants, 'PM'
-        )
-        fe_candidates = TeamMatchingService._get_role_candidates(
-            applicants, 'FRONTEND'
-        )
-        be_candidates = TeamMatchingService._get_role_candidates(
-            applicants, 'BACKEND'
-        )
-        
-        # 3️⃣ 가능한 최대 팀 개수 계산
-        # PM 기준, FE 기준, BE 기준 중 최소값
-        max_teams_by_pm = len(pm_candidates) // TeamMatchingService.PM_COUNT_PER_TEAM
-        max_teams_by_fe = len(fe_candidates) // TeamMatchingService.FE_COUNT_PER_TEAM
-        max_teams_by_be = len(be_candidates) // TeamMatchingService.BE_COUNT_PER_TEAM
-        
-        num_teams = min(max_teams_by_pm, max_teams_by_fe, max_teams_by_be)
-        
-        if num_teams == 0:
+
+        # ── 2. preferred_role 기준 역할별 분류 ──
+        pool = cls._build_candidate_pool(applicants)
+
+        # ── 3. 열정 인접 그룹별 → 실력 인접 그룹별 팀 구성 ──
+        team_slots = cls._assign_teams(pool)
+
+        if not team_slots:
+            pm_n = len(pool.get('PM', []))
+            fe_n = len(pool.get('FRONTEND', []))
+            be_n = len(pool.get('BACKEND', []))
             raise ValidationError(
-                f"팀을 만들 수 없습니다. (최소 조건: PM {TeamMatchingService.PM_COUNT_PER_TEAM}명, "
-                f"FE {TeamMatchingService.FE_COUNT_PER_TEAM}명, BE {TeamMatchingService.BE_COUNT_PER_TEAM}명) "
-                f"현재: PM {len(pm_candidates)}명, FE {len(fe_candidates)}명, BE {len(be_candidates)}명"
+                f"인접 레벨 조건을 만족하는 팀을 구성할 수 없습니다. "
+                f"(PM {pm_n}명, FE {fe_n}명, BE {be_n}명)"
             )
-        
-        # 4️⃣ 더 나은 분배 알고리즘
-        # 각 역할별로 열정 그룹을 만들되, 팀별로 라운드로빈 방식 적용
-        def distribute_round_robin(candidates, num_teams, role_code):
-            """
-            각 역할별 지원자를 팀별로 라운드로빈으로 배정
-            같은 팀 내에서 여러 직군의 사람이 들어가면서도,
-            각 역할의 배정은 균등하게 이루어짐
-            N+1 쿼리 최적화: prefetch_related된 role_levels 사용
-            """
-            # 헬퍼: 캐시된 user.role_levels에서 해당 role의 level을 빠르게 조회
-            def get_role_level(user, role_code):
-                """이미 prefetch된 role_levels에서 빠르게 조회 (DB 쿼리 없음)"""
-                for role_level in user.role_levels.all():
-                    if role_level.role.code == role_code:
-                        return role_level.level
-                return 0
-            
-            # 열정별로 그룹화한 후 레벨순 정렬
-            passion_groups = {}
-            for user in candidates:
-                passion = user.passion_level or 0
-                if passion not in passion_groups:
-                    passion_groups[passion] = []
-                passion_groups[passion].append(user)
-            
-            # 각 열정 그룹을 역할별 레벨로 정렬 (높은 순)
-            # 이제 DB 쿼리 없이 메모리에서만 정렬함
-            for passion in passion_groups:
-                passion_groups[passion].sort(
-                    key=lambda u: (-get_role_level(u, role_code))
-                )
-            
-            # 열정별로 순회하면서 팀별로 라운드로빈 배정
-            result = [[] for _ in range(num_teams)]
-            team_member_counts = [0] * num_teams
-            
-            for passion_level in sorted(passion_groups.keys(), reverse=True):
-                users_in_passion = passion_groups[passion_level]
-                for idx, user in enumerate(users_in_passion):
-                    # 가장 적은 멤버를 가진 팀부터 배정
-                    min_team = min(range(num_teams), key=lambda i: team_member_counts[i])
-                    result[min_team].append(user)
-                    team_member_counts[min_team] += 1
-            
-            # 결과를 평탄화
-            flattened = []
-            for team_members in result:
-                flattened.extend(team_members)
-            return flattened
-        
-        # 4️⃣ 트랜잭션 내에서 팀 생성 및 멤버 배정
-        with transaction.atomic():
-            teams_created = []
-            
-            # 각 역할의 지원자를 라운드-로빈 분배 (열정 + 레벨 + 균형 고려)
-            pm_distributed = distribute_round_robin(pm_candidates, num_teams, 'PM')
-            fe_distributed = distribute_round_robin(fe_candidates, num_teams, 'FRONTEND')
-            be_distributed = distribute_round_robin(be_candidates, num_teams, 'BACKEND')
-            
-            pm_idx = 0
-            fe_idx = 0
-            be_idx = 0
-            
-            for team_num in range(num_teams):
-                # 프로젝트 생성
-                project = Project.objects.create(
-                    title=f"{season.name} 팀 {team_num + 1}",
-                    description=f"자동 매칭된 팀 프로젝트",
-                    status='MATCHED',
-                )
-                
-                # 팀 생성
-                team = Team.objects.create(
-                    project=project,
-                    name=f"Team {team_num + 1}",
-                )
-                
-                # PM 배정
-                for _ in range(TeamMatchingService.PM_COUNT_PER_TEAM):
-                    if pm_idx < len(pm_distributed):
-                        pm_user = pm_distributed[pm_idx]
-                        TeamMember.objects.create(
-                            team=team,
-                            user=pm_user,
-                            role=Role.objects.get(code='PM'),
-                        )
-                        pm_idx += 1
-                
-                # FE 배정
-                for _ in range(TeamMatchingService.FE_COUNT_PER_TEAM):
-                    if fe_idx < len(fe_distributed):
-                        fe_user = fe_distributed[fe_idx]
-                        TeamMember.objects.create(
-                            team=team,
-                            user=fe_user,
-                            role=Role.objects.get(code='FRONTEND'),
-                        )
-                        fe_idx += 1
-                
-                # BE 배정
-                for _ in range(TeamMatchingService.BE_COUNT_PER_TEAM):
-                    if be_idx < len(be_distributed):
-                        be_user = be_distributed[be_idx]
-                        TeamMember.objects.create(
-                            team=team,
-                            user=be_user,
-                            role=Role.objects.get(code='BACKEND'),
-                        )
-                        be_idx += 1
-                
-                teams_created.append(team)
-        
-        # 매칭되지 않은 인원 계산
-        unmatched = {
-            'pm': len(pm_candidates) - pm_idx,
-            'fe': len(fe_candidates) - fe_idx,
-            'be': len(be_candidates) - be_idx,
-        }
-        
-        return {
-            'teams_created': len(teams_created),
-            'total_users_matched': (
-                pm_idx +
-                fe_idx +
-                be_idx
-            ),
-            'pm_matched': pm_idx,
-            'fe_matched': fe_idx,
-            'be_matched': be_idx,
-            'unmatched': unmatched,
-            'total_unmatched': sum(unmatched.values()),
-        }
-    
+
+        # ── 4. DB에 팀 생성 (단일 트랜잭션) ──
+        result = cls._create_teams_in_db(season, team_slots)
+        return result
+
+    # ──────────────────────────────────────────
+    # Step 2: 후보자 풀 구축
+    # ──────────────────────────────────────────
     @staticmethod
-    def _get_role_candidates(applicants, role_code):
+    def _build_candidate_pool(applicants):
         """
-        특정 역할의 지원자를 역할 레벨 + 열정 레벨 기반으로 정렬
-        
-        정렬 기준:
-        1. 열정 레벨 내림차순 (높은 열정부터)
-        2. 같은 열정이면 역할 레벨 내림차순 (스킬 좋은 사람)
-        
-        N+1 쿼리 최적화: prefetch_related된 데이터만 사용
-        
-        Args:
-            applicants: User QuerySet (prefetch_related='role_levels' 필수)
-            role_code: 'PM' | 'FRONTEND' | 'BACKEND'
-            
-        Returns:
-            list: 정렬된 User 객체 리스트 (열정 우선, 그 다음 역할 레벨)
+        지원자를 역할별 dict[role_code → list[Candidate]] 로 변환.
+        Candidate = {user, level, passion}
         """
-        candidates = []
-        
+        pool = defaultdict(list)
+
         for user in applicants:
-            # prefetch_related된 role_levels에서 해당 역할 조회 (DB 쿼리 없음)
-            role_level = None
+            role_code = user.preferred_role.code
+
+            # prefetch된 role_levels에서 해당 역할의 레벨 조회
+            level = 0
             for rl in user.role_levels.all():
                 if rl.role.code == role_code:
-                    role_level = rl
+                    level = rl.level
                     break
-            
-            if role_level:
-                candidates.append({
-                    'user': user,
-                    'level': role_level.level,
-                    'passion': user.passion_level or 0,
-                })
-        
-        # 정렬: 열정 내림차순, 같으면 레벨 내림차순
-        candidates.sort(key=lambda x: (-x['passion'], -x['level']))
-        
-        return [c['user'] for c in candidates]
+
+            if level == 0:
+                continue  # 해당 역할 레벨이 없으면 제외
+
+            pool[role_code].append({
+                'user': user,
+                'level': level,
+                'passion': user.passion_level,
+            })
+
+        return dict(pool)
+
+    # ──────────────────────────────────────────
+    # Step 3: 인접 레벨 기반 팀 배정
+    # ──────────────────────────────────────────
+    @classmethod
+    def _assign_teams(cls, pool):
+        """
+        열정 인접 그룹 × 실력 인접 그룹 조합으로 팀 슬롯을 생성.
+        각 팀 안에서 열정 차이 ≤ 1, 같은 역할 실력 차이 ≤ 1 보장.
+
+        Returns:
+            list[dict]: [{'pm': [cand], 'fe': [cand, cand], 'be': [cand, cand]}, ...]
+        """
+        pm_all = pool.get('PM', [])
+        fe_all = pool.get('FRONTEND', [])
+        be_all = pool.get('BACKEND', [])
+
+        team_slots = []
+        used_ids = set()  # 이미 배정된 유저 id
+
+        # 열정 윈도우별로 순회 (높은 열정 그룹부터)
+        for passion_lo, passion_hi in reversed(cls.ADJACENT_WINDOWS):
+            # 해당 열정 범위에 속하는 미배정 후보 필터
+            pm_passion = cls._filter_unused(pm_all, used_ids, passion_lo, passion_hi)
+            fe_passion = cls._filter_unused(fe_all, used_ids, passion_lo, passion_hi)
+            be_passion = cls._filter_unused(be_all, used_ids, passion_lo, passion_hi)
+
+            # 실력 윈도우별로 추가 세분화
+            for level_lo, level_hi in reversed(cls.ADJACENT_WINDOWS):
+                pm_cands = [c for c in pm_passion if level_lo <= c['level'] <= level_hi]
+                fe_cands = [c for c in fe_passion if level_lo <= c['level'] <= level_hi]
+                be_cands = [c for c in be_passion if level_lo <= c['level'] <= level_hi]
+
+                # 가능한 팀 수 계산
+                n_teams = min(
+                    len(pm_cands) // cls.PM_PER_TEAM,
+                    len(fe_cands) // cls.FE_PER_TEAM,
+                    len(be_cands) // cls.BE_PER_TEAM,
+                )
+
+                if n_teams == 0:
+                    continue
+
+                # 각 역할 내에서 레벨 편차를 최소화하도록 정렬
+                pm_cands.sort(key=lambda c: c['level'])
+                fe_cands.sort(key=lambda c: c['level'])
+                be_cands.sort(key=lambda c: c['level'])
+
+                pm_i = fe_i = be_i = 0
+                for _ in range(n_teams):
+                    slot = {
+                        'pm': pm_cands[pm_i:pm_i + cls.PM_PER_TEAM],
+                        'fe': fe_cands[fe_i:fe_i + cls.FE_PER_TEAM],
+                        'be': be_cands[be_i:be_i + cls.BE_PER_TEAM],
+                    }
+                    pm_i += cls.PM_PER_TEAM
+                    fe_i += cls.FE_PER_TEAM
+                    be_i += cls.BE_PER_TEAM
+
+                    # used_ids에 등록
+                    for cand in slot['pm'] + slot['fe'] + slot['be']:
+                        used_ids.add(cand['user'].id)
+
+                    team_slots.append(slot)
+
+                # passion 필터 목록도 갱신 (다음 level 윈도우에서 중복 방지)
+                pm_passion = [c for c in pm_passion if c['user'].id not in used_ids]
+                fe_passion = [c for c in fe_passion if c['user'].id not in used_ids]
+                be_passion = [c for c in be_passion if c['user'].id not in used_ids]
+
+        # ── 2차: 남은 인원으로 완화 매칭 (열정 ≤ 1, 실력 제약 완화) ──
+        remaining_pm = cls._filter_unused(pm_all, used_ids)
+        remaining_fe = cls._filter_unused(fe_all, used_ids)
+        remaining_be = cls._filter_unused(be_all, used_ids)
+
+        for passion_lo, passion_hi in reversed(cls.ADJACENT_WINDOWS):
+            pm_p = [c for c in remaining_pm if passion_lo <= c['passion'] <= passion_hi]
+            fe_p = [c for c in remaining_fe if passion_lo <= c['passion'] <= passion_hi]
+            be_p = [c for c in remaining_be if passion_lo <= c['passion'] <= passion_hi]
+
+            n = min(
+                len(pm_p) // cls.PM_PER_TEAM,
+                len(fe_p) // cls.FE_PER_TEAM,
+                len(be_p) // cls.BE_PER_TEAM,
+            )
+            if n == 0:
+                continue
+
+            pm_p.sort(key=lambda c: c['level'])
+            fe_p.sort(key=lambda c: c['level'])
+            be_p.sort(key=lambda c: c['level'])
+
+            pi = fi = bi = 0
+            for _ in range(n):
+                slot = {
+                    'pm': pm_p[pi:pi + cls.PM_PER_TEAM],
+                    'fe': fe_p[fi:fi + cls.FE_PER_TEAM],
+                    'be': be_p[bi:bi + cls.BE_PER_TEAM],
+                }
+                pi += cls.PM_PER_TEAM
+                fi += cls.FE_PER_TEAM
+                bi += cls.BE_PER_TEAM
+
+                for cand in slot['pm'] + slot['fe'] + slot['be']:
+                    used_ids.add(cand['user'].id)
+                team_slots.append(slot)
+
+            remaining_pm = [c for c in remaining_pm if c['user'].id not in used_ids]
+            remaining_fe = [c for c in remaining_fe if c['user'].id not in used_ids]
+            remaining_be = [c for c in remaining_be if c['user'].id not in used_ids]
+
+        return team_slots
+
+    # ──────────────────────────────────────────
+    # Step 4: DB 저장
+    # ──────────────────────────────────────────
+    @classmethod
+    def _create_teams_in_db(cls, season, team_slots):
+        """트랜잭션 내에서 팀·프로젝트·멤버 일괄 생성"""
+
+        # Role 객체 캐싱 (총 3회 쿼리 → 미리 1회)
+        roles = {r.code: r for r in Role.objects.all()}
+
+        stats = {'pm': 0, 'fe': 0, 'be': 0}
+
+        with transaction.atomic():
+            teams_created = []
+
+            for idx, slot in enumerate(team_slots, 1):
+                project = Project.objects.create(
+                    title=f"{season.name} 팀 {idx}",
+                    description="자동 매칭된 팀 프로젝트",
+                    season=season,
+                    status='MATCHED',
+                )
+                team = Team.objects.create(
+                    project=project,
+                    name=f"Team {idx}",
+                )
+
+                role_map = {
+                    'pm': ('PM', slot['pm']),
+                    'fe': ('FRONTEND', slot['fe']),
+                    'be': ('BACKEND', slot['be']),
+                }
+                for key, (role_code, members) in role_map.items():
+                    for cand in members:
+                        TeamMember.objects.create(
+                            team=team, user=cand['user'], role=roles[role_code],
+                        )
+                        stats[key] += 1
+
+                teams_created.append(team)
+
+        total = stats['pm'] + stats['fe'] + stats['be']
+        return {
+            'teams_created': len(teams_created),
+            'total_users_matched': total,
+            'pm_matched': stats['pm'],
+            'fe_matched': stats['fe'],
+            'be_matched': stats['be'],
+        }
+
+    # ──────────────────────────────────────────
+    # 헬퍼
+    # ──────────────────────────────────────────
+    @staticmethod
+    def _filter_unused(candidates, used_ids, passion_lo=None, passion_hi=None):
+        """미배정 후보 중 열정 범위에 해당하는 후보만 반환"""
+        result = [c for c in candidates if c['user'].id not in used_ids]
+        if passion_lo is not None and passion_hi is not None:
+            result = [c for c in result if passion_lo <= c['passion'] <= passion_hi]
+        return result
 
 
 class EmailService:

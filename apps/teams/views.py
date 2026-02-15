@@ -25,8 +25,6 @@ from .serializers import TeamSerializer, TeamCreateSerializer, TeamMemberSeriali
 # Template Views (HTML 렌더링)
 # ================================
 
-# apps/teams/views.py
-
 @login_required
 @require_POST
 def enable_email_notifications(request):
@@ -105,12 +103,20 @@ def passion_test(request):
     
     - 열정 레벨이 이미 있으면 team_status로 리다이렉트
     - 없으면 'teams/passion_test.html' 템플릿을 렌더링
+    - URL 파라미터 ?role=PM|FRONTEND|BACKEND에서 선택 역할 받음
     """
     if request.user.passion_level:
         # 이미 열정 테스트 완료
         return redirect("teams:team_status")
     
-    return render(request, "teams/passion_test.html")
+    # URL 파라미터에서 role 받기
+    role = request.GET.get("role", "")
+    
+    context = {
+        "role": role,
+    }
+    
+    return render(request, "teams/passion_test.html", context)
 
 @login_required
 @require_POST
@@ -118,19 +124,30 @@ def passion_submit_api(request):
     """
     열정 테스트 결과 제출 처리 (API)
     
-    - POST 요청으로 passion_level을 JSON으로 받음
-    - User 모델에 열정 레벨 저장
+    - POST 요청으로 passion_level과 role(선호 직군)을 JSON으로 받음
+    - User 모델에 열정 레벨과 선호 역할 저장
     - JSON 응답으로 success 여부 반환
     """
     try:
         data = json.loads(request.body)
         passion_level = data.get("passion_level")
+        role_code = data.get("role")  # PM, FRONTEND, BACKEND
         
         if passion_level is None:
             return JsonResponse({"success": False, "error": "필수 데이터가 없습니다."})
         
         request.user.passion_level = int(passion_level)
-        request.user.save(update_fields=["passion_level"])
+        
+        # preferred_role 저장
+        if role_code:
+            try:
+                from apps.accounts.models import Role
+                role = Role.objects.get(code=role_code)
+                request.user.preferred_role = role
+            except Role.DoesNotExist:
+                pass  # 역할이 없으면 무시
+        
+        request.user.save(update_fields=["passion_level", "preferred_role"])
         
         return JsonResponse({"success": True})
     except json.JSONDecodeError:
@@ -146,17 +163,28 @@ def passion_submit(request):
     """
     열정 테스트 결과 제출 처리
     
-    - POST 요청으로 열정 레벨(passion_level)을 전달받음
-    - User 모델에 열정 레벨 저장
+    - POST 요청으로 열정 레벨(passion_level)과 역할(role)을 전달받음
+    - User 모델에 열정 레벨과 선호 역할 저장
     - 제출 후 팀 매칭 결과 페이지로 리다이렉트
     """
     if request.method != "POST":
         return HttpResponseBadRequest("잘못된 요청입니다.")
     
     passion_level = request.POST.get("passion_level")
+    role_code = request.POST.get("role")  # PM, FRONTEND, BACKEND
     
     request.user.passion_level = int(passion_level)
-    request.user.save(update_fields=["passion_level"])
+    
+    # preferred_role 저장
+    if role_code:
+        try:
+            from apps.accounts.models import Role
+            role = Role.objects.get(code=role_code)
+            request.user.preferred_role = role
+        except Role.DoesNotExist:
+            pass  # 역할이 없으면 무시
+    
+    request.user.save(update_fields=["passion_level", "preferred_role"])
     
     return redirect("teams:team_status")
 
@@ -180,10 +208,11 @@ def team_matching_cancel(request):
         messages.error(request, "❌ 팀 매칭 기간이 아닙니다. 취소할 수 없습니다.")
         return redirect("teams:team_status")
     
-    # 열정 레벨 초기화 및 이메일 알림 비활성화
+    # 열정 레벨, preferred_role 초기화 및 이메일 알림 비활성화
     request.user.passion_level = None
+    request.user.preferred_role = None
     request.user.email_notifications_enabled = False
-    request.user.save(update_fields=["passion_level", "email_notifications_enabled"])
+    request.user.save(update_fields=["passion_level", "preferred_role", "email_notifications_enabled"])
     
     messages.success(request, "✅ 팀 매칭 신청이 취소되었습니다.")
     return redirect("teams:team_apply")
