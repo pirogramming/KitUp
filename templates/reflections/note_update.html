@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회고 수정{% endblock %}
+
+{% block header %}
+  <link rel="stylesheet" href="{% static 'css/reflections.css' %}">
+{% endblock %}
+
+{% block content %}
+<form method="post" class="ref-form" data-ref-form>
+  {% csrf_token %}
+  {% include "reflections/_note_form.html" %}
+</form>
+
+<script defer src="{% static 'js/reflections.js' %}"></script>
+{% endblock %}

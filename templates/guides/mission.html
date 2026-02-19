@@ -1,0 +1,100 @@
+{% extends 'base.html' %} 
+{% load static %} 
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/mission.css' %}" />
+{% endblock %} 
+
+{% block content %}
+{% if not project %}
+    <div class="no_project">
+        <h3>진행 중인 프로젝트가 없습니다.</h3>
+    </div>
+{% else %}
+
+<section class="p_header">
+	<a href="{% url 'projects:dashboard' %}" class="p_dashboard"><p>DASHBOARD</p></a>
+	<a href="{% url 'guides:mission' %}" class="p_mission"><p>MISSION</p></a>
+</section>
+
+<div class="mission_progress">
+	<div class="mp_title">
+		<img src="{% static 'images/rocket.png' %}" alt="rocket" />
+		<div>
+			<h3>{{ project.title }}의 진척도</h3>
+			<p>*파트별로 진행 속도를 맞추는 것을 권장드려요!</p>
+		</div>
+	</div>
+	
+	{% for progress in all_role_progress %}
+	<div class="role_progress_bar">
+		<h3>
+			{% if progress.role.code == "PM" %}PM
+			{% elif progress.role.code == "FRONTEND" %}FE
+			{% elif progress.role.code == "BACKEND" %}BE
+			{% endif %}
+		</h3>
+		<div class="progress_bar_container">
+			<div class="progress_bar_fill 
+				{% if progress.role.code == 'PM' %}pm_color
+				{% elif progress.role.code == 'FRONTEND' %}fe_color
+				{% elif progress.role.code == 'BACKEND' %}be_color
+				{% endif %}" 
+				style="width: {{ progress.progress_percent }}%">
+			</div>
+		</div>
+		<span class="progress_percent">{{ progress.progress_percent }}%</span>
+	</div>
+	{% endfor %}
+</div>
+
+{% for mission in mission_data %}
+<div class="mission_item {% if mission.is_completed %}completed{% endif %}" data-card-id="{{ mission.card.id }}">
+    <div class="timeline_dot">
+        <div class="circle">{{ forloop.counter }}</div>
+        <div class="line"></div>
+    </div>
+    <div class="card_wrapper">
+        <div class="mission_card">
+            <div class="card_header">
+                <h3>{{ mission.card.title }}</h3>
+                {% if mission.is_completed %}
+                <img src="{% static 'images/check.png' %}" alt="체크" class="check_icon">
+                {% else %}
+                <img src="{% static 'images/nocheck.png' %}" alt="체크" class="check_icon">
+                {% endif %}
+            </div>
+            <div class="card_content">
+                <div class="mission_description">
+                    <ul>
+                    {% for task_item in mission.task_progress_data %}
+                        <li>
+                            {{ task_item.task.title }}
+                            {% if task_item.task.description %}
+                                <br><em>{{ task_item.task.description }}</em>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endif %}
+{% if not project %}
+    <div></div>
+{% else %}
+<div class="m_footer">
+    🎉  <span>{{ project.title }}</span> 의 KITUP 프로젝트 완주를 축하드립니다!  🎉
+</div>
+{% endif %}
+
+<script>
+const PROJECT_ID = {{ project.id|default:'null' }};
+const USER_ROLE = '{{ role.code|default:'' }}';
+</script>
+<script src="{% static 'js/mission.js' %}"></script>
+{% endblock %}

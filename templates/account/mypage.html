@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="mypage-wrapper">
+    <div class="profile-card">
+        <aside class="user-info-side">
+            <div class="avatar-container">
+                <img src="{% if user.profile_image %}{{ user.profile_image.url }}
+                         {% else %}
+                            {% static 'images/default_profile.png' %}
+                         {% endif %}" alt="프로필 사진" class="profile-img">
+                <a href="{% url 'accounts:profile_edit' %}" class="edit-badge">
+                    <img src="{% static 'images/pencil_icon.png' %}" alt="수정">
+                </a>
+            </div>
+
+            <div class="info-table">
+                <div class="info-row">
+                    <span class="label">닉네임</span>
+                    <span class="value">{{ user_obj.nickname|default:user_obj.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">아이디</span>
+                    <span class="value">{{ user_obj.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">이메일</span>
+                    <span class="value">{{ user_obj.email }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="label">Github</span>
+                    <span class="value">@{{ user_obj.github_id|default:"anonymous" }}</span>
+                </div>
+            </div>
+            <div class="my-levels-section">
+                <h3 class="levels-title">나의 레벨</h3>
+
+                <div class="level-list">
+                    <!-- FRONTEND -->
+                    <div class="level-item">
+                        <span class="role-name frontend">프론트엔드</span>
+
+                        {% with fe_level=role_levels.FRONTEND %}
+                        {% if fe_level %}
+                        <span class="level-badge level-{{ fe_level }}">Lv {{ fe_level }}</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=FRONTEND'">
+                            재진단
+                        </button>
+                        {% else %}
+                        <span class="level-badge undiagnosed">미진단</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=FRONTEND'">
+                            레벨 진단하기
+                        </button>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+
+                    <!-- BACKEND -->
+                    <div class="level-item">
+                        <span class="role-name backend">백엔드</span>
+
+                        {% with be_level=role_levels.BACKEND %}
+                        {% if be_level %}
+                        <span class="level-badge level-{{ be_level }}">Lv {{ be_level }}</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=BACKEND'">
+                            재진단
+                        </button>
+                        {% else %}
+                        <span class="level-badge undiagnosed">미진단</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=BACKEND'">
+                            레벨 진단하기
+                        </button>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+
+                    <!-- PM -->
+                    <div class="level-item">
+                        <span class="role-name pm">기획</span>
+
+                        {% with pm_level=role_levels.PM %}
+                        {% if pm_level %}
+                        <span class="level-badge level-{{ pm_level }}">Lv {{ pm_level }}</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=PM'">
+                            재진단
+                        </button>
+                        {% else %}
+                        <span class="level-badge undiagnosed">미진단</span>
+                        <button type="button" class="retest-btn"
+                            onclick="location.href='{% url 'accounts:level_test' %}?role=PM'">
+                            레벨 진단하기
+                        </button>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+            <a href="{% url 'accounts:profile_edit' %}" class="edit-button">프로필 수정</a>
+            <a href="{% url 'accounts:withdraw' %}" style="display: block; margin-top: 25px; color: #9ca3af; font-size: 13px; text-decoration: underline; text-align: center;">회원 탈퇴하기</a>
+        </aside>
+
+        <main class="content-side">
+            <section class="tech-stack-box">
+                <h3 class="side-title">기술 스택</h3>
+                <div class="tags">
+                    {% for tech in user_obj.tech_stacks.all %}
+                    <span class="tag-item tag-{{ tech.category|lower }}"># {{ tech.name }}</span>
+                    {% empty %}
+                    <p class="empty-msg">등록된 스택이 없습니다.</p>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <div class="project-list-grid">
+                {% for membership in memberships %}
+                <div class="project-item-card">
+                    <h4 class="item-label">팀 프로젝트 기록</h4>
+                    <p class="item-project-title">{{ membership.team.project.title }}</p>
+                    <span class="item-role-tag">{{ membership.role.name }}</span>
+                </div>
+                {% empty %}
+                <div class="project-item-card empty">
+                    <h4 class="item-label">팀 프로젝트 기록</h4>
+                    <p class="empty-msg">아직 참여한 프로젝트가 없습니다.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

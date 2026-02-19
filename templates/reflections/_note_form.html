@@ -1,0 +1,204 @@
+{% load reflections_extras %}
+{% load static %}
+
+<div class="ref-form-wrap"
+     data-note-id="{% if note %}{{ note.id }}{% endif %}"
+     data-draft-key="{% if draft_key %}{{ draft_key }}{% endif %}"
+     data-upload-temp-url="{% url 'retrospective-upload-temp-asset' %}"
+     data-upload-note-url="{% if note and note.id %}{% url 'retrospective-upload-asset' note.id %}{% endif %}"
+    >
+
+  {% if error %}
+    <div class="ref-alert">{{ error }}</div>
+  {% endif %}
+
+  {# 상단 타이틀/태그/메뉴 라인 #}
+  <div class="ref-form-head">
+    <input
+      name="title"
+      class="ref-title"
+      value="{% if note %}{{ note.title }}{% endif %}"
+      placeholder="제목을 입력하세요"
+      required
+    />
+
+    <div class="ref-head-right">
+      {% if note and note.role %}
+        <span class="ref-role-pill tag-{{ note.role|lower }}">
+          {{ note.role }}
+        </span>
+      {% endif %}
+
+      <div class="note-morewrap" data-more-wrap>
+        <button type="button" class="note-morebtn" data-more-btn aria-haspopup="true" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 20.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+          </svg>
+        </button>
+
+        <div class="note-menu" role="menu" data-more-menu hidden>
+          {% if note %}
+            <a class="note-menuitem" role="menuitem" href="{% url 'reflections:note_update' note.id %}">수정하기</a>
+            <form method="post" action="{% url 'reflections:note_delete' note.id %}" class="note-menuform">
+              {% csrf_token %}
+              <button type="submit" class="note-menuitem danger" role="menuitem">삭제하기</button>
+            </form>
+          {% else %}
+            <span class="note-menuitem" role="menuitem">작성 중…</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ref-divider"></div>
+
+  {# 프로젝트/역할 선택(원하신 기능) #}
+  <div class="ref-meta">
+    <div class="ref-meta-row">
+      <label class="ref-label">프로젝트</label>
+      <div class="ref-selectwrap">
+        <select name="project_id" class="ref-select" data-project-select>
+          <option value="">선택 안 함 (개인 회고)</option>
+          {% if my_projects %}
+            {% for p in my_projects %}
+              <option value="{{ p.id }}" {% if note and note.project_id == p.id %}selected{% endif %}>
+                {{ p.title }}
+                {% with my_role_map|get_item:p.id as r %}
+                  {% if r %} ({{ r }}){% else %} (역할 미지정){% endif %}
+                {% endwith %}
+              </option>
+            {% endfor %}
+          {% endif %}
+        </select>
+        <span class="ref-form-selectchev" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="ref-meta-row">
+      <label class="ref-label">역할</label>
+      <div class="ref-selectwrap">
+        <select name="role" class="ref-select" data-role-select disabled>
+          <option value="">개인 회고</option>
+          <option value="PM" {% if note.role == "PM" %}selected{% endif %}>WEB 기획</option>
+          <option value="FRONTEND" {% if note.role == "FRONTEND" %}selected{% endif %}>WEB 프론트엔드</option>
+          <option value="BACKEND" {% if note.role == "BACKEND" %}selected{% endif %}>WEB 백엔드</option>
+        </select>
+        <span class="ref-form-selectchev" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </div>
+      <span class="ref-meta-hint">프로젝트 선택 시 역할이 자동 입력됩니다. (원하면 직접 변경 가능)</span>
+    </div>
+  </div>
+
+  <input id="assetFileInput" type="file" accept="image/*" class="ref-hidden-file" />
+
+  {# 질문 카드들 #}
+  <div class="ref-q-list">
+    {% for q in guide.questions %}
+      <section class="ref-q-card">
+        <div class="ref-q-head">
+          <div class="ref-q-title">
+            <span class="ref-q-num">{{ q.order|default:forloop.counter }}</span>
+            <span>{{ q.title }}</span>
+          </div>
+
+          <div class="ref-q-actions">
+            {# note 있거나 draft_key 있으면 업로드 버튼 활성 #}
+            <button
+              type="button"
+              class="ref-iconbtn"
+              data-asset-btn
+              data-qid="{{ q.id }}"
+              {% if not note and not draft_key %}disabled{% endif %}
+              title="이미지"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M8 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="currentColor"/>
+                <path d="M21 16l-6-6-4 4-2-2-6 6" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+
+            <button 
+              type="button" 
+              class="ref-iconbtn" 
+              data-table-btn 
+              data-qid="{{ q.id }}"
+              title="표(추후)"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 4h16v16H4V4Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M4 10h16M10 4v16" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="ref-q-body">
+          <textarea
+            id="ta__{{ q.id }}"
+            name="a__{{ q.id }}"
+            class="ref-textarea"
+            rows="6"
+          >{{ answers|get_item:q.id }}</textarea>
+        </div>
+      </section>
+    {% endfor %}
+  </div>
+
+  {# 업로드된 이미지 리스트(note 있을 때만) #}
+  {% if note and note.assets.all %}
+    <div class="ref-assets">
+      <div class="ref-assets-title">업로드된 이미지</div>
+      <div class="ref-assets-grid">
+        {% for asset in note.assets.all %}
+          <div class="ref-asset" data-asset-row="{{ asset.id }}">
+            <img class="ref-asset-img" src="{{ asset.image.url }}" alt="{{ asset.alt_text|default:'image' }}">
+            <button type="button" class="ref-asset-del" data-asset-delete data-asset-id="{{ asset.id }}">삭제</button>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {# 하단 버튼 #}
+  <div class="ref-form-actions">
+    {% if note and note.id %}
+    <a class="ref-btn ref-btn-ghost" href="{% url 'reflections:note_detail' note.id %}">돌아가기</a>
+    {% else %}
+      <a class="ref-btn ref-btn-ghost" href="{% url 'reflections:note_list' %}">돌아가기</a>
+    {% endif %}
+    <button class="ref-btn ref-btn-primary" type="submit">저장하기</button>
+  </div>
+
+  <div class="ref-table-picker-backdrop" hidden>
+    <div class="ref-table-picker-modal">
+      <div class="ref-table-picker-title">표 크기 선택</div>
+      <div class="ref-table-picker-grid">
+        {% for r in "12345" %}
+          {% for c in "12345" %}
+            <div class="ref-table-cell"
+                data-rows="{{ forloop.parentloop.counter }}"
+                data-cols="{{ forloop.counter }}">
+            </div>
+          {% endfor %}
+        {% endfor %}
+      </div>
+      <div class="ref-table-picker-footer">
+        <span class="ref-table-picker-size">0 × 0</span>
+        <button type="button" class="ref-table-picker-cancel">취소</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{{ my_role_map|json_script:"roleMapJson" }}

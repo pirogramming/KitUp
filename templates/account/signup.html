@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회원가입 - KITUP{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/signup.css' %}?v=1">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="signup-card">
+        <h1 class="title">회원가입</h1>
+
+        <form class="signup-form" method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="label">아이디</label>
+                <div class="input-wrapper">
+                    <input type="text" name="username" id="id_username" class="input" placeholder="아이디" required>
+                    <button type="button" class="check-btn" onclick="checkUsername()">확인</button>
+                </div>
+                <span id="username-message" class="message"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="label">비밀번호</label>
+                <input type="password" name="password1" id="id_password1" class="input" placeholder="비밀번호" required>
+            </div>
+
+            <div class="form-group">
+                <input type="password" name="password2" id="id_password2" class="input" placeholder="비밀번호 확인" required>
+            </div>
+
+            <div class="form-group">
+                <label class="label">이메일</label>
+                <div class="input-wrapper">
+                    <input type="email" name="email" id="id_email" class="input" placeholder="이메일" required>
+                    <button type="button" class="check-btn" onclick="checkEmail()">확인</button>
+                </div>
+                <span id="email-message" class="message"></span>
+            </div>
+
+            {% if form.errors %}
+            <div class="error-messages">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p class="error">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <button type="submit" class="submit-btn">회원가입</button>
+        </form>
+              <!-- 소셜 로그인 -->
+        <div class="social-login">
+            <p class="social-title-1">간편 가입</p>
+            <div class="social-icons">
+                <a href="{% url 'kakao_login' %}" class="social-icon">
+                    <img src="{% static 'images/kakao-icon.png' %}" alt="Kakao">
+                </a>
+                <a href="{% url 'google_login' %}" class="social-icon">
+                    <img src="{% static 'images/google-icon.png' %}" alt="Google">
+                </a>
+                <a href="{% url 'github_login' %}" class="social-icon">
+                    <img src="{% static 'images/github-icon.png' %}" alt="GitHub">
+                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function checkUsername() {
+    const username = document.getElementById('id_username').value;
+    const messageEl = document.getElementById('username-message');
+
+    if (!username) {
+        messageEl.textContent = '아이디를 입력해주세요.';
+        messageEl.className = 'message error';
+        return;
+    }
+
+    fetch(`/api/accounts/check-username/?username=${encodeURIComponent(username)}`)
+        .then(r => r.json())
+        .then(d => {
+            messageEl.textContent = d.message;
+            messageEl.className = d.available ? 'message success' : 'message error';
+        });
+}
+
+function checkEmail() {
+    const email = document.getElementById('id_email').value;
+    const messageEl = document.getElementById('email-message');
+
+    if (!email) {
+        messageEl.textContent = '이메일을 입력해주세요.';
+        messageEl.className = 'message error';
+        return;
+    }
+
+    fetch(`/api/accounts/check-email/?email=${encodeURIComponent(email)}`)
+        .then(r => r.json())
+        .then(d => {
+            messageEl.textContent = d.message;
+            messageEl.className = d.available ? 'message success' : 'message error';
+        });
+}
+</script>
+{% endblock %}

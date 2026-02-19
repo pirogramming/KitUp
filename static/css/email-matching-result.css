@@ -1,0 +1,159 @@
+/* Email Template Styles - Matching Result */
+
+/* Base Styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section */
+.header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* Content Section */
+.content {
+    padding: 30px 20px;
+}
+
+.greeting {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.greeting strong {
+    color: #667eea;
+}
+
+/* Period Info Box */
+.period-info {
+    background-color: #f0f4ff;
+    border-left: 4px solid #667eea;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.period-info p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+/* Team Section */
+.team-section {
+    margin: 30px 0;
+}
+
+.team-section h2 {
+    font-size: 18px;
+    color: #667eea;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* Team Members Table */
+.team-members {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.team-members thead {
+    background-color: #667eea;
+    color: white;
+}
+
+.team-members th {
+    padding: 16px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.team-members td {
+    padding: 20px 12px;
+    border-bottom: 1px solid #e0e0e0;
+    vertical-align: middle;
+}
+
+.team-members tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+.team-members tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Member Details */
+.member-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 15px;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.role-pm {
+    background-color: #FFE5B4;
+    color: #FF8C00;
+}
+
+.role-fe {
+    background-color: #B4E5FF;
+    color: #0066CC;
+}
+
+.role-be {
+    background-color: #B4FFB4;
+    color: #006600;
+}
+
+/* Footer Section */
+.footer {
+    background-color: #f5f5f5;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #666;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 12px 30px;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: 600;
+    margin-top: 20px;
+}

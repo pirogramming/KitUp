@@ -1,0 +1,164 @@
+{% extends 'base.html' %} {% load static %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/onboarding_profile.css' %}" />
+{% endblock %} {% block content %}
+
+<h1>{% if user.nickname %}프로필 수정{% else %}프로필 설정{% endif %}</h1>
+
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <div>
+    {{ form.nickname.errors }}
+    {{ form.nickname.label_tag }} 
+    <div style="display: flex; gap: 10px; align-items: center;">
+      {{ form.nickname }}
+      <button type="button" id="nicknameCheckBtn" style="padding: 10px 20px; background: #4272EF; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap; flex-shrink: 0;">
+        중복 확인
+      </button>
+    </div>
+    <div id="nicknameCheckResult" style="margin-top: 8px; font-size: 14px; display: none;"></div>
+  </div>
+
+  <div>
+    {{ form.github_id.errors }}
+    {{ form.github_id.label_tag }} {{ form.github_id }}
+  </div>
+
+  <div>
+    {{ form.profile_image.errors }}
+    {{ form.profile_image.label_tag }} {{ form.profile_image }}
+  </div>
+
+  <div>
+    {{ form.tech_stacks.errors }}
+    <label>{{ form.tech_stacks.label }}</label>
+    <div style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+      {{ form.tech_stacks }}
+    </div>
+    <small>{{ form.tech_stacks.help_text }}</small>
+  </div>
+
+  <button type="submit">
+    {% if user.nickname %}수정{% else %}저장{% endif %}
+  </button>
+</form>
+  <script>
+  // 닉네임 중복 확인
+  (function() {
+    const nicknameInput = document.querySelector('input[name="nickname"]');
+    const checkBtn = document.getElementById('nicknameCheckBtn');
+    const resultDiv = document.getElementById('nicknameCheckResult');
+
+    if (!nicknameInput || !checkBtn || !resultDiv) return;
+
+    checkBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      
+      const nickname = nicknameInput.value.trim();
+      
+      if (!nickname) {
+        resultDiv.textContent = '닉네임을 입력해주세요.';
+        resultDiv.style.color = '#FF6B6B';
+        resultDiv.style.display = 'block';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/accounts/check-nickname/?nickname=${encodeURIComponent(nickname)}`);
+        const data = await response.json();
+
+        resultDiv.style.display = 'block';
+        
+        if (data.available) {
+          resultDiv.textContent = '✓ 사용 가능한 닉네임입니다.';
+          resultDiv.style.color = '#51CF66';
+          nicknameInput.style.borderColor = '#51CF66';
+        } else {
+          resultDiv.textContent = data.message || '이미 사용 중인 닉네임입니다.';
+          resultDiv.style.color = '#FF6B6B';
+          nicknameInput.style.borderColor = '#FF6B6B';
+        }
+      } catch (error) {
+        resultDiv.textContent = '닉네임 확인 중 오류가 발생했습니다.';
+        resultDiv.style.color = '#FF6B6B';
+        resultDiv.style.display = 'block';
+      }
+    });
+
+    // 입력 필드 변경 시 결과 숨기기
+    nicknameInput.addEventListener('input', () => {
+      resultDiv.style.display = 'none';
+      nicknameInput.style.borderColor = '';
+    });
+  })();
+
+  // 온보딩: 프로필 이미지 영역 클릭으로 파일 선택 및 미리보기
+  (function() {
+    // robustly find the file input for profile_image inside the form
+    const form = document.querySelector('form[enctype="multipart/form-data"]') || document.querySelector('form');
+    if (!form) return;
+
+    let fileInput = form.querySelector('input[type="file"][name$="profile_image"]');
+    if (!fileInput) fileInput = form.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    const profileDiv = fileInput.closest('div') || fileInput.parentElement;
+    if (!profileDiv) return;
+
+    // 클릭 시 파일 선택
+    profileDiv.addEventListener('click', (e) => {
+      // allow regular interactions (e.g., clicking on other controls inside the div)
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.tagName === 'A')) return;
+      e.preventDefault();
+      fileInput.click();
+    });
+
+    // 선택 시 미리보기
+    fileInput.addEventListener('change', (e) => {
+      const f = fileInput.files && fileInput.files[0];
+      if (!f) return;
+      if (!f.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        profileDiv.classList.add('has-image');
+        profileDiv.style.setProperty('--profile-url', `url(${ev.target.result})`);
+      };
+      reader.readAsDataURL(f);
+    });
+  })();
+
+  // Tech stack checkbox visual fallback (for browsers without :has)
+  (function() {
+    const form = document.querySelector('form');
+    if (!form) return;
+    // find the div that contains checkbox inputs
+    const divs = Array.from(form.querySelectorAll('div'));
+    let container = null;
+    for (const d of divs) {
+      if (d.querySelector && d.querySelector('input[type="checkbox"]')) {
+        container = d;
+        break;
+      }
+    }
+    if (!container) return;
+
+    const inputs = container.querySelectorAll('input[type="checkbox"]');
+    if (!inputs || inputs.length === 0) return;
+
+    function updateLabelForInput(input) {
+      let label = container.querySelector(`label[for="${input.id}"]`);
+      if (!label) label = input.closest('label');
+      if (!label) return;
+      if (input.checked) label.classList.add('is-checked');
+      else label.classList.remove('is-checked');
+    }
+
+    inputs.forEach((inp) => {
+      updateLabelForInput(inp);
+      inp.addEventListener('change', () => updateLabelForInput(inp));
+      const labelRef = container.querySelector(`label[for="${inp.id}"]`);
+      if (labelRef) labelRef.addEventListener('click', () => setTimeout(() => updateLabelForInput(inp), 0));
+    });
+  })();
+  </script>
+  {% endblock %}

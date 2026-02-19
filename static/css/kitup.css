@@ -1,0 +1,406 @@
+/* static/css/kitup.css */
+
+/* 공통 배경/컨테이너 */
+.kitup-page {
+  background: #f6f8fc;
+  min-height: 100vh;
+}
+
+.kitup-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 16px 80px;
+}
+
+/* =========================
+   LIST (기존)
+   ========================= */
+.kitup-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.kitup-sort {
+  margin-bottom: 32px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.kitup-sort a {
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.kitup-sort a.is-active {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.kitup-sort-sep {
+  margin: 0 6px;
+}
+
+.kitup-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.kitup-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kitup-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.kitup-card-imgwrap {
+  width: 100%;
+  height: 180px;
+  background: #f1f3f5;
+}
+
+.kitup-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kitup-card-body {
+  padding: 16px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.kitup-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.kitup-card-desc {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+.kitup-empty {
+  grid-column: 1 / -1;
+  padding: 80px 0;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+/* 카드 하단 좋아요 영역 */
+.kitup-card-like {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.kitup-like-count {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* =========================
+   DETAIL (1번: 카드형 섹션)
+   ========================= */
+.kitup-detail {
+  max-width: 980px;
+}
+
+/* 히어로 이미지 카드 */
+.kitup-detail-hero {
+  margin-top: 8px;
+}
+
+.kitup-detail-imgwrap {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #eef2f7;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+.kitup-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 우상단 하트 오버레이 */
+.kitup-detail-like {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.10);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.kitup-detail-like .kitup-heart-icon {
+  width: 28px;
+  height: 28px;
+}
+
+/* 제목/설명 */
+.kitup-detail-head {
+  margin-top: 18px;
+}
+
+.kitup-detail-title {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 10px;
+}
+
+.kitup-detail-desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+/* 섹션: 카드형 박스 */
+.kitup-detail-sections {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.kitup-detail-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 18px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.kitup-detail-h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* 팀 메타 */
+.kitup-detail-meta {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.kitup-detail-meta li {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+.kitup-detail-meta .k {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.kitup-detail-meta .v {
+  font-size: 14px;
+  color: #111827;
+}
+
+/* 멤버 목록 */
+.kitup-members {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.kitup-member {
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 12px 12px;
+  background: #fbfdff;
+}
+
+.kitup-member-role {
+  font-size: 12px;
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.kitup-member-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* 링크 */
+.kitup-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.kitup-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.kitup-links a:hover {
+  background: #dbeafe;
+}
+
+/* 팀 규칙 */
+.kitup-rules {
+  margin: 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #eef2f7;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #111827;
+  white-space: pre-wrap;
+}
+
+/* =========================
+   HEART (SVG toggle)
+   ========================= */
+.kitup-like-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin: 0;
+  line-height: 0;
+  box-shadow: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kitup-like-btn:focus {
+  outline: none;
+}
+
+.kitup-heart-icon {
+  display: block;
+  background: transparent;
+}
+
+
+.kitup-heart-icon {
+  width: 20px;
+  height: 20px;
+  color: #9ca3af;
+  fill: currentColor;
+  transition: transform 0.12s ease, color 0.12s ease;
+}
+
+.kitup-like-btn:hover .kitup-heart-icon {
+  transform: scale(1.08);
+}
+
+.kitup-heart-icon.is-fill {
+  display: none;
+}
+
+.kitup-like-btn[aria-pressed="true"] .kitup-heart-icon {
+  color: #ef4444;
+}
+
+.kitup-like-btn[aria-pressed="true"] .kitup-heart-icon.is-fill {
+  display: inline-block;
+}
+
+.kitup-like-btn[aria-pressed="true"] .kitup-heart-icon.is-outline {
+  display: none;
+}
+
+/* sr-only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+@media (max-width: 1024px) {
+  .kitup-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .kitup-members {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kitup-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kitup-title {
+    font-size: 22px;
+  }
+
+  .kitup-detail-imgwrap {
+    height: 240px;
+  }
+
+  .kitup-members {
+    grid-template-columns: 1fr;
+  }
+
+  .kitup-detail-meta li {
+    grid-template-columns: 72px 1fr;
+  }
+}

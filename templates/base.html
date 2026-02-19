@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KITUP{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block header %}{% endblock %}
+</head>
+<body>
+    <!-- 모바일 오버레이 -->
+    <div class="mobile-overlay"></div>
+    
+    <header>
+        <a href="/">
+            <h3>KITUP</h3>
+        </a>
+        
+        <!-- 햄버거 메뉴 버튼 -->
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="header_menu">
+            {% if user.is_authenticated %}
+                <a href="{% url 'teams:matching_router' %}"><p>팀매칭</p></a>
+                <div class="dropdown">
+                    <a href="{% url 'projects:dashboard' %}"><p>내 프로젝트</p></a>
+                    <div class="dropdown-content">
+                        <a href="{% url 'projects:dashboard' %}">대시보드</a>
+                        <a href="{% url 'guides:mission' %}">미션</a>
+                    </div>
+                </div>
+                <a href="{% url 'projects:kitup_list' %}"><p>KITUP 프로젝트</p></a>
+                <a href="{% url 'reflections:note_list' %}"><p>회고</p></a>
+                <a href="{% url 'accounts:mypage' %}"><p>마이페이지</p></a>
+                <a href="/accounts/logout/"><p>로그아웃</p></a>
+            {% else %}
+                <a href="/accounts/login/"><p>로그인</p></a>
+                <a href="/accounts/signup/"><p>회원가입</p></a>
+            {% endif %}
+        </div>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        {% endblock %}
+    </footer>
+    
+    <script src="{% static 'js/base.js' %}"></script>
+</body>
+</html>

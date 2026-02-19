@@ -1,0 +1,162 @@
+{% extends 'base.html' %} {% load static %} {% block header %}
+<link rel="stylesheet" href="{% static 'css/team_apply.css' %}" />
+{% endblock %} {% block content %}
+{% if season.status != 'MATCHING' %}
+<div class="match_wait">
+	<h3>
+		지금은 팀 매칭 기간이 아니예요. <br />
+		팀 매칭 기간이 되면 메일로 알려드릴게요.
+	</h3>
+	<form method="post" action="{% url 'teams:enable_notifications' %}" class="noti">
+		{% csrf_token %}
+		<button class="noti_button" type="submit">알림받기</button>
+	</form>
+</div>
+
+{% elif user_obj.passion_level == None %}
+<div class="team_matching">
+	<h3>팀 매칭 모집 기간이 시작됐어요!</h3>
+	<p>
+		6주의 기간동안 희망하는 스택으로 프로젝트를 진행하고, 실력을 쌓아보아요.
+	</p>
+	<div class="t_stack">
+		<div class="t_design">
+			<h3>WEB 기획</h3>
+			{% if user.is_authenticated %}
+			{% with pm_level=role_levels.PM %}
+			{% if pm_level == 1 %}
+			<img src="{% static 'images/Level1.png' %}" alt="Level1">
+            <p class="t_level">Lv1</p>
+			<button class="t_design_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=PM'">팀 매칭 신청하기</button>
+			{% elif pm_level == 2 %}
+			<img src="{% static 'images/Level2.png' %}" alt="Level2">
+            <p class="t_level">Lv2</p>
+			<button class="t_design_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=PM'">팀 매칭 신청하기</button>
+			{% elif pm_level == 3 %}
+			<img src="{% static 'images/Level3.png' %}" alt="Level3">
+            <p class="t_level">Lv3</p>
+			<button class="t_design_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=PM'">팀 매칭 신청하기</button>
+			{% elif pm_level == 4 %}
+			<img src="{% static 'images/Level4.png' %}" alt="Level4">
+            <p class="t_level">Lv4</p>
+            <button class="t_design_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=PM'">팀 매칭 신청하기</button>
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">아직 레벨 진단이 완료되지 않았어요!</p>
+			<button class="t_design_btn" type="button" onclick="window.location.href='{% url 'accounts:level_test' %}?role=PM'">레벨 진단하기</button>
+			{% endif %}
+			{% endwith %}
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">로그인 후 레벨을 확인해보세요.</p>
+			<button
+				class="t_design_btn"
+				type="button"
+				onclick="location.href = '/accounts/login/'"
+			>
+				로그인하고 팀 매칭 신청하기
+			</button>
+			{% endif %}
+		</div>
+		<div class="t_frontend">
+			<h3>WEB 프론트엔드</h3>
+			{% if user.is_authenticated %}
+			{% with fe_level=role_levels.FRONTEND %}
+			{% if fe_level == 1 %}
+			<img src="{% static 'images/Level1.png' %}" alt="Level1" />
+			<p class="t_level">Lv1</p>
+			<button class="t_front_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=FRONTEND'">팀 매칭 신청하기</button>
+			{% elif fe_level == 2 %}
+			<img src="{% static 'images/Level2.png' %}" alt="Level2">
+            <p class="t_level">Lv2</p>
+			<button class="t_front_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=FRONTEND'">팀 매칭 신청하기</button>
+			{% elif fe_level == 3 %}
+			<img src="{% static 'images/Level3.png' %}" alt="Level3">
+            <p class="t_level">Lv3</p>
+			<button class="t_front_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=FRONTEND'">팀 매칭 신청하기</button>
+			{% elif fe_level == 4 %}
+			<img src="{% static 'images/Level4.png' %}" alt="Level4">
+            <p class="t_level">Lv4</p>
+            <button class="t_front_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=FRONTEND'">팀 매칭 신청하기</button>
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">아직 레벨 진단이 완료되지 않았어요!</p>
+			<button class="t_front_btn" type="button" onclick="window.location.href='{% url 'accounts:level_test' %}?role=FRONTEND'">레벨 진단하기</button>
+			{% endif %}
+			{% endwith %}
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">로그인 후 레벨을 확인해보세요.</p>
+			<button
+				class="t_front_btn"
+				type="button"
+				onclick="location.href = '/accounts/login/'"
+			>
+				로그인하고 팀 매칭 신청하기
+			</button>
+			{% endif %}
+		</div>
+		<div class="t_backend">
+			<h3>WEB 백엔드</h3>
+			{% if user.is_authenticated %}
+			{% with be_level=role_levels.BACKEND %}
+			{% if be_level == 1 %}
+			<img src="{% static 'images/Level1.png' %}" alt="Level1" />
+			<p class="t_level">Lv1</p>
+			<button class="t_back_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=BACKEND'">팀 매칭 신청하기</button>
+			{% elif be_level == 2 %}
+			<img src="{% static 'images/Level2.png' %}" alt="Level2">
+            <p class="t_level">Lv2</p>
+			<button class="t_back_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=BACKEND'">팀 매칭 신청하기</button>
+			{% elif be_level == 3 %}
+			<img src="{% static 'images/Level3.png' %}" alt="Level3">
+            <p class="t_level">Lv3</p>
+			<button class="t_back_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=BACKEND'">팀 매칭 신청하기</button>
+			{% elif be_level == 4 %}
+			<img src="{% static 'images/Level4.png' %}" alt="Level4" />
+			<p class="t_level">Lv4</p>
+			<button class="t_back_btn" onclick="window.location.href='{% url 'teams:passion_test' %}?role=BACKEND'">팀 매칭 신청하기</button>
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">아직 레벨 진단이 완료되지 않았어요!</p>
+			<button class="t_back_btn" type="button" onclick="window.location.href='{% url 'accounts:level_test' %}?role=BACKEND'">레벨 진단하기</button>
+			{% endif %}
+			{% endwith %}
+			{% else %}
+			<img src="{% static 'images/nolevel.png' %}" alt="nolevel" />
+			<p class="t_nolevel">로그인 후 레벨을 확인해보세요.</p>
+			<button
+				class="t_back_btn"
+				type="button"
+				onclick="location.href = '/accounts/login/'"
+			>
+				로그인하고 팀 매칭 신청하기
+			</button>
+			{% endif %}
+		</div>
+	</div>
+
+</div>
+
+{% else %}
+<div class="team_waiting">
+	<h3>
+		팀 매칭 신청이 완료되었어요. <br />
+		팀 매칭 결과가 발표되면 메일로 알려드릴게요.
+	</h3>
+	<div class="matching_actions">
+		<form method="post" action="{% url 'teams:enable_notifications' %}" >
+			{% csrf_token %}
+			<button type="submit" class="noti_button">알림받기</button>
+		</form>
+		<form method="post" action="{% url 'teams:team_matching_cancel' %}" class="cancel_form">
+			{% csrf_token %}
+			<button type="submit" class="cancel_button" onclick="">매칭 취소</button>
+		</form>
+	</div>
+</div>
+{% endif %}
+<script defer src="{% static 'js/team_apply.js' %}"></script>
+{% endblock %}
+
+</div>

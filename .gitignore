@@ -16,7 +16,6 @@ local_settings.py
 settings_local.py
 
 # Django media & static (선택)
-media/
 staticfiles/
 
 ############################
@@ -36,14 +35,9 @@ ENV/
 pip-wheel-metadata/
 
 ############################
-# Django collectstatic
-############################
-static/
-
-############################
 # Docker
 ############################
-docker-compose.override.yml
+#docker-compose.override.yml
 *.tar
 *.log
 
@@ -87,3 +81,11 @@ htmlcov/
 # 기타
 ############################
 .cache/
+/media/
+
+
+*.pem
+kitup-key.pem
+
+# AI용 프로젝트 압축 파일
+*.zip

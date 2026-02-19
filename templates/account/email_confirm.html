@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}이메일 인증 완료 - KITUP{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="confirm-card">
+        {% if confirmation %}
+        <h1>✅ 이메일 인증 완료!</h1>
+        <p><strong>{{ confirmation.email_address.email }}</strong></p>
+        <p>이메일 인증이 완료되었습니다.</p>
+        <p>이제 로그인하실 수 있습니다.</p>
+        
+        <a href="{% url 'account_login' %}" class="btn">로그인하기</a>
+        {% else %}
+        <h1>❌ 인증 실패</h1>
+        <p>유효하지 않거나 만료된 인증 링크입니다.</p>
+        <a href="{% url 'account_signup' %}" class="btn">다시 가입하기</a>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .container { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
+    .confirm-card { 
+        background: white; 
+        padding: 48px; 
+        border-radius: 16px; 
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        max-width: 400px;
+    }
+    .confirm-card h1 { margin-bottom: 24px; }
+    .confirm-card p { color: #666; margin-bottom: 8px; }
+    .btn { 
+        display: inline-block;
+        background: #4f7cff; 
+        color: white; 
+        padding: 12px 32px; 
+        border-radius: 8px; 
+        text-decoration: none;
+        margin-top: 24px;
+    }
+    .btn:hover { background: #3b63d9; }
+</style>
+{% endblock %}

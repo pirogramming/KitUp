@@ -1,0 +1,46 @@
+/* 결과 화면 추가 스타일 */
+.passion-result-message {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+/* 열정 레벨 테스트 헤더 */
+
+.passion-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.passion-description {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.8;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .passion-header {
+        margin-bottom: 32px;
+    }
+
+    .passion-title {
+        font-size: 26px;
+    }
+
+    .passion-description {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+}
+
+@media (max-width: 480px) {
+    .passion-title {
+        font-size: 24px;
+    }
+
+    .passion-description {
+        font-size: 13px;
+    }
+}

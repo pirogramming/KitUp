@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}회고{% endblock %}
+
+{% block header %}
+  <link rel="stylesheet" href="{% static 'css/reflections.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="ref-page">
+
+  {# 상단 컨트롤 영역 #}
+  <section class="ref-controls">
+    <form class="ref-search" method="get" action="">
+      
+      <div class="ref-searchbar">
+        <span class="ref-searchicon" aria-hidden="true">
+          <img src="{% static 'images/search.png' %}" alt="검색">
+        </span>
+        <input
+          type="text"
+          name="q"
+          value="{{ request.GET.q|default:'' }}"
+          placeholder="검색어를 입력하세요"
+          class="ref-searchinput"
+        />
+        <button type="submit" class="ref-searchbtn">검색</button>
+      </div>
+
+      <div class="ref-filters">
+        <div class="ref-filters-selects">
+          <div class="ref-select-container">
+            <select name="sort" class="ref-selectbox" data-auto-submit>
+              <option value="new"   {% if sort == "new" %}selected{% endif %}>최신순</option>
+              <option value="old"   {% if sort == "old" %}selected{% endif %}>오래된순</option>
+              <option value="title" {% if sort == "title" %}selected{% endif %}>제목순</option>
+            </select>
+            <span class="ref-selectchev" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+          <div class="ref-select-container">
+            <select name="roles" class="ref-selectbox" data-auto-submit>
+              <option value="" {% if not role %}selected{% endif %}>전체</option>
+              <option value="PM" {% if "PM" == role %}selected{% endif %}>기획</option>
+              <option value="FRONTEND" {% if "FRONTEND" == role %}selected{% endif %}>프론트엔드</option>
+              <option value="BACKEND" {% if "BACKEND" == role %}selected{% endif %}>백엔드</option>
+              <option value="none" {% if "none" == role %}selected{% endif %}>개인 회고</option>
+            </select>
+            <span class="ref-selectchev" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+        <div class="ref-filters-actions">
+          <button
+            type="button"
+            class="bookmark-filter-btn {% if bookmarked %}is-active{% endif %}"
+            data-bookmark-filter
+            aria-pressed="{% if bookmarked %}true{% else %}false{% endif %}"
+          >
+            <svg class="ref-action-icon bookmark-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                aria-hidden="true">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+            <span class="ref-action-txt">북마크</span>
+          </button>
+          
+          <a href="{% url 'reflections:note_create' %}" class="ref-writebtn">
+              <img src="{% static 'images/pencil_icon.png' %}"
+                class="ref-action-icon"
+                alt="">
+            <span class="ref-action-txt">글쓰기</span>
+          </a>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  {# 리스트 영역 #}
+  <section class="ref-list">
+    {% if notes %}
+      {% for note in notes %}
+        <article class="note-card" data-note-id="{{ note.id }}">
+          <button
+            type="button"
+            class="bookmark-btn {% if note.bookmarked %}is-active{% endif %}"
+            aria-pressed="{% if note.bookmarked %}true{% else %}false{% endif %}"
+            data-note-id="{{ note.id }}"
+            data-bookmark-btn
+          >
+            <svg class="bookmark-icon bookmark-off"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                aria-hidden="true">
+              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+            </svg>
+
+            <svg class="bookmark-icon bookmark-on"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                aria-hidden="true">
+              <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2"/>
+            </svg>
+          </button>
+
+          <a class="note-main" href="{% url 'reflections:note_detail' note.id %}">
+            <div class="note-topline">
+              <h3 class="note-title">{{ note.title }}</h3>
+
+              {# 태그 (예: WEB 프론트엔드/백엔드/기획) #}
+              {% if note.role %}
+                <span class="note-tag tag-{{ note.role|lower }}">
+                  {{ note.role_display|default:note.role }}
+                </span>
+              {% endif %}
+            </div>
+
+            <p class="note-preview">
+              {{ note.preview|default:note.content_md|truncatechars:80 }}
+            </p>
+
+            <time class="note-date" datetime="{{ note.created_at|date:'c' }}">
+              {{ note.created_at|date:"Y.m.d (D)" }}
+            </time>
+          </a>
+
+          {# 더보기 메뉴 #}
+          <div class="note-morewrap" data-more-wrap>
+            <button type="button" class="note-morebtn" aria-haspopup="true" aria-expanded="false" data-more-btn title="더보기">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 20.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+              </svg>
+            </button>
+
+            <div class="note-menu" role="menu" data-more-menu hidden>
+              <a class="note-menuitem" role="menuitem" href="{% url 'reflections:note_update' note.id %}">수정하기</a>
+
+              <form method="post" action="{% url 'reflections:note_delete' note.id %}" class="note-menuform">
+                {% csrf_token %}
+                <button type="submit" class="note-menuitem danger" role="menuitem">삭제하기</button>
+              </form>
+            </div>
+          </div>
+
+        </article>
+      {% endfor %}
+    {% else %}
+      <div class="ref-empty">
+        <p class="ref-empty-title">작성된 회고가 없습니다.</p>
+        <a href="{% url 'reflections:note_create' %}" class="ref-empty-cta">첫 회고 작성하기</a>
+      </div>
+    {% endif %}
+  </section>
+
+</div>
+
+<script defer src="{% static 'js/reflections.js' %}"></script>
+{% endblock %}

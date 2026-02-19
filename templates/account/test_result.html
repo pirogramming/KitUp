@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}KITUP - 레벨 진단 결과{% endblock %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/test_result.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="test-result-container">
+    <div class="result-wrapper">
+        <!-- 타이틀 -->
+        <h1 class="result-title">WEB {{ role_name }} 레벨 진단</h1>
+        
+        <!-- 레벨 카드 -->
+        <div class="level-card">
+            <!-- 레벨 아이콘 -->
+            <div class="level-icon-wrapper">
+                {% if level == 1 %}
+                <div class="level-icon level-1">🌱</div>
+                {% elif level == 2 %}
+                <div class="level-icon level-2">🌿</div>
+                {% elif level == 3 %}
+                <div class="level-icon level-3">🌳</div>
+                {% else %}
+                <div class="level-icon level-4">🏆</div>
+                {% endif %}
+            </div>
+            
+            <!-- 레벨 배지 -->
+            <div class="level-badge">Lv{{ level }}</div>
+            
+            <!-- 메시지 -->
+            <div class="result-message">
+                <p class="user-name">{{ user.nickname }} 님은 {{ level_description }}입니다.</p>
+                <p class="description">프로젝트를 시작해 보세요!</p>
+            </div>
+        </div>
+        
+        <!-- 홈으로 버튼 -->
+        <button class="btn-home" onclick="location.href='/'">
+            홈으로 돌아가기
+        </button>
+    </div>
+</div>
+{% endblock %}

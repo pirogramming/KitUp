@@ -1,0 +1,360 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
+body {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+  margin: 0; padding: 0;
+}
+
+* {
+    margin: 0; padding: 0;
+    box-sizing: border-box;
+}
+
+header {
+    position: fixed;
+    top: 0; left: 0;
+    background: #fff;
+    z-index: 1000;
+    width: 100%; height: 60px;
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+    justify-content: space-between;
+}
+
+header a {
+    text-decoration: none;
+    color: black;
+}
+
+header a h3 {
+    color: #4272EF;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+header .header_menu {
+    display: flex;
+}
+
+header .header_menu > a {
+    display: block;
+    color: #4272EF;
+    width: 110px; height: 40px;
+    margin-left: 20px; text-align: center;
+    border-radius: 20px;
+}
+
+header .header_menu > a:hover {
+    background: #4272EF;
+    color: #fff;
+    transition: 0.3s ease;
+}
+
+header .header_menu > a p {
+    padding: 13px auto;
+    font-size: 14px; font-weight: bold;
+    line-height: 40px;
+}
+
+main {
+    padding-top: 60px;
+    min-height: calc(100vh - 60px);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.dropdown > a {
+    display: block;
+    color: #4272EF;
+    width: 110px; height: 40px;
+    text-align: center;
+    border-radius: 20px;
+}
+
+.dropdown > a p {
+    padding: 13px auto;
+    font-size: 14px; font-weight: bold;
+    line-height: 40px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 42px;
+    left: -10px;
+    background: #fff;
+    min-width: 130px;
+    overflow: hidden;
+    z-index: 1001;
+    padding-top: 3px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.dropdown-content::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: transparent;
+}
+
+.dropdown-content a {
+    display: block;
+    color: #4272EF;
+    padding: 12px 0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.dropdown-content a:hover {
+    background: #4272EF;
+    color: #fff;
+    transition: 0.5s ease;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* ========================================
+   반응형 미디어 쿼리
+======================================== */
+
+/* 햄버거 메뉴 버튼 (기본 숨김) */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1002;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: #4272EF;
+    margin: 3px 0;
+    transition: 0.3s;
+    border-radius: 3px;
+}
+
+/* 햄버거 애니메이션 */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* 모바일 오버레이 */
+.mobile-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+.mobile-overlay.active {
+    display: block;
+}
+
+/* 데스크탑 & 노트북 (769px 이상) */
+@media (min-width: 884px) {
+    header {
+        padding: 0 50px;
+    }
+    
+    header a h3 {
+        font-size: 32px;
+    }
+    
+    .header_menu {
+        display: flex !important;
+    }
+
+    .dropdown > a:hover {
+        background: #4272EF;
+        color: #fff;
+        transition: 0.5s ease;
+    }
+
+    .dropdown-content {
+        display: none !important;
+    }
+}
+
+/* 태블릿 & 모바일 (768px 이하) */
+@media (max-width: 883px) {
+    header {
+        padding: 0 20px;
+    }
+    
+    header a h3 {
+        font-size: 28px;
+    }
+    
+    /* 햄버거 버튼 표시 */
+    .hamburger {
+        display: flex;
+    }
+    
+    /* 메뉴 기본 숨김 */
+    .header_menu {
+        display: none;
+        position: fixed;
+        top: 60px;
+        right: -250px;
+        width: 250px;
+        height: calc(100vh - 60px);
+        background: #fff;
+        flex-direction: column;
+        padding: 20px 0;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+        overflow-y: auto;
+        transition: right 0.3s ease-out;
+    }
+    
+    .header_menu.active {
+        display: flex;
+        right: 0; 
+    }
+    
+    /* 메뉴 아이템 */
+    header .header_menu > a {
+        width: 100%;
+        margin: 0;
+        height: 50px;
+        border-radius: 0;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+    }
+    
+    header .header_menu > a p {
+        line-height: 50px;
+        font-size: 15px;
+    }
+    
+    header .header_menu > a:hover {
+        background: #4272EF;
+        color: #fff;
+    }
+    
+    /* 드롭다운 */
+    .header_menu .dropdown {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .dropdown > a {
+        width: 100%;
+        height: 50px;
+        border-radius: 0;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+        color: #4272EF;
+    }
+    
+    .dropdown > a p {
+        line-height: 50px;
+        font-size: 15px;
+    }
+    
+    .dropdown-content {
+        position: static;
+        display: none;
+        min-width: 100%;
+        border-radius: 0;
+        background: #fff;
+        padding-top: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    .dropdown-content::before {
+        display: none;
+    }
+    
+    .dropdown.active .dropdown-content {
+        display: block;
+        max-height: 120px; 
+    }
+    
+    .dropdown-content a {
+        display: block;
+        width: 100%;
+        padding: 15px 0;
+        height: auto;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: center;
+        background: #fff;
+        color: #4272EF;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    .dropdown-content a:last-child {
+        border-bottom: none;
+    }
+    
+    .dropdown-content a:hover {
+        background: #4272EF;
+        color: #fff;
+    }
+}
+
+/* 모바일 (480px 이하) */
+@media (max-width: 480px) {
+    header {
+        padding: 0 15px;
+    }
+    
+    header a h3 {
+        font-size: 24px;
+    }
+    
+    .hamburger span {
+        width: 22px;
+        height: 2.5px;
+    }
+    
+    .header_menu {
+        width: 220px;
+    }
+    
+    header .header_menu > a,
+    .dropdown > a {
+        height: 48px;
+    }
+    
+    header .header_menu > a p,
+    .dropdown > a p {
+        line-height: 48px;
+        font-size: 14px;
+    }
+    
+    .dropdown-content a {
+        padding: 12px 0;
+        font-size: 13px;
+    }
+}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% load static %}
+{% load reflections_extras %}
+
+{% block title %}{{ note.title }} - 회고{% endblock %}
+
+{% block header %}
+  <link rel="stylesheet" href="{% static 'css/reflections.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="ref-page">
+  <div class="ref-detail-wrap">
+    <div class="ref-detail-topbar">
+      <div class="ref-detail-title-section">
+        <h1 class="ref-detail-title">{{ note.title }}</h1>
+      </div>
+      <div class="ref-detail-actions">
+        <a href="{% url 'reflections:note_list' %}" class="ref-btn ref-btn-ghost">목록</a>
+        
+        <button 
+          type="button" 
+          class="bookmark-btn {% if note.bookmarked %}is-active{% endif %}"
+          data-bookmark-btn
+          data-note-id="{{ note.id }}"
+          aria-pressed="{% if note.bookmarked %}true{% else %}false{% endif %}"
+          aria-label="북마크"
+        >
+          <svg class="bookmark-icon bookmark-off" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg class="bookmark-icon bookmark-on" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        
+          <div class="note-morewrap" data-more-wrap>
+            <button type="button" class="note-morebtn" data-more-btn aria-haspopup="true" aria-expanded="false">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 6.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3ZM12 20.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" fill="currentColor"/>
+              </svg>
+            </button>
+
+            <div class="note-menu" role="menu" data-more-menu hidden>
+              {% if note %}
+                <a class="note-menuitem" role="menuitem" href="{% url 'reflections:note_update' note.id %}">수정하기</a>
+                <form method="post" action="{% url 'reflections:note_delete' note.id %}" class="note-menuform">
+                  {% csrf_token %}
+                  <button type="submit" class="note-menuitem danger" role="menuitem">삭제하기</button>
+                </form>
+              {% else %}
+                <span class="note-menuitem" role="menuitem">작성 중…</span>
+              {% endif %}
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="ref-detail-meta-text">
+      작성일: {{ note.created_at|date:"Y-m-d H:i" }} ·
+      최종수정일: {{ note.updated_at|date:"Y-m-d H:i" }}
+    </div>
+    <br>
+
+    <div class="ref-detail-qa-list">
+      {% for q in guide.questions %}
+        <section class="ref-detail-qa-card">
+          <div class="ref-detail-qa-header">
+            <span class="ref-q-num">{{ q.order|default:forloop.counter }}</span>
+            <span class="ref-detail-qa-title">{{ q.title }}</span>
+          </div>
+          <div class="ref-detail-qa-body">
+            {{ answers|get_item:q.id|md }}
+          </div>
+        </section>
+      {% endfor %}
+    </div>
+
+    {# 마크다운 내보내기(접기) #}
+    <details class="ref-detail-export">
+      <summary class="ref-detail-export-summary">
+        마크다운 내보내기
+      </summary>
+      <div class="ref-detail-export-body">
+        <textarea
+          id="full_md"
+          rows="12"
+          readonly
+          class="ref-detail-export-textarea"
+        >{{ note.content_md }}</textarea>
+        <button
+          type="button"
+          class="ref-btn ref-btn-primary"
+          data-md-copy
+          data-target-id="full_md"
+        >
+          MD 복사
+        </button>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<script defer src="{% static 'js/reflections.js' %}"></script>
+
+{% endblock %}

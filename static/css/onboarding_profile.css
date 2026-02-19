@@ -1,0 +1,414 @@
+/* Onboarding Profile CSS - With Styled Tech Stacks */
+
+/* CSS Variables */
+:root {
+  --primary-blue: #4169E1;
+  --primary-hover: #365AC3;
+  --light-blue: #C5D7F5;
+  --text-primary: #212529;
+  --text-secondary: #6C757D;
+  --border-color: #E5E8EB;
+  --background-gray: #F8F9FA;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Page Title Styling */
+h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+  letter-spacing: -0.5px;
+}
+
+/* Form Container - Creates the white card */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: var(--white);
+  border-radius: 20px;
+  padding: 48px 40px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-color);
+}
+
+/* All form field containers */
+form > div {
+  margin-bottom: 32px;
+}
+
+form > div:last-of-type {
+  margin-bottom: 40px;
+}
+
+/* First div - Profile Image Section */
+form > div:first-child {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+/* Hide the default label for profile image */
+form > div:first-child label {
+  display: none;
+}
+
+/* Hide the actual file input */
+form > div:first-child input[type="file"] {
+  display: none;
+}
+
+/* Profile Image Preview Container */
+form > div:first-child::before {
+  content: '';
+  display: block;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--light-blue) 0%, #B3CDFC 100%);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 1;
+}
+
+form > div:first-child:hover::before {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-lg);
+}
+
+/* User icon - default state */
+form > div:first-child::after {
+  content: '';
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='rgba(255,255,255,0.7)' stroke-width='1.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Camera icon button - positioned at bottom right */
+form > div:first-child {
+  padding-bottom: 20px;
+}
+
+form > div:first-child label[for]:not([style*="display: none"])::after,
+form > div:first-child > *:last-child::after {
+  content: '';
+  position: absolute;
+  bottom: 20px;
+  right: calc(50% - 60px + 6px);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236C757D' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z M15 13a3 3 0 11-6 0 3 3 0 016 0z'/%3E%3C/svg%3E");
+  background-size: 18px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 3px solid var(--white);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+/* Make the entire profile image area clickable */
+form > div:first-child {
+  cursor: pointer;
+}
+
+/* Add a class for when image is loaded */
+form > div:first-child.has-image::after {
+  display: none;
+}
+
+form > div:first-child.has-image::before {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* allow JS to set a custom profile image via CSS variable */
+  background-image: var(--profile-url, linear-gradient(135deg, var(--light-blue) 0%, #B3CDFC 100%));
+}
+
+/* Second div - Nickname field with button */
+form > div:nth-child(2) {
+  position: relative;
+}
+
+/* Nickname input styling */
+form > div:nth-child(2) input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: var(--background-gray);
+  transition: all 0.2s;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+form > div:nth-child(2) input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+}
+
+/* Labels */
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* General Input Fields (GitHub ID) */
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: var(--background-gray);
+  transition: all 0.2s;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+}
+
+/* Tech Stacks Container - NEW STYLING */
+form > div:last-of-type > div {
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 16px !important;
+  border-radius: 10px !important;
+  background-color: var(--white) !important;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+form > div:last-of-type > div::-webkit-scrollbar {
+  width: 8px;
+}
+
+form > div:last-of-type > div::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+form > div:last-of-type > div::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+form > div:last-of-type > div::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Hide default select/checkbox display */
+form > div:last-of-type select {
+  display: none;
+}
+
+/* Style checkboxes as chips/tags */
+form > div:last-of-type input[type="checkbox"] {
+  display: none;
+}
+
+/* Checkbox labels styled as chips */
+form > div:last-of-type label {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: var(--background-gray);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0;
+  user-select: none;
+}
+
+form > div:last-of-type label:hover {
+  background-color: var(--light-blue);
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Checked state */
+/* Use :has to style the label when its contained input is checked (modern browsers) */
+form > div:last-of-type label:has(input[type="checkbox"]:checked) {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* Add checkmark icon to checked items (when input is checked) */
+form > div:last-of-type label:has(input[type="checkbox"]:checked)::before {
+  content: '✓';
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+/* JS fallback class when :has is unsupported */
+form > div:last-of-type label.is-checked {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: var(--white);
+  font-weight: 600;
+}
+
+form > div:last-of-type label.is-checked::before {
+  content: '✓';
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+/* Help text for tech stacks */
+form > div:last-of-type small {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Error Messages */
+.errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+}
+
+.errorlist li {
+  color: #DC3545;
+  font-size: 13px;
+  padding: 6px 12px;
+  background-color: #FFE5E8;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+/* Submit Button */
+button[type="submit"] {
+  width: 100%;
+  padding: 14px 24px;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  margin-top: 0;
+}
+
+button[type="submit"]:hover {
+  background-color: var(--primary-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+form {
+  animation: fadeIn 0.4s ease-out;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  form {
+    padding: 32px 24px;
+    border-radius: 16px;
+  }
+
+  h1 {
+    font-size: 20px;
+    margin-bottom: 32px;
+  }
+
+  form > div:first-child::before {
+    width: 100px;
+    height: 100px;
+  }
+
+  form > div:first-child::after {
+    width: 40px;
+    height: 40px;
+    top: 30px;
+  }
+
+  form > div:nth-child(2) input[type="text"] {
+    padding-right: 16px;
+  }
+
+  form > div:nth-child(2)::after {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    text-align: center;
+    right: auto;
+    top: auto;
+    transform: none;
+  }
+
+  form > div:last-of-type label {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  form {
+    padding: 24px 20px;
+  }
+}

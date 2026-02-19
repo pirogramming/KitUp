@@ -1,0 +1,51 @@
+.policy {
+    width: 80%;
+    margin: 0 auto 200px;
+}
+
+.policy > h1 {
+    text-align: center;
+    color: #4272EF;
+    margin: 100px auto;
+    font-size: 35px;
+}
+
+.policy h3 {
+    margin: 10px 0;
+}
+
+.policy p {
+    color: #333;
+    font-size: 15px;
+    margin-top: 10px;
+}
+
+.notice {
+    display: block;
+    font-weight: 550;
+    color: #000;
+    margin: 3px 0;
+}
+
+.policy a {
+    display: block;
+    margin: 50px auto;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 150px;
+    background: #4272EF;
+    color: #fff;
+    border-radius: 20px;
+}
+
+.policy a:hover {
+    background: #1F4CC0;
+    transition: 0.5s ease;
+}
+
+@media (max-width: 430px) {
+    .policy > h1 {
+        font-size: 28px;
+    }
+}

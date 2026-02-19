@@ -1,0 +1,173 @@
+[
+  {
+    "model": "accounts.TechStack",
+    "pk": 1,
+    "fields": {
+      "name": "Python",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 2,
+    "fields": {
+      "name": "JavaScript",
+      "category": "FRONTEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 3,
+    "fields": {
+      "name": "TypeScript",
+      "category": "FRONTEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 4,
+    "fields": {
+      "name": "Java",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 5,
+    "fields": {
+      "name": "Notion",
+      "category": "PM",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 6,
+    "fields": {
+      "name": "React",
+      "category": "FRONTEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 7,
+    "fields": {
+      "name": "Django",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 8,
+    "fields": {
+      "name": "Flask",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 9,
+    "fields": {
+      "name": "FastAPI",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 10,
+    "fields": {
+      "name": "Spring",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 11,
+    "fields": {
+      "name": "PostgreSQL",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 12,
+    "fields": {
+      "name": "MySQL",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 13,
+    "fields": {
+      "name": "MongoDB",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 14,
+    "fields": {
+      "name": "Redis",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 15,
+    "fields": {
+      "name": "Docker",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 16,
+    "fields": {
+      "name": "Git",
+      "category": "PM",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 17,
+    "fields": {
+      "name": "AWS",
+      "category": "BACKEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 18,
+    "fields": {
+      "name": "Figma",
+      "category": "PM",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "accounts.TechStack",
+    "pk": 19,
+    "fields": {
+      "name": "HTML/CSS",
+      "category": "FRONTEND",
+      "created_at": "2026-02-06T00:00:00Z"
+    }
+  }
+]

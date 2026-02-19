@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}이메일 인증 - KITUP{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="verification-card">
+        <h1>이메일 인증</h1>
+        <p>입력하신 이메일 주소로 인증 메일을 발송했습니다.</p>
+        <p>이메일을 확인하고 인증 링크를 클릭해주세요.</p>
+        
+        <div class="info-box">
+            <p>✓ 메일이 오지 않았다면 스팸함을 확인해주세요.</p>
+            <p>✓ 인증 링크는 3일간 유효합니다.</p>
+        </div>
+        
+        <a href="{% url 'account_login' %}" class="btn">로그인 페이지로</a>
+    </div>
+</div>
+
+<style>
+    .container { 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 60vh; }
+    .verification-card { 
+        background: white; 
+        padding: 48px 40px; 
+        border-radius: 16px; 
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        max-width: 400px;}
+    .verification-card h1 { 
+        margin-bottom: 24px;
+        font-size: 24px;
+        font-weight: 600;}
+
+    .verification-card p { 
+        font-size: 14px;
+        color: #666; 
+        margin-bottom: 8px; }
+    .info-box { 
+        background: #f0f9ff; 
+        padding: 16px; 
+        border-radius: 8px; 
+        margin: 24px 0;
+        text-align: left;
+    }
+    .info-box p { font-size: 14px; color: #0369a1; margin: 4px 0; }
+    .btn { 
+        display: inline-block;
+        background: #4f7cff; 
+        color: white; 
+        padding: 12px 32px; 
+        border-radius: 8px; 
+        text-decoration: none;
+        margin-top: 16px;
+    }
+    .btn:hover { background: #3b63d9; }
+</style>
+{% endblock %}

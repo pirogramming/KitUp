@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+<link rel="stylesheet" href="{% static 'css/profile_edit.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-edit-wrapper">
+    <div class="edit-card">
+        <aside class="user-info-side">
+            <div class="avatar-container">
+                <img id="preview-image" src="{% if user.profile_image %}{{ user.profile_image.url }}
+                        {% else %}
+                            {% static 'images/default_profile.png' %}
+                        {% endif %}" alt="프로필 사진" class="profile-img">
+                <label for="id_profile_image" class="edit-badge">
+                    <img src="{% static 'images/pencil_icon.png' %}" alt="수정">
+                </label>
+            </div>
+            <form method="post" enctype="multipart/form-data" class="edit-form">
+                {% csrf_token %}
+
+                <!-- 프로필 이미지 입력 (숨김) -->
+                {{ form.profile_image }}
+
+                <div class="info-table">
+                    <div class="info-row">
+                        <label class="label">닉네임</label>
+                        <div class="nickname-check-wrapper">
+                            <div class="input-button-group">
+                                {{ form.nickname }}
+                                <button type="button" class="check-btn" id="check-nickname-btn">중복확인</button>
+                            </div>
+                            <span class="check-status" id="check-status"></span>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <label class="label">아이디</label>
+                        <input type="text" value="{{ user.username }}" class="input-field readonly" readonly>
+                    </div>
+                    <div class="info-row">
+                        <label class="label">Github</label>
+                        {{ form.github_id }}
+                    </div>
+                    <div class="info-row">
+                        <label class="label">이메일</label>
+                        <input type="text" value="{{ user.email }}" class="input-field readonly" readonly>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    {{ form.tech_stacks.errors }}
+                    <label class="label">{{ form.tech_stacks.label }}</label>
+                    <div style="max-height: 300px; overflow-y: auto; 
+                    border: 1px solid #ccc; padding: 10px;">
+                        {{ form.tech_stacks }}
+                    </div>
+                    <small>{{ form.tech_stacks.help_text }}</small>
+                </div>
+
+                {% if form.errors %}
+                <div class="error-messages">
+                    {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                    <p class="error-text">{{ error }}</p>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="save-button">수정 완료</button>
+            </form>
+        </aside>
+
+        <main class="content-side">
+            <section class="tech-stack-box">
+                <h3 class="side-title">기술 스택</h3>
+                <div class="tags">
+                    {% for tech in user.tech_stacks.all %}
+                    <span class="tag-item tag-{{ tech.category|lower }}">
+                        # {{ tech.name }}
+                    </span>
+                    {% empty %}
+                    <p class="empty-msg">등록된 기술 스택이 없습니다.</p>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileInput = document.getElementById('id_profile_image');
+        const previewImage = document.getElementById('preview-image') || document.querySelector('.profile-img');
+        const defaultImageUrl = "{% static 'images/default_profile.png' %}";
+        const nicknameInput = document.getElementById('id_nickname');
+        const checkNicknameBtn = document.getElementById('check-nickname-btn');
+        const checkStatus = document.getElementById('check-status');
+
+        // 닉네임 검증
+        if (checkNicknameBtn && nicknameInput) {
+            // 중복확인 버튼 클릭
+            checkNicknameBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                checkNicknameDuplicate();
+            });
+
+            // 닉네임 입력 중 실시간 검증
+            nicknameInput.addEventListener('input', function () {
+                checkStatus.textContent = '';
+                checkStatus.className = 'check-status';
+                nicknameInput.classList.remove('valid', 'invalid');
+            });
+
+            // Enter 키로도 검증
+            nicknameInput.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    checkNicknameDuplicate();
+                }
+            });
+        }
+
+        function checkNicknameDuplicate() {
+            const nickname = nicknameInput.value.trim();
+            const userId = "{{ user.id }}";
+
+            if (!nickname) {
+                checkStatus.textContent = '닉네임을 입력하세요.';
+                checkStatus.className = 'check-status error';
+                nicknameInput.classList.add('invalid');
+                return;
+            }
+
+            // API 호출
+            fetch(`/api/accounts/check-nickname/?nickname=${encodeURIComponent(nickname)}&user_id=${userId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.available) {
+                        checkStatus.textContent = '✓ ' + data.message;
+                        checkStatus.className = 'check-status success';
+                        nicknameInput.classList.add('valid');
+                        nicknameInput.classList.remove('invalid');
+                    } else {
+                        checkStatus.textContent = '✗ ' + data.message;
+                        checkStatus.className = 'check-status error';
+                        nicknameInput.classList.add('invalid');
+                        nicknameInput.classList.remove('valid');
+                    }
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                    checkStatus.textContent = '검증 중 오류가 발생했습니다.';
+                    checkStatus.className = 'check-status error';
+                });
+        }
+
+        if (profileInput) {
+            // input 필드 숨기기
+            profileInput.style.display = 'none';
+
+            // 파일 선택 시 미리보기
+            profileInput.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+
+                if (file) {
+                    // 이미지 파일인지 확인
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            previewImage.src = e.target.result;
+                        };
+
+                        reader.readAsDataURL(file);
+                    } else {
+                        alert('이미지 파일만 선택할 수 있습니다.');
+                        profileInput.value = '';
+                    }
+                } else {
+                    // 파일 선택 취소 시 기본 이미지로 복원
+                    previewImage.src = defaultImageUrl;
+                }
+            });
+        }
+
+        // 이미지 로드 실패 시 기본 이미지 표시
+        if (previewImage) {
+            previewImage.addEventListener('error', function () {
+                this.src = defaultImageUrl;
+            });
+        }
+
+        // 모든 Django form input 필드에 input-field 클래스 추가
+        const formInputs = document.querySelectorAll('.info-row input[type="text"], .info-row input[type="email"], .info-row input[type="password"]');
+        formInputs.forEach(input => {
+            if (!input.classList.contains('readonly')) {
+                input.classList.add('input-field');
+            }
+        });
+
+        // Tech stack checkbox visual handler (for profile edit)
+        (function () {
+            const form = document.querySelector('.edit-form');
+            if (!form) return;
+            const inputs = form.querySelectorAll('input[type="checkbox"]');
+            if (!inputs || inputs.length === 0) return;
+
+            function updateLabelForInput(input) {
+                let label = form.querySelector(`label[for="${input.id}"]`);
+                if (!label) label = input.closest('label');
+                if (!label) return;
+                if (input.checked) label.classList.add('is-checked');
+                else label.classList.remove('is-checked');
+            }
+
+            inputs.forEach((inp) => {
+                updateLabelForInput(inp);
+                inp.addEventListener('change', () => updateLabelForInput(inp));
+            });
+        })();
+    });
+</script>
+{% endblock %}
